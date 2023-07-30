@@ -25,7 +25,7 @@ pipeline {
             steps {
                 script {
                     dir("${frontend}") {
-                        npm install
+                        npm ci
                     }
                 }
             }
@@ -85,7 +85,7 @@ pipeline {
             steps {
                 script {
                     dir("${backend}") {
-                        npm install
+                        npm ci
                     }
                 }
             }

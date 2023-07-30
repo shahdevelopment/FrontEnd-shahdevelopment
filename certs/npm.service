@@ -1,0 +1,14 @@
+[Unit]
+Description=NPM Service
+After=network.target
+
+[Service]
+WorkingDirectory=/profilesite
+ExecStart=/usr/bin/npm run start
+Restart=always
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=npm
+
+[Install]
+WantedBy=multi-user.target

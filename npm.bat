@@ -10,7 +10,11 @@ npm install express
 npm install nedb
 npm install dotenv
 
-git rm -r --cached *
+
+
+
+
+git rm -r --cached public
 
 git add .
 
