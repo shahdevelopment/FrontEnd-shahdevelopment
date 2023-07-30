@@ -1,0 +1,16 @@
+build_logs
+node_modules
+.vs
+.utils
+# .dockerignore
+certbot.sh
+deploy-image.bat
+docker-compose.yaml
+nginx.conf
+smtp.js
+test_email.js
+certs
+notes
+smtp.js
+test_email.js
+npm.bat

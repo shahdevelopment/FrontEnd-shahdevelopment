@@ -1,0 +1,17 @@
+node_modules
+npm-debug.log
+.gitignore
+docker-compose.yaml
+Dockerfile
+.vs
+.utils
+build_logs
+certs
+notes
+.dockerignore
+certbot.sh
+deploy-image.bat
+docker-compose.yaml
+nginx.conf
+test_email.js
+smtp.js
