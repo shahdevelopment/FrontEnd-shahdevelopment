@@ -19,11 +19,6 @@ pipeline {
         defgit = 'git@github.com:Shah0373/k8s-definitions.git'
     }
     stages {
-        stage('clean workspace on Built in Node') {
-            steps {
-                sh "whoami"
-            }
-        }
         stage('frontend-clone') {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'GITHUB_SSH_CREDENTIALS', keyFileVariable: 'SSH_KEY')]) {
