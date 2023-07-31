@@ -136,7 +136,6 @@ body {
   text-decoration: none;
   color: white;
   background-color: #000000;
-  letter-spacing: 2px;
   border: 1px solid #fff;
   display: inline-block;
   font-size: 1rem;
@@ -167,7 +166,6 @@ body {
   text-decoration: none;
   color: white;
   background-color: #000000;
-  letter-spacing: 2px;
   border: 1px solid #fff;
   display: inline-block;
   font-size: 1rem;
@@ -238,7 +236,6 @@ body {
   text-decoration: none;
   color: white;
   background-color: black;
-  letter-spacing: 2px;
   font-size: 1rem;
   letter-spacing: 3px;
   border-radius: 8px;
@@ -268,7 +265,7 @@ body {
 }
 
 .pictcont .shahcont {
-  max-width: 100%px;
+  max-width: 100%;
   max-height: 90%;
   padding: 25px 25px 25px 25px;
   overflow: hidden;
@@ -284,7 +281,6 @@ body {
 
 .workexpc {
   max-width: 100%;
-  margin: 0 auto;
   color: white;
   display: inline;
   flex-wrap: wrap;
@@ -318,7 +314,6 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 40px;
   line-height: 50px;
   letter-spacing: 3px;
   margin-bottom: 6px;
@@ -328,7 +323,6 @@ body {
   border: 3px solid black;
   max-width: 95%;
   margin-left: 30px;
-
 }
 
 #delete {
@@ -347,7 +341,6 @@ body {
 }
 
 .secdiv h1 {
-  font-size: 30px;
   line-height: 50px;
   letter-spacing: 3px;
   margin-bottom: 6px;
@@ -358,14 +351,11 @@ body {
 
 .secdiv p {
   line-height: 1;
-  font-weight: bold;
   font-size: 25px;
   margin-bottom: 50;
   max-width: 690;
   font-weight: 0;
 }
-
-
 
 .smol {
   text-decoration: none;

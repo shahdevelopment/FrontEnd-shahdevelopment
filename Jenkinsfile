@@ -51,7 +51,7 @@ pipeline {
             // }
             steps {
                 withSonarQubeEnv('sonarqube') {
-                    sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${frontend}/"
+                    sh "${scannerHome}/bin/sonar-scanner -sonar.scm.provider=git -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${frontend}/"
                 }
             }
         }
@@ -59,7 +59,7 @@ pipeline {
             steps {
                 script {
                     dir("${frontend}") {
-                        dockerImage = docker.build registry_front + ":v$BUILD_NUMBER"
+                        dockerImage = docker.build "$registry_front" + ":v$BUILD_NUMBER"
                     }
                 }    
             }
@@ -68,7 +68,7 @@ pipeline {
             steps {
                 script{
                     docker.withRegistry('', registryCredentials) {
-                        dockerImage.push("v$BUILD_NUMBER")
+                        dockerImage.push("$registry_front:v$BUILD_NUMBER")
                     }
                 }   
             }
@@ -78,7 +78,6 @@ pipeline {
                 sh "docker rmi $registry_front:v$BUILD_NUMBER "
             }
         }
-
         // stage('frontend-kubernetes-deploy') {
         //     agent {label 'KOPS'}
         //         steps {
@@ -112,7 +111,7 @@ pipeline {
             // }
             steps {
                 withSonarQubeEnv('sonarqube') {
-                    sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${backend}/"
+                    sh "${scannerHome}/bin/sonar-scanner -sonar.scm.provider=git -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${backend}/"
                 }
             }
         }
@@ -120,7 +119,7 @@ pipeline {
             steps {
                 script {
                     dir("${backend}") {
-                        dockerImage = docker.build registry_back + ":v$BUILD_NUMBER"
+                        dockerImage = docker.build "$registry_back" + ":v$BUILD_NUMBER"
                     }
                 }    
             }
@@ -129,7 +128,7 @@ pipeline {
             steps {
                 script{
                     docker.withRegistry('', registryCredentials) {
-                        dockerImage.push("v$BUILD_NUMBER")
+                        dockerImage.push("$registry_back:v$BUILD_NUMBER")
                     }
                 }   
             }
@@ -147,14 +146,6 @@ pipeline {
                         // Clone the GitHub repository using the SSH key
                             sh '''
                                 rm -rf *
-                                eval $(ssh-agent)
-
-                                if ! pgrep -u "$USER" ssh-agent > /dev/null; then
-                                    ssh-agent > ~/.ssh/ssh-agent-env
-                                fi
-
-                                . ~/.ssh/ssh-agent-env
-
                                 ssh-agent bash -c "ssh-add $SSH_KEY; git clone git@github.com:Shah0373/k8s-definitions.git"
                             '''
                         }
