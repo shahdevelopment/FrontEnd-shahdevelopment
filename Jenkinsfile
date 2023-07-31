@@ -6,7 +6,7 @@ pipeline {
     agent any
     options {
         // Reuse the workspace from previous builds
-        ws("/opt/jenkins/workspace/profile-site-build")
+        ws("/opt/jenkins-slave/workspace/profile-site-build")
     }
     environment {
         registry_front = "shahdevelopment/kube"
