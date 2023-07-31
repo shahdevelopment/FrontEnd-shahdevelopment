@@ -4,11 +4,10 @@ def COLOR_MAP = [
 ]
 pipeline {
     agent any
-        options {
-        // Set a custom workspace to ensure workspace isolation
-        // The path should be unique for each pipeline job
-        customWorkspace '/opt/jenkins-workspace/profile-site-build'
-        }
+    options {
+        // Reuse the workspace from previous builds
+        reuseWorkspace()
+    }
     environment {
         registry_front = "shahdevelopment/kube"
         registry_back = "shahdevelopment/kube_back"
