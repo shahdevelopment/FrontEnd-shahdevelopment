@@ -4,6 +4,11 @@ def COLOR_MAP = [
 ]
 pipeline {
     agent any
+        options {
+        // Set a custom workspace to ensure workspace isolation
+        // The path should be unique for each pipeline job
+        customWorkspace '/opt/jenkins-workspace/profile-site-build'
+        }
     environment {
         registry_front = "shahdevelopment/kube"
         registry_back = "shahdevelopment/kube_back"
@@ -152,6 +157,8 @@ pipeline {
                 steps {
                     dir("${k8}") {
                         sh '''
+                            ls
+                            pwd
                             /bin/bash move.sh
                             helm upgrade my-app ./helm/profilecharts --set backimage=${registry_back}:v${BUILD_NUMBER} --set frontimage=${registry_front}:v${BUILD_NUMBER}
                         '''
