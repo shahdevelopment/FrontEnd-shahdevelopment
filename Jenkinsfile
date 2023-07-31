@@ -13,7 +13,7 @@ pipeline {
         backend = 'profile_backend'
         scannerHome = tool 'sonar4.7'
         k8 = 'k8s-definitions'
-        frontgit = 'git@github.com:Shah0373/profile-front.git'
+        frontgit = 'git@github.com:Shah0373/profile_front.git'
         backgit = 'git@github.com:Shah0373/profile_backend.git'
         defgit = 'git@github.com:Shah0373/k8s-definitions.git'
     }
