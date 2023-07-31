@@ -19,9 +19,13 @@ pipeline {
         defgit = 'git@github.com:Shah0373/k8s-definitions.git'
     }
     stages {
-        stage('frontend-clone') {
+        stage('clean workspace on Built in Node') {
             steps {
                 cleanWs()
+            }
+        }
+        stage('frontend-clone') {
+            steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'GITHUB_SSH_CREDENTIALS', keyFileVariable: 'SSH_KEY')]) {
                     sshagent(['GITHUB_SSH_CREDENTIALS']) {
                         sh "rm -rf * && git clone ${frontgit}"
@@ -88,7 +92,6 @@ pipeline {
         // }
         stage('backend-clone') {
             steps {
-                cleanWs()
                 withCredentials([sshUserPrivateKey(credentialsId: 'GITHUB_SSH_CREDENTIALS', keyFileVariable: 'SSH_KEY')]) {
                     sshagent(['GITHUB_SSH_CREDENTIALS']) {
                         sh "rm -rf * && git clone ${backgit}"
@@ -138,10 +141,15 @@ pipeline {
                 sh "docker rmi $registry_back:v$BUILD_NUMBER "
             }
         }
-        stage('kubernetes-pull') {
+        stage('clean workspace on Kube Node') {
             agent {label 'KOPS'}
                 steps {
                     cleanWs()
+                }
+        }
+        stage('kubernetes-pull') {
+            agent {label 'KOPS'}
+                steps {
                     withCredentials([sshUserPrivateKey(credentialsId: 'GITHUB_SSH_CREDENTIALS', keyFileVariable: 'SSH_KEY')]) {
                         sshagent(['GITHUB_SSH_CREDENTIALS']) {
                             sh "rm -rf * && git clone ${defgit}"
