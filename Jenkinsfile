@@ -78,21 +78,7 @@ pipeline {
                 sh "docker rmi $registry_front:v$BUILD_NUMBER "
             }
         }
-        stage('kubernetes-pull') {
-            agent {label 'KOPS'}
-                steps {
-                    script {
-                        withCredentials([sshUserPrivateKey(credentialsId: env.GITHUB_SSH_CREDENTIALS, keyFileVariable: 'SSH_KEY')]) {
-                        // Clone the GitHub repository using the SSH key
-                            sh '''
-                                rm -rf *
-                                eval $(ssh-agent)
-                                ssh-agent bash -c "ssh-add $SSH_KEY; git clone git@github.com:Shah0373/k8s-definitions.git"
-                            '''
-                        }
-                    }
-                }
-        }
+
         // stage('frontend-kubernetes-deploy') {
         //     agent {label 'KOPS'}
         //         steps {
@@ -126,9 +112,7 @@ pipeline {
             // }
             steps {
                 withSonarQubeEnv('sonarqube') {
-                    dir("${backend}") {
-                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${backend}/"
-                    }
+                    sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${backend}/"
                 }
             }
         }
@@ -154,6 +138,21 @@ pipeline {
             steps{
                 sh "docker rmi $registry_back:v$BUILD_NUMBER "
             }
+        }
+        stage('kubernetes-pull') {
+            agent {label 'KOPS'}
+                steps {
+                    script {
+                        withCredentials([sshUserPrivateKey(credentialsId: env.GITHUB_SSH_CREDENTIALS, keyFileVariable: 'SSH_KEY')]) {
+                        // Clone the GitHub repository using the SSH key
+                            sh '''
+                                rm -rf *
+                                eval $(ssh-agent)
+                                ssh-agent bash -c "ssh-add $SSH_KEY; git clone git@github.com:Shah0373/k8s-definitions.git"
+                            '''
+                        }
+                    }
+                }
         }
         stage('kubernetes-deploy') {
             agent {label 'KOPS'}
