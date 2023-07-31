@@ -152,12 +152,12 @@ pipeline {
                 steps {
                     dir("${k8}") {
                         sh '''
-                            rm -rf ./helm/profilecharts/templates/*
-                            cp *.yaml helm/profilecharts/templates/
-                            // the below is for a fresh deploy
-                            // helm upgrade --install --force my-app helm/profilecharts --set backimage=${registry_back}:v${BUILD_NUMBER} --set frontimage=${registry_front}:v${BUILD_NUMBER}
+                            /bin/bash move.sh
                             helm upgrade my-app ./helm/profilecharts --set backimage=${registry_back}:v${BUILD_NUMBER} --set frontimage=${registry_front}:v${BUILD_NUMBER}
                         '''
+                        // the below is for a fresh deploy
+                        // helm upgrade --install --force my-app helm/profilecharts --set backimage=${registry_back}:v${BUILD_NUMBER} --set frontimage=${registry_front}:v${BUILD_NUMBER}
+
                     }
                 }
                 post {
