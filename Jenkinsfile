@@ -24,10 +24,9 @@ pipeline {
     stages {
         stage('frontend-clone') {
             steps {
-                cleanWs()
                 withCredentials([sshUserPrivateKey(credentialsId: 'gitsshkey', keyFileVariable: 'SSH_KEY')]) {
                     sshagent(['gitsshkey']) {
-                        sh "git clone ${frontgit}"
+                        sh "rm -rf * && git clone ${frontgit}"
                     }
                 }
             }
@@ -143,10 +142,9 @@ pipeline {
         stage('kubernetes-pull') {
             agent {label 'KOPS'}
                 steps {
-                    cleanWs()
                     withCredentials([sshUserPrivateKey(credentialsId: 'gitsshkey', keyFileVariable: 'SSH_KEY')]) {
                         sshagent(['gitsshkey']) {
-                            sh "git clone ${defgit}"
+                            sh "rm -rf * && git clone ${defgit}"
                         }
                     }               
                 }   
