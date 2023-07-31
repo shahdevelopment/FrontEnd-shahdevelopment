@@ -21,11 +21,11 @@ pipeline {
     stages {
         stage('frontend-clone') {
             steps {
-                script {
-                        withCredentials([sshUserPrivateKey(credentialsId: env.GITHUB_SSH_CREDENTIALS, keyFileVariable: 'SSH_KEY')]) {
-                            env.SSH_KEY = SSH_KEY
-                            sh "rm -rf * && ssh-agent bash -c 'ssh-add ${SSH_KEY}; GIT_SSH_COMMAND=\"ssh -o StrictHostKeyChecking=no\" git clone ${frontgit}'"
-                        }
+                cleanWs()
+                withCredentials([sshUserPrivateKey(credentialsId: 'GITHUB_SSH_CREDENTIALS', keyFileVariable: 'SSH_KEY')]) {
+                    sshagent(['GITHUB_SSH_CREDENTIALS']) {
+                        sh "rm -rf * && git clone ${frontgit}"
+                    }
                 }
             }
         }
@@ -88,12 +88,12 @@ pipeline {
         // }
         stage('backend-clone') {
             steps {
-                script {
-                        withCredentials([sshUserPrivateKey(credentialsId: env.GITHUB_SSH_CREDENTIALS, keyFileVariable: 'SSH_KEY')]) {
-                            env.SSH_KEY = SSH_KEY
-                            sh "ssh-agent bash -c 'ssh-add ${SSH_KEY}; GIT_SSH_COMMAND=\"ssh -o StrictHostKeyChecking=no\" git clone ${backgit}'"
-                        }
-                }
+                cleanWs()
+                withCredentials([sshUserPrivateKey(credentialsId: 'GITHUB_SSH_CREDENTIALS', keyFileVariable: 'SSH_KEY')]) {
+                    sshagent(['GITHUB_SSH_CREDENTIALS']) {
+                        sh "rm -rf * && git clone ${backgit}"
+                    }
+                }            
             }
         }
         // stage('backend-build') {
@@ -141,13 +141,13 @@ pipeline {
         stage('kubernetes-pull') {
             agent {label 'KOPS'}
                 steps {
-                    script {
-                        withCredentials([sshUserPrivateKey(credentialsId: env.GITHUB_SSH_CREDENTIALS, keyFileVariable: 'SSH_KEY')]) {
-                            env.SSH_KEY = SSH_KEY
-                            sh "rm -rf && ssh-agent bash -c 'ssh-add ${SSH_KEY}; GIT_SSH_COMMAND=\"ssh -o StrictHostKeyChecking=no\" git clone ${defgit}'"
+                    cleanWs()
+                    withCredentials([sshUserPrivateKey(credentialsId: 'GITHUB_SSH_CREDENTIALS', keyFileVariable: 'SSH_KEY')]) {
+                        sshagent(['GITHUB_SSH_CREDENTIALS']) {
+                            sh "rm -rf * && git clone ${defgit}"
                         }
-                    }
-                }
+                    }               
+                }   
         }
         stage('kubernetes-deploy') {
             agent {label 'KOPS'}
@@ -163,13 +163,13 @@ pipeline {
                     }
                 }
                 post {
-                always {
-                    echo 'Slack Notifications.'
-                    slackSend channel: '#devopsbuilds',
-                    color: COLOR_MAP[currentBuild.currentResult],
-                    message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NMUBER} \n More info at: ${env.BUILD_URL}"
+                    always {
+                        echo 'Slack Notifications.'
+                        slackSend channel: '#devopsbuilds',
+                        color: COLOR_MAP[currentBuild.currentResult],
+                        message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NMUBER} \n More info at: ${env.BUILD_URL}"
+                    }
                 }
-            }
         }
     }  
 }
