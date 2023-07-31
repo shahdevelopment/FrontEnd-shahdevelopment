@@ -51,7 +51,7 @@ pipeline {
             // }
             steps {
                 withSonarQubeEnv('sonarqube') {
-                    sh "${scannerHome}/bin/sonar-scanner -sonar.scm.provider=git -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${frontend}/"
+                    sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${frontend}/"
                 }
             }
         }
@@ -111,7 +111,7 @@ pipeline {
             // }
             steps {
                 withSonarQubeEnv('sonarqube') {
-                    sh "${scannerHome}/bin/sonar-scanner -sonar.scm.provider=git -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${backend}/"
+                    sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${backend}/"
                 }
             }
         }
