@@ -68,7 +68,7 @@ pipeline {
             steps {
                 script{
                     docker.withRegistry('', registryCredentials) {
-                        dockerImage.push("$registry_front:v$BUILD_NUMBER")
+                        dockerImage.push("v$BUILD_NUMBER")
                     }
                 }   
             }
@@ -128,7 +128,7 @@ pipeline {
             steps {
                 script{
                     docker.withRegistry('', registryCredentials) {
-                        dockerImage.push("$registry_back:v$BUILD_NUMBER")
+                        dockerImage.push("v$BUILD_NUMBER")
                     }
                 }   
             }
