@@ -148,6 +148,13 @@ pipeline {
                             sh '''
                                 rm -rf *
                                 eval $(ssh-agent)
+
+                                if ! pgrep -u "$USER" ssh-agent > /dev/null; then
+                                    ssh-agent > ~/.ssh/ssh-agent-env
+                                fi
+
+                                . ~/.ssh/ssh-agent-env
+
                                 ssh-agent bash -c "ssh-add $SSH_KEY; git clone git@github.com:Shah0373/k8s-definitions.git"
                             '''
                         }
