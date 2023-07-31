@@ -8,7 +8,6 @@ pipeline {
         registry_front = "shahdevelopment/kube"
         registry_back = "shahdevelopment/kube_back"
         registryCredentials = 'dockerhub'
-        GITHUB_SSH_CREDENTIALS = 'gitsshkey'
         SONAR_PROJECT_KEY = 'profile-site-nodejs'
         frontend = 'profile_front'
         backend = 'profile_backend'
@@ -21,9 +20,9 @@ pipeline {
     stages {
         stage('frontend-clone') {
             steps {
-                withCredentials([sshUserPrivateKey(credentialsId: 'GITHUB_SSH_CREDENTIALS', keyFileVariable: 'SSH_KEY')]) {
-                    sshagent(['GITHUB_SSH_CREDENTIALS']) {
-                        sh "rm -rf * && git clone ${frontgit}"
+                withCredentials([sshUserPrivateKey(credentialsId: 'gitsshkey', keyFileVariable: 'SSH_KEY')]) {
+                    sshagent(['gitsshkey']) {
+                        sh "git clone ${frontgit}"
                     }
                 }
             }
@@ -87,9 +86,9 @@ pipeline {
         // }
         stage('backend-clone') {
             steps {
-                withCredentials([sshUserPrivateKey(credentialsId: 'GITHUB_SSH_CREDENTIALS', keyFileVariable: 'SSH_KEY')]) {
-                    sshagent(['GITHUB_SSH_CREDENTIALS']) {
-                        sh "rm -rf * && git clone ${backgit}"
+                withCredentials([sshUserPrivateKey(credentialsId: 'gitsshkey', keyFileVariable: 'SSH_KEY')]) {
+                    sshagent(['gitsshkey']) {
+                        sh "git clone ${backgit}"
                     }
                 }            
             }
@@ -139,9 +138,10 @@ pipeline {
         stage('kubernetes-pull') {
             agent {label 'KOPS'}
                 steps {
-                    withCredentials([sshUserPrivateKey(credentialsId: 'GITHUB_SSH_CREDENTIALS', keyFileVariable: 'SSH_KEY')]) {
-                        sshagent(['GITHUB_SSH_CREDENTIALS']) {
-                            sh "rm -rf * && git clone ${defgit}"
+                    cleanWs()
+                    withCredentials([sshUserPrivateKey(credentialsId: 'gitsshkey', keyFileVariable: 'SSH_KEY')]) {
+                        sshagent(['gitsshkey']) {
+                            sh "git clone ${defgit}"
                         }
                     }               
                 }   
