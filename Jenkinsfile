@@ -158,7 +158,7 @@ pipeline {
             agent {label 'KOPS'}
                 steps {
                     dir("${k8}") {
-                        sh "helm upgrade --install --force my-app helm/profilecharts --set back-image=${registry_back}:v${BUILD_NUMBER} front-image=${registry_front}:v${BUILD_NUMBER}"
+                        sh "helm upgrade --install --force my-app helm/profilecharts --set back-image=${registry_back}:v${BUILD_NUMBER} --set front-image=${registry_front}:v${BUILD_NUMBER}"
                     }
                 }
                 post {
