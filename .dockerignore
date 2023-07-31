@@ -8,7 +8,6 @@ Dockerfile
 build_logs
 certs
 notes
-.dockerignore
 certbot.sh
 deploy-image.bat
 docker-compose.yaml

@@ -14,6 +14,9 @@ pipeline {
         backend = 'profile_backend'
         scannerHome = tool 'sonar4.7'
         k8 = 'k8s-definitions'
+        frontgit = 'git@github.com:Shah0373/profile-front.git'
+        backgit = 'git@github.com:Shah0373/profile_backend.git'
+        defgit = 'git@github.com:Shah0373/k8s-definitions.git'
     }
     stages {
         stage('frontend-clone') {
@@ -23,7 +26,7 @@ pipeline {
                         // Clone the GitHub repository using the SSH key
                             sh '''
                                 rm -rf *
-                                ssh-agent bash -c "ssh-add $SSH_KEY; git clone git@github.com:Shah0373/profile_front.git"
+                                ssh-agent bash -c "ssh-add $SSH_KEY; git clone ${frontgit}"
                             '''
                         }
                 }
@@ -91,7 +94,7 @@ pipeline {
                 script {
                         withCredentials([sshUserPrivateKey(credentialsId: env.GITHUB_SSH_CREDENTIALS, keyFileVariable: 'SSH_KEY')]) {
                             // Clone the GitHub repository using the SSH key
-                            sh 'ssh-agent bash -c "ssh-add $SSH_KEY; git clone git@github.com:Shah0373/profile_backend.git"'
+                            sh 'ssh-agent bash -c "ssh-add $SSH_KEY; git clone ${backgit}"'
                         }
                 }
             }
@@ -146,7 +149,7 @@ pipeline {
                         // Clone the GitHub repository using the SSH key
                             sh '''
                                 rm -rf *
-                                ssh-agent bash -c "ssh-add $SSH_KEY; git clone git@github.com:Shah0373/k8s-definitions.git"
+                                ssh-agent bash -c "ssh-add $SSH_KEY; git clone ${defgit}"
                             '''
                         }
                     }
@@ -158,7 +161,10 @@ pipeline {
                     dir("${k8}") {
                         sh '''
                             /bin/bash secret.sh
-                            helm upgrade --install --force my-app helm/profilecharts --set backimage=${registry_back}:v${BUILD_NUMBER} --set frontimage=${registry_front}:v${BUILD_NUMBER}
+                            helm create
+                            // the below is for a fresh deploy
+                            // helm upgrade --install --force my-app helm/profilecharts --set backimage=${registry_back}:v${BUILD_NUMBER} --set frontimage=${registry_front}:v${BUILD_NUMBER}
+                            helm upgrade my-app ./helm/profilecharts --set backimage=${registry_back}:v${BUILD_NUMBER} --set frontimage=${registry_front}:v${BUILD_NUMBER}
                         '''
                     }
                 }

@@ -2,7 +2,6 @@ build_logs
 node_modules
 .vs
 .utils
-# .dockerignore
 certbot.sh
 deploy-image.bat
 docker-compose.yaml
@@ -14,3 +13,4 @@ notes
 smtp.js
 test_email.js
 npm.bat
+git-push.bat
