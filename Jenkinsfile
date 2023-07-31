@@ -86,6 +86,7 @@ pipeline {
                         // Clone the GitHub repository using the SSH key
                             sh '''
                                 rm -rf *
+                                eval $(ssh-agent)
                                 ssh-agent bash -c "ssh-add $SSH_KEY; git clone git@github.com:Shah0373/k8s-definitions.git"
                             '''
                         }
