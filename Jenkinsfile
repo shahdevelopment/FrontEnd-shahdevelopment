@@ -23,8 +23,8 @@ pipeline {
             steps {
                 script {
                         withCredentials([sshUserPrivateKey(credentialsId: env.GITHUB_SSH_CREDENTIALS, keyFileVariable: 'SSH_KEY')]) {
-                        // Clone the GitHub repository using the SSH key
-                            sh "rm -rf * && ssh-agent bash -c \"ssh-add ${SSH_KEY}; git clone ${frontgit}\""
+                            env.SSH_KEY = SSH_KEY
+                            sh "rm -rf * && ssh-agent bash -c 'ssh-add ${SSH_KEY}; GIT_SSH_COMMAND=\"ssh -o StrictHostKeyChecking=no\" git clone ${frontgit}'"
                         }
                 }
             }
@@ -90,8 +90,8 @@ pipeline {
             steps {
                 script {
                         withCredentials([sshUserPrivateKey(credentialsId: env.GITHUB_SSH_CREDENTIALS, keyFileVariable: 'SSH_KEY')]) {
-                            // Clone the GitHub repository using the SSH key
-                            sh "ssh-agent bash -c \"ssh-add ${SSH_KEY}; git clone ${backgit}\""
+                            env.SSH_KEY = SSH_KEY
+                            sh "ssh-agent bash -c 'ssh-add ${SSH_KEY}; GIT_SSH_COMMAND=\"ssh -o StrictHostKeyChecking=no\" git clone ${backgit}'"
                         }
                 }
             }
@@ -143,8 +143,8 @@ pipeline {
                 steps {
                     script {
                         withCredentials([sshUserPrivateKey(credentialsId: env.GITHUB_SSH_CREDENTIALS, keyFileVariable: 'SSH_KEY')]) {
-                        // Clone the GitHub repository using the SSH key
-                            sh "rm -rf * && ssh-agent bash -c \"ssh-add ${SSH_KEY}; git clone ${defgit}\""
+                            env.SSH_KEY = SSH_KEY
+                            sh "rm -rf && ssh-agent bash -c 'ssh-add ${SSH_KEY}; GIT_SSH_COMMAND=\"ssh -o StrictHostKeyChecking=no\" git clone ${defgit}'"
                         }
                     }
                 }
