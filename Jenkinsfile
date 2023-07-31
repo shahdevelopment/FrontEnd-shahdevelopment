@@ -24,7 +24,7 @@ pipeline {
                 script {
                         withCredentials([sshUserPrivateKey(credentialsId: env.GITHUB_SSH_CREDENTIALS, keyFileVariable: 'SSH_KEY')]) {
                         // Clone the GitHub repository using the SSH key
-                            sh "rm -rf * && ssh-agent bash -c \"ssh-add $SSH_KEY; git clone ${frontgit}\""
+                            sh "rm -rf * && ssh-agent bash -c \"ssh-add ${SSH_KEY}; git clone ${frontgit}\""
                         }
                 }
             }
@@ -91,7 +91,7 @@ pipeline {
                 script {
                         withCredentials([sshUserPrivateKey(credentialsId: env.GITHUB_SSH_CREDENTIALS, keyFileVariable: 'SSH_KEY')]) {
                             // Clone the GitHub repository using the SSH key
-                            sh "ssh-agent bash -c \"ssh-add $SSH_KEY; git clone ${backgit}\""
+                            sh "ssh-agent bash -c \"ssh-add ${SSH_KEY}; git clone ${backgit}\""
                         }
                 }
             }
@@ -144,7 +144,7 @@ pipeline {
                     script {
                         withCredentials([sshUserPrivateKey(credentialsId: env.GITHUB_SSH_CREDENTIALS, keyFileVariable: 'SSH_KEY')]) {
                         // Clone the GitHub repository using the SSH key
-                            sh "rm -rf * && ssh-agent bash -c \"ssh-add $SSH_KEY; git clone ${defgit}\""
+                            sh "rm -rf * && ssh-agent bash -c \"ssh-add ${SSH_KEY}; git clone ${defgit}\""
                         }
                     }
                 }
