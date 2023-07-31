@@ -11,7 +11,7 @@ pipeline {
         GITHUB_SSH_CREDENTIALS = 'gitsshkey'
         SONAR_PROJECT_KEY = 'profile-site-nodejs'
         frontend = 'profile_front'
-        backend = 'profile_back'
+        backend = 'profile_backend'
         scannerHome = tool 'sonar4.7'
         k8 = 'k8s-definitions'
     }
