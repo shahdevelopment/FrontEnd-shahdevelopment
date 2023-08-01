@@ -24,6 +24,7 @@ pipeline {
     stages {
         stage('frontend-clone') {
             steps {
+                cleanWs()
                 withCredentials([sshUserPrivateKey(credentialsId: 'gitsshkey', keyFileVariable: 'SSH_KEY')]) {
                     sshagent(['gitsshkey']) {
                         sh "rm -rf * && git clone ${frontgit}"
