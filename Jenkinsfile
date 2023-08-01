@@ -3,7 +3,7 @@ def COLOR_MAP = [
     'FAILURE': 'danger',
 ]
 pipeline {
-    agent any
+    agent 'ansible'
     options {
         // Reuse the workspace from previous builds
         ws("/opt/jenkins-slave/workspace/profile-site-build")
@@ -140,7 +140,7 @@ pipeline {
             }
         }
         stage('kubernetes-pull') {
-            agent {label 'KOPS'}
+            // agent {label 'ansible'}
                 steps {
                     withCredentials([sshUserPrivateKey(credentialsId: 'gitsshkey', keyFileVariable: 'SSH_KEY')]) {
                         sshagent(['gitsshkey']) {
@@ -150,7 +150,7 @@ pipeline {
                 }   
         }
         stage('kubernetes-deploy') {
-            agent {label 'KOPS'}
+            // agent {label 'KOPS'}
                 steps {
                     dir("${k8}") {
                         sh '''
