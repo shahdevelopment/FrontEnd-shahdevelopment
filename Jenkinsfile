@@ -118,6 +118,7 @@ pipeline {
                             error("front-Path operation health check failed!")
                         }
                         sh 'npm test'
+                        docker cp ${frontend}:/usr/src/app/npm-tests/report.json .
                     }
                 }
                 dir("${backend}") {
@@ -128,6 +129,7 @@ pipeline {
                             error("front-Path operation health check failed!")
                         }
                         sh 'npm test'
+                        docker cp ${frontend}:/usr/src/app/npm-tests/report.json .
                     }
                 }
             }
