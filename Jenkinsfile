@@ -42,17 +42,17 @@ pipeline {
                     script {
                         dir("${frontend}") {
                             sshagent(['gitsshkey']) {
-                                sh "git clone ${frontgit}"
+                                sh "git clone ${frontgit} ."
                            }
                         }
                         dir("${backend}") {
                             sshagent(['gitsshkey']) {
-                                sh "git clone ${backgit}"
+                                sh "git clone ${backgit} ."
                            }
                         }
                         dir("${k8}") {
                             sshagent(['gitsshkey']) {
-                                sh "git clone ${defgit}"
+                                sh "git clone ${defgit} ."
                            }
                         }
                     }
@@ -79,6 +79,8 @@ pipeline {
                 dir("${frontend}") {
                     script {
                         dockerImage = docker.build "$registry_front" + ":v$BUILD_NUMBER"
+                        sh 'sleep 1'
+
                         docker.withRegistry('', registryCredentials) {
                             dockerImage.push("v$BUILD_NUMBER")
                         }
@@ -88,6 +90,8 @@ pipeline {
                 dir("${backend}") {
                     script {
                         dockerImage = docker.build "$registry_back" + ":v$BUILD_NUMBER"
+                        sh 'sleep 1'
+
                         docker.withRegistry('', registryCredentials) {
                             dockerImage.push("v$BUILD_NUMBER")
                         }
