@@ -135,7 +135,7 @@ pipeline {
             }
             post {
                 always {
-                    sh " Testing complete."
+                    sh "echo Testing complete."
                 }
             }
         }
