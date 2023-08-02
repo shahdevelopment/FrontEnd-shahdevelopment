@@ -30,9 +30,11 @@ pipeline {
     stages {
         stage('setup test') {
             steps {
-                npm install -g axios
-                npm install -g fs
-                npm install -g jest
+                sh '''
+                    npm install -g axios
+                    npm install -g fs
+                    npm install -g jest
+                '''
             }
         }
         stage('project-clone') {
@@ -144,6 +146,15 @@ pipeline {
                     sh "docker rmi $registry_front:v$BUILD_NUMBER"
                     sh "docker rmi $registry_back:v$BUILD_NUMBER "
                 }
+            }
+        }
+        stage('remove-dev-dependencies') {
+            steps{
+                sh '''
+                    npm uninstall -g axios
+                    npm uninstall -g fs
+                    npm uninstall -g jest
+                '''
             }
         }
         stage('kubernetes-deploy') {
