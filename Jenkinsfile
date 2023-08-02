@@ -31,9 +31,9 @@ pipeline {
         stage('setup test') {
             steps {
                 sh '''
-                    npm install -g axios
-                    npm install -g fs
-                    npm install -g jest
+                    sudo npm install -g axios
+                    sudo npm install -g fs
+                    sudo npm install -g jest
                 '''
             }
         }
@@ -151,9 +151,9 @@ pipeline {
         stage('remove-dev-dependencies') {
             steps{
                 sh '''
-                    npm uninstall -g axios
-                    npm uninstall -g fs
-                    npm uninstall -g jest
+                    sudo npm uninstall -g axios
+                    sudo npm uninstall -g fs
+                    sudo npm uninstall -g jest
                 '''
             }
         }
