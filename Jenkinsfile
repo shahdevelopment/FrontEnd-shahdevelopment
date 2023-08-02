@@ -78,7 +78,7 @@ pipeline {
             steps {
                 dir("${frontend}") {
                     script {
-                        dockerImage = docker.build "$registry_front" + ":v$BUILD_NUMBER"
+                        dockerImage = docker.build "$registry_front" + ":v$BUILD_NUMBER" .
                         docker.withRegistry('', registryCredentials) {
                             dockerImage.push("v$BUILD_NUMBER")
                         }
@@ -87,7 +87,7 @@ pipeline {
                 }
                 dir("${backend}") {
                     script {
-                        dockerImage = docker.build "$registry_back" + ":v$BUILD_NUMBER"
+                        dockerImage = docker.build "$registry_back" + ":v$BUILD_NUMBER" .
                         docker.withRegistry('', registryCredentials) {
                             dockerImage.push("v$BUILD_NUMBER")
                         }
