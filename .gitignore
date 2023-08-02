@@ -1,16 +1,11 @@
-build_logs
+# Standardized
+npm-debug.log
 node_modules
 .vs
 .utils
-certbot.sh
-deploy-image.bat
-docker-compose.yaml
-nginx.conf
-smtp.js
-test_email.js
-certs
-notes
-smtp.js
-test_email.js
-npm.bat
+build_logs
 git-push.bat
+dev/notes
+
+# Specific:
+.dockerignore

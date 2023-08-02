@@ -18,11 +18,12 @@ function setup() {
             },
             body: JSON.stringify(data)
         };
-        const response = await fetch('/api', options);
+        const response = await fetch('http://back-end-service:9000/api', options);
         const json = await response.json();
         console.log(json);
         alert("Post Submitted!");
     });
+
     startVideo.addEventListener('click', function () {
         if (run === "yes") {
             alert("Camera Already Running!");
@@ -32,6 +33,7 @@ function setup() {
             run = "yes";
         }
     });
+
     stopVideo.addEventListener("click", function () {
         alert("Camera will be stopped........");
         video.stop();

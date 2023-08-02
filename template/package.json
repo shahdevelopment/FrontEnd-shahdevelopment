@@ -1,0 +1,17 @@
+{
+    "name": "profile_front",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "directories": {
+        "test": "tests",
+        "public": "public"
+    },
+    "scripts": {
+        "test": "jest dev/**/*.test.js",
+        "start": "node index.js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC"
+}

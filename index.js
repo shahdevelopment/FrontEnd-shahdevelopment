@@ -1,18 +1,13 @@
 const express = require('express');
-const Datastore = require('nedb');
 const app = express();
-
-// Set the MIME type for JavaScript files
-app.set('view engine', 'js');
-app.engine('js', (_, options, callback) => {
-    callback(null, options.source);
-});
-
-require('dotenv').config();
-
 const PORT = 3000;
 const HOST = '0.0.0.0';
-
+// Set the MIME type for JavaScript files
+// app.set('view engine', 'js');
+// app.engine('js', (_, options, callback) => {
+//     callback(null, options.source);
+// });
+// require('dotenv').config();
 app.use(express.static('public', {
     setHeaders: (response, path, stat) => {
         if (path.endsWith('js')) {
@@ -21,20 +16,21 @@ app.use(express.static('public', {
     }
 }));
 app.use(express.json({ limit: '1mb' }));
-
+//
 app.listen(PORT, HOST, () => {
     console.log(`Server is running on http://${HOST}:${PORT}`);
 });
-
-const database = new Datastore('drawings.db');
-database.loadDatabase();
-
-  
-
 // app.get('/', (req, res) => {
 //     res.redirect('/index');
 // });
-
+app.get('/health', (req, res) => {
+    const message = "Healthy!";
+    res.status(200).json({ info: message })
+})
+app.get('/ready', (req, res) => {
+    const message = "Ready!";
+    res.status(200).json({ info: message })
+})
 app.get('/blocked', (req, res) => {
     const modifiedHTML = `
         <html>
@@ -51,36 +47,6 @@ app.get('/blocked', (req, res) => {
     `;
     res.send(modifiedHTML);
 })
-
-app.delete('/api/:id', (request, response) => {
-    const postId = request.params.id;
-    console.log(postId);
-    database.remove({ _id: postId }, {}, (err, numRemoved) => {
-        if (err) {
-            console.error(`Error deleting post with ID ${postId}.`, err);
-            response.status(500).send(`Error deleting post with ID ${postId}.`);
-        } else {
-            console.log(`Post with ID ${postId} deleted.`);
-            response.sendStatus(200);
-        }
-    });
-});
-app.get('/api', (request, response) => {
-    database.find({}, (err, data) => {
-        if (err) {
-            response.end();
-            return;
-        }
-        response.json(data);
-    });
-});
-app.post('/api', (request, response) => {
-    const data = request.body;
-    const timestamp = Date.now();
-    data.timestamp = timestamp;
-    database.insert(data);
-    response.json(data);
-});
 app.get('/geolocate', (req, res) => {
     const apiKey = process.env.api_key_new;
     const modifiedHTML = `
@@ -1930,342 +1896,3 @@ app.get('/data', (req, res) => {
 `;
     res.send(modifiedHTML);
 });
-
-// app.get('/itmanager', (req, res) => {
-//     const modifiedHTML = `
-//     <html lang="en">
-//     <head>
-//         <meta charset="utf-8">
-//         <meta name="viewport" content="width=device-width, initial-scale=1">
-//         <title>IT Manager</title>
-//         <link rel="stylesheet" href="style/style.css">
-//     </head>
-//     <div class="topnav">
-//         <div>
-//             <a class="name" href="/">
-//                 <p>Shahjehan (Shah) Solehria</p>
-//             </a>
-//             <h2 class="title">Dev-Ops | AWS/Azure Cloud | Security | Software</h2>
-//         </div>
-//         <div>
-//             <div id="menu-bar">
-//                 <div id="menu-buttons">
-//                     <div class="dropdown">
-//                         <button class="dropbtn">Experience</button>
-//                         <div class="dropdown-content">
-//                             <a href="/rivermeadow">Migration Engineer</a>
-//                             <a href="/seniorsystemsadmin">Senior IS Network Admin</a>
-//                             <a href="/i-sightII">Systems Administrator</a>
-//                             <a href="/i-sight">Junior Systems Admin</a>
-//                             <a href="/biolytical">Business Analyst</a>
-//                         </div>
-//                     </div>
-//                     <div class="dropdown">
-//                         <button class="dropbtn">Projects</button>
-//                         <div class="dropdown-content">
-//                             <a href="/fastapi">FastAPI Server</a>
-//                             <a href="/geolocate">Geo Location App</a>
-//                             <a href="/selfie">Selfie App</a>
-//                             <a href="/shahgpt">ChatGPT Clone</a>
-//                         </div>
-//                     </div>
-//                     <button onclick="highlightButton(this)" class="menu"><a href="/education">Education</a></button>
-//                     <button onclick="highlightButton(this)" class="menu"><a href="/skills">Skills</a></button>
-//                     <button onclick="highlightButton(this)" class="menu"><a href="/contactpage">Contact</a></button>
-//                     <button onclick="highlightButton(this)" class="menu">
-//                         <a href="Shah_Solehria_Resume.pdf" target="_blank">Resume</a>
-//                     </button>
-//                 </div>
-//             </div>
-//         </div>
-//         <div class="ham">
-//             <button class="hamburger-menu">
-//                 <div class="hamburger-line"></div>
-//                 <div class="hamburger-line"></div>
-//                 <div class="hamburger-line"></div>
-//             </button>
-//         </div>
-//         <script src="js/hamburger.js"></script>
-//     </div>
-//     <div class="workexp">
-//         <div class="workexpc">
-//             <h1>IT Manager</h1>
-//             <h2>- Omega Mechanical Ltd.</h2>
-//             <ul>
-//                 <li>
-//                     Drafted an Access TPS to automate and track onboarding, offboarding, asset
-//                     change requests, & licensing as it pertains to technology functional requirements
-//                 </li>
-//                 <li>Analyzed and presented new potential technologies</li>
-//                 <li>Mapped & configured Office retail edition licensing keys using Windows CMD</li>
-//                 <li>Supported Systems Administration for O365 Admin Center</li>
-//                 <li>Optimized slow or unresponsive computers using Windows CMD scripts</li>
-//                 <li>
-//                     Managed networking equipment including, switches, Network Attached Storage
-//                     (NAS), ethernet cables, accessories, Wireless Access Points, & Servers
-//                 </li>
-//                 <li>
-//                     Supported decision makers by compiling data from multiple databases, automating
-//                     reports, & developed an easy to read excel visual dashboard that caused purchases
-//                 </li>
-//                 <li>
-//                     Systematically enforced compliance by mapping licensing and working with
-//                     Microsoft to report the company Estimated Licensing Position (ELP)
-//                 </li>
-//                 <li>Published company-wide technology compliance announcements</li>
-//                 <li>Successfully coded a replacement company website</li>
-//                 <li>
-//                     Developed a networked Database Management System (DBMS) to speed up user
-//                     Autobid Mechanical software application interface, enforce compliance, & increase
-//                     bidding competitiveness
-//                 </li>
-//                 <li>
-//                     Optimized computers mechanical design computers to smoothly run (Windows
-//                     PowerShell - Ram Compression, BIOS Settings, background animations, paging file
-//                     size, etc.) AutoCAD software including Plant 3D, Navisworks, & BIM 360
-//                 </li>
-//                 <li>Deployed/ recovered workstations in conjunction with HR</li>
-//                 <li>Replaced broken or defective parts in laptops & fixed phone screens</li>
-//                 <li>
-//                     Ensured smooth integration between business & technology as it pertains to a
-//                     corporate office environment
-//                 </li>
-//             </ul>
-//         </div>
-//     </div>
-//     <br></br>
-//     <br></br>
-//     <br></br>
-//     <br></br>
-//     <br></br>
-//     <br></br>
-//     <div class="latnew">
-//         <h1>Quick Links</h1>
-//     </div>
-//     <br></br>
-//     <div class="features1">
-//         <div class="features-in">
-//             <div class="fea-item1">
-//                 <a href="abc.html">
-//                     <img style='height: 100%; width: 100%; object-fit: contain' src="image/abc.jpg" width="343" height="300"
-//                         alt="Skills" />
-//                 </a>
-//                 <div class="fea-1">
-//                     <h3>Work: ERP Sys Admin</h3>
-//                 </div>
-//             </div>
-//             <div class="fea-item2">
-//                 <a href="/contactpage">
-//                     <img style='height: 100%; width: 100%; object-fit: contain' src="image/contact.png" width="343"
-//                         height="300" alt="Contact Me" />
-//                 </a>
-//                 <div class="fea-1">
-//                     <h3>Contact Me</h3>
-//                 </div>
-//             </div>
-//             <div class="fea-item1">
-//                 <a href="/selfie">
-//                     <img style='height: 100%; width: 100%; object-fit: contain' src="image/active.jpg" width="343"
-//                         height="300" alt="nodeJS and neDB Selfie App" />
-//                 </a>
-//                 <div class="fea-1">
-//                     <h3>nodeJS and neDB Selfie App</h3>
-//                 </div>
-//             </div>
-//         </div>
-//     </div>
-//     <br></br>
-//     <br></br>
-//     <br></br>
-//     <br></br>
-//     <br></br>
-//     <br></br>
-//     <br></br>
-//     <div class="footer">
-//         <a href="/"><button class="dropbtn">Home</button></a>
-//         <div class="footmenu">
-//             <a href="/skills"><button class="dropbtn">Skills</button></a>
-//             <a href="/education"><button class="dropbtn">Education</button></a>
-//             <a href="/contactpage"><button class="dropbtn">Contact Me</button></a>
-//         </div>
-//     </div>
-//     </html>
-//     `;
-//     res.send(modifiedHTML);
-// });
-
-// app.get('/biolytical', (req, res) => {
-//     const modifiedHTML = `
-//     <html lang="en">
-
-//     <head>
-//         <meta charset="utf-8">
-//         <meta name="viewport" content="width=device-width, initial-scale=1">
-//         <title>Business Analyst</title>
-//         <link rel="stylesheet" href="style/style.css">
-//     </head>
-    
-//     <div class="topnav">
-//         <div>
-//             <a class="name" href="/index">
-//                 <p>Shahjehan (Shah) Solehria</p>
-//             </a>
-//             <h2 class="title">Dev-Ops | AWS/Azure Cloud | Security | Software</h2>
-//         </div>
-//         <div>
-//             <div id="menu-bar">
-//                 <div id="menu-buttons">
-//                     <div class="dropdown">
-//                         <button class="dropbtn">Experience</button>
-//                         <div class="dropdown-content">
-//                             <a href="/rivermeadow">Migration Engineer</a>
-//                             <a href="/seniorsystemsadmin">Senior IS Network Admin</a>
-//                             <a href="/i-sightII">Systems Administrator</a>
-//                             <a href="/i-sight">Junior Systems Admin</a>
-//                             <a href="/biolytical">Business Analyst</a>
-//                         </div>
-//                     </div>
-//                     <div class="dropdown">
-//                         <button class="dropbtn">Projects</button>
-//                         <div class="dropdown-content">
-//                             <a href="/fastapi">FastAPI Server</a>
-//                             <a href="/geolocate">Geo Location App</a>
-//                             <a href="/selfie">Selfie App</a>
-//                             <a href="/chat">ChatGPT Clone</a>
-//                         </div>
-//                     </div>
-//                     <button onclick="highlightButton(this)" class="menu"><a href="/education">Education</a></button>
-//                     <button onclick="highlightButton(this)" class="menu"><a href="/skills">Skills</a></button>
-//                     <button onclick="highlightButton(this)" class="menu"><a href="/contactpage">Contact</a></button>
-//                     <button onclick="highlightButton(this)" class="menu">
-//                         <a href="Shah_Solehria_Resume.pdf" target="_blank">Resume</a>
-//                     </button>
-//                 </div>
-//             </div>
-//         </div>
-//         <div class="ham">
-//         <button class="hamburger-menu">
-//             <div class="hamburger-line"></div>
-//             <div class="hamburger-line"></div>
-//             <div class="hamburger-line"></div>
-//         </button>
-//         </div>
-//         <script src="js/hamburger.js"></script>
-//     </div>
-    
-//     <div class="workexp">
-//         <div class="workexpc">
-//             <h1>Business Analyst (bioLytical Laboratories Inc.)</h1>
-//             <ul>
-//                 <li>End to end development & testing of DDX Document Management software</li>
-//                 <ul>
-//                     <li>
-//                         Ensured security & retrieval of stored documents through server accessible forced command line INI
-//                         files
-//                     </li>
-//                     <li>
-//                         Integrated DDX system with SYSPRO using hyperlinks & triggers to enable autofill
-//                         of form data
-//                     </li>
-//                     <li>
-//                         Configured outbound email of Purchase Orders & Sales Orders through supplier & customer
-//                         lookups & SMTP server integration
-//                     </li>
-//                     <li>Modified SQL Server ddxArchive database to store a number of document lookups</li>
-//                     <li>
-//                         Mapped documents in Port Form Mapper to be automatically recognized,
-//                         emailed, printed, & archived
-//                     </li>
-//                     <li>Enabled secure connections to SQL Server (TSQL & SQL) and Windows Server</li>
-//                     <li>Configured single sign on (SSO) in DDX to enable ease of access</li>
-//                     <li>
-//                         Configured document maps, SQL lookups, & TSQL security in publisher and viewer applications through
-//                         DDX
-//                         Admin program
-//                     </li>
-//                 </ul>
-//                 <li>
-//                     Administered Salesforce SAAS platform & provided ad hoc support for integration support & further
-//                     development
-//                 </li>
-//                 <li>Supported & administered SQL Server, Windows Server 2016, & SYSPRO</li>
-//                 <li>Effectively used the iTop ticketing system to keep track of user requests & problems</li>
-//                 <li>Configured alerts out of SCRIBE middleware through SMTP configuration</li>
-//             </ul>
-//         </div>
-//     </div>
-//     <br></br>
-//     <br></br>
-//     <br></br>
-//     <br></br>
-//     <br></br>
-//     <br></br>
-    
-//     <div class="latnew">
-//         <h1>Quick Links</h1>
-//     </div>
-    
-//     <br></br>
-//     <div class="features1">
-//         <div class="features-in">
-//             <div class="fea-item1">
-//                 <a href="/i-sight">
-//                     <img style='height: 100%; width: 100%; object-fit: contain' src="image/cons.png" width="343"
-//                         height="300" alt="Junior Sys Admin" />
-//                 </a>
-//                 <div class="fea-1">
-//                     <h3>Exp: Junior Sys Admin</h3>
-//                 </div>
-//             </div>
-//             <div class="fea-item2">
-//                 <a href="/i-sightII">
-//                     <img style='height: 100%; width: 100%; object-fit: contain' src="image/abc.jpg" width="343" height="300"
-//                         alt="Systems Administrator" />
-//                 </a>
-//                 <div class="fea-1">
-//                     <h3>Exp: Systems Administrator</h3>
-//                 </div>
-//             </div>
-//             <div class="fea-item3">
-//                 <a href="/data">
-//                     <img style='height: 100%; width: 100%; object-fit: contain' src="image/active.jpg" width="343"
-//                         height="300" alt="Link to Geo Selfie App" />
-//                 </a>
-//                 <div class="fea-1">
-//                     <h3>Geo Selfie App</h3>
-//                 </div>
-//             </div>
-//         </div>
-//     </div>
-//     <br></br>
-//     <br></br>
-//     <br></br>
-//     <br></br>
-//     <br></br>
-//     <br></br>
-//     <br></br>
-//     <div class="footer">
-    
-//         <a href="/"><button class="dropbtn">Home</button></a>
-    
-//         <div class="footmenu">
-//             <a href="/skills"><button class="dropbtn">Skills</button></a>
-//             <a href="/education"><button class="dropbtn">Education</button></a>
-//             <a href="/contactpage"><button class="dropbtn">Contact Me</button></a>
-//         </div>
-//     </div>
-    
-//     </html>
-//     `;
-//     res.send(modifiedHTML);
-// });
-
-
-// database.insert({name: 'Sheefamn', status: 'train'});
-// database.insert({name: 'cat', status: 'alive'});
-
-
-// app.get('/geolocate.html', (req, res) => {
-//     const googleMapScript = "<script src='https://maps.googleapis.com/maps/api/js?key=AIzaSyBM96ZlN_58vdEA7F5hbOyZSLkq_4Q5OuQ&libraries=places'></script>";
-//     res.send(googleMapScript);
-// })

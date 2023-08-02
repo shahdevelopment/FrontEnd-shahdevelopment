@@ -11,13 +11,13 @@ function changeInput(value) {
 }
 
 async function getMessage() {
-    const baseUrl = 'https://k8-backend.shahdevelopment.tech/chat'
+    const baseUrl = 'http://back-end-service:9000/chat'
 
-    var res = await fetch(baseUrl,
+    const res = await fetch(baseUrl,
         {
             method: 'GET'
         })
-    var key = await res.json()
+    const key = await res.json()
     const chatKey = key.info
 
     console.log('Clicked');
@@ -55,9 +55,7 @@ async function getMessage() {
         .catch(error => {
             console.error(error)
         })
-
 }
-
 
 inputContainer.addEventListener('keypress', function (event) {
     if (event.keyCode === 13) {

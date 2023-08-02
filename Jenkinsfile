@@ -4,175 +4,165 @@ def COLOR_MAP = [
 ]
 pipeline {
     agent {label 'ansible'}
-    options {
-        // Reuse the workspace from previous builds
-        ws("/opt/jenkins-slave/workspace/profile-site-build")
-    }
+    // options {
+        // // Reuse the workspace from previous builds
+        // ws("/opt/jenkins-slave/workspace/profile-site-build")
+    // }
     environment {
         registry_front = "shahdevelopment/kube"
         registry_back = "shahdevelopment/kube_back"
         registryCredentials = 'dockerhub'
-        SONAR_PROJECT_KEY = 'profile-site-nodejs'
+        
         frontend = 'profile_front'
         backend = 'profile_backend'
-        scannerHome = tool 'sonar4.7'
         k8 = 'k8s-definitions'
+
+        front = 'front-end-service'
+        back = 'back-end-service'
+
+        SONAR_PROJECT_KEY = 'profile-site-nodejs'
+        scannerHome = tool 'sonar4.7'
+
         frontgit = 'git@github.com:Shah0373/profile_front.git'
         backgit = 'git@github.com:Shah0373/profile_backend.git'
         defgit = 'git@github.com:Shah0373/k8s-definitions.git'
     }
     stages {
-        stage('frontend-clone') {
+        stage('setup test') {
+            steps {
+                npm install -g axios
+                npm install -g fs
+                npm install -g jest
+            }
+        }
+        stage('project-clone') {
             steps {
                 cleanWs()
                 withCredentials([sshUserPrivateKey(credentialsId: 'gitsshkey', keyFileVariable: 'SSH_KEY')]) {
-                    sshagent(['gitsshkey']) {
-                        sh "rm -rf * && git clone ${frontgit}"
+                    script {
+                        dir("${frontend}") {
+                            sshagent(['gitsshkey']) {
+                                sh "git clone ${frontgit}"
+                           }
+                        }
+                        dir("${backend}") {
+                            sshagent(['gitsshkey']) {
+                                sh "git clone ${backgit}"
+                           }
+                        }
+                        dir("${k8}") {
+                            sshagent(['gitsshkey']) {
+                                sh "git clone ${defgit}"
+                           }
+                        }
                     }
-                }
+                }    
+                
             }
         }
-        // stage('frontend-build') {
-        //     steps {
-        //         sh '''
-        //             cd ${frontend}
-        //             rm package-lock.json
-        //             rm package.json
-        //             npm cache clean --force
-        //             npm init -y
-        //             cd ..
-        //             cd ${frontend}
-        //             npm install express
-        //             npm install nedb
-        //             npm install dotenv
-        //         '''
-        //     }
-        // }
-        stage('frontend-sonarqube ') {
+        stage('sonarqube Analysis') {
             // environment {
             //     scannerHome = tool 'sonar4.7'
             // }
             steps {
                 withSonarQubeEnv('sonarqube') {
-                    sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${frontend}/"
+                    dir{} {
+                        script {
+                            sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${frontend}/"
+                            sh "sleep 1"
+                            sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${backend}/"
+                        }
+                    }
                 }
             }
         }
-        stage('frontend-docker-build') {
+        stage('docker-build') {
             steps {
-                script {
-                    dir("${frontend}") {
+                dir("${frontend}") {
+                    script {
                         dockerImage = docker.build "$registry_front" + ":v$BUILD_NUMBER"
+                        docker.withRegistry('', registryCredentials) {
+                            dockerImage.push("v$BUILD_NUMBER")
+                        }
+                        sh 'sleep 1'
+                    }
+                }
+                dir("${backend}") {
+                    script {
+                        dockerImage = docker.build "$registry_back" + ":v$BUILD_NUMBER"
+                        docker.withRegistry('', registryCredentials) {
+                            dockerImage.push("v$BUILD_NUMBER")
+                        }
                     }
                 }    
             }
         }
-        stage('frontend-upload-image') {
+        stage('run container') {
+            steps{
+                script {
+                    sh "docker run -dt --name ${backend} -p 9000:9000 ${registry_back}:v${BUILD_NUMBER}"
+                    sh 'sleep 1'
+                    sh "docker run -dt --name ${frontend} -p 3000:3000 ${registry_front}:v${BUILD_NUMBER} && sleep 20"
+                }
+            }
+        }
+        stage('Test') {
             steps {
-                script{
-                    docker.withRegistry('', registryCredentials) {
-                        dockerImage.push("v$BUILD_NUMBER")
+                dir("${frontend}") {
+                    script {
+                        def healthCheckResult = sh(returnStatus: true, script: "docker exec ${frontend} node dev/tests/path-check.js")
+                        if (healthCheckResult != 0) {
+                            currentBuild.result = 'UNSTABLE'
+                            error("front-Path operation health check failed!")
+                        }
+                        sh 'npm test'
                     }
-                }   
+                }
+                dir("${backend}") {
+                    script {
+                        def healthCheckResult = sh(returnStatus: true, script: "docker exec ${backend} node dev/tests/path-check.js")
+                        if (healthCheckResult != 0) {
+                            currentBuild.result = 'UNSTABLE'
+                            error("front-Path operation health check failed!")
+                        }
+                        sh 'npm test'
+                    }
+                }
+            }
+            post {
+                always {
+                    sh " Testing complete."
+                }
             }
         }
         stage('frontend-remove-image') {
             steps{
-                sh "docker rmi $registry_front:v$BUILD_NUMBER "
-            }
-        }
-        // stage('frontend-kubernetes-deploy') {
-        //     agent {label 'KOPS'}
-        //         steps {
-        //             dir("${k8}") {
-        //                 sh "kops update cluster --name kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --yes --admin"
-        //             }
-        //         }
-        // }
-        stage('backend-clone') {
-            steps {
-                withCredentials([sshUserPrivateKey(credentialsId: 'gitsshkey', keyFileVariable: 'SSH_KEY')]) {
-                    sshagent(['gitsshkey']) {
-                        sh "git clone ${backgit}"
-                    }
-                }            
-            }
-        }
-        // stage('backend-build') {
-        //     steps {
-        //         script {
-        //             dir("${backend}") {
-        //                 npm ci
-        //             }
-        //         }
-        //     }
-        // }
-        stage('backend-sonarqube') {
-            // environment {
-            //     scannerHome = tool 'sonar4.7'
-            // }
-            steps {
-                withSonarQubeEnv('sonarqube') {
-                    sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${backend}/"
+                script {
+                    sh "docker stop ${frontend} && docker rm ${frontend}"
+                    sh "docker stop ${backend} && docker rm ${backend}"
+                    sh "sleep 2"
+                    sh "docker rmi $registry_front:v$BUILD_NUMBER"
+                    sh "docker rmi $registry_back:v$BUILD_NUMBER "
                 }
             }
-        }
-        stage('backend-docker-build') {
-            steps {
-                script {
-                    dir("${backend}") {
-                        dockerImage = docker.build "$registry_back" + ":v$BUILD_NUMBER"
-                    }
-                }    
-            }
-        }
-        stage('backend-upload-image'){
-            steps {
-                script{
-                    docker.withRegistry('', registryCredentials) {
-                        dockerImage.push("v$BUILD_NUMBER")
-                    }
-                }   
-            }
-        }
-        stage('backend-remove-image') {
-            steps{
-                sh "docker rmi $registry_back:v$BUILD_NUMBER "
-            }
-        }
-        stage('kubernetes-pull') {
-            // agent {label 'ansible'}
-                steps {
-                    withCredentials([sshUserPrivateKey(credentialsId: 'gitsshkey', keyFileVariable: 'SSH_KEY')]) {
-                        sshagent(['gitsshkey']) {
-                            sh "rm -rf * && git clone ${defgit}"
-                        }
-                    }               
-                }   
         }
         stage('kubernetes-deploy') {
-            // agent {label 'KOPS'}
-                steps {
-                    dir("${k8}") {
-                        sh '''
-                            ls
-                            pwd
-                            /bin/bash move.sh
-                            helm upgrade my-app ./helm/profilecharts --set backimage=${registry_back}:v${BUILD_NUMBER} --set frontimage=${registry_front}:v${BUILD_NUMBER}
-                        '''
-                        // the below is for a fresh deploy
-                        // helm upgrade --install --force my-app helm/profilecharts --set backimage=${registry_back}:v${BUILD_NUMBER} --set frontimage=${registry_front}:v${BUILD_NUMBER}
-
-                    }
+            steps {
+                dir("${k8}") {
+                    sh "/bin/bash move.sh"
+                    sh "helm upgrade my-app ./helm/profilecharts --set backimage=${registry_back}:v${BUILD_NUMBER} --set frontimage=${registry_front}:v${BUILD_NUMBER}"
+                    // the below is for a fresh deploy
+                    // helm upgrade --install --force my-app helm/profilecharts --set backimage=${registry_back}:v${BUILD_NUMBER} --set frontimage=${registry_front}:v${BUILD_NUMBER}
                 }
-                post {
-                    always {
-                        echo 'Slack Notifications.'
-                        slackSend channel: '#devopsbuilds',
-                        color: COLOR_MAP[currentBuild.currentResult],
-                        message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NMUBER} \n More info at: ${env.BUILD_URL}"
-                    }
+            }
+            post {
+                always {
+                    echo 'Slack Notifications.'
+                    slackSend channel: '#devopsbuilds',
+                    color: COLOR_MAP[currentBuild.currentResult],
+                    message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
                 }
+            }
         }
     }  
 }

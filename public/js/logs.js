@@ -1,7 +1,7 @@
 getData();
 
 async function getData() {
-  const response = await fetch('/api');
+  const response = await fetch('http://back-end-service:9000/api');
   const data = await response.json();
 
   for (item of data) {
@@ -23,7 +23,8 @@ async function getData() {
     image.alt = 'Dan Shiffman making silly faces.';
 
     button.addEventListener('click', () => {
-      deletePost(item._id); // Call the deletePost function passing the post ID
+      deletePost(item._id);
+      // Call the deletePost function passing the post ID
     });
 
     root.append(mood, date, image, button);
@@ -33,7 +34,7 @@ async function getData() {
 }
 
 function deletePost(postId) {
-  fetch(`/api/${postId}`, {
+  fetch(`http://back-end-service:9000/api/${postId}`, {
     method: 'DELETE'
   })
     .then(response => {
