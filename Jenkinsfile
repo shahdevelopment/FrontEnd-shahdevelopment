@@ -28,13 +28,13 @@ pipeline {
         defgit = 'git@github.com:Shah0373/k8s-definitions.git'
     }
     stages {
-        stage('setup test') {
-            steps {
-                sh '''
-                    sudo /bin/bash /opt/jenkins-slave/workspace/scripts/npm-dev-dep.sh
-                '''
-            }
-        }
+        // stage('setup test') {
+        //     steps {
+        //         sh '''
+        //             sudo /bin/bash /opt/jenkins-slave/workspace/scripts/npm-dev-dep.sh
+        //         '''
+        //     }
+        // }
         stage('project-clone') {
             steps {
                 cleanWs()
@@ -146,13 +146,13 @@ pipeline {
                 }
             }
         }
-        stage('remove-dev-dependencies') {
-            steps{
-                sh '''
-                    sudo /bin/bash /opt/jenkins-slave/workspace/scripts/npm-dev-cln.sh                
-                '''
-            }
-        }
+        // stage('remove-dev-dependencies') {
+        //     steps{
+        //         sh '''
+        //             sudo /bin/bash /opt/jenkins-slave/workspace/scripts/npm-dev-cln.sh                
+        //         '''
+        //     }
+        // }
         stage('kubernetes-deploy') {
             steps {
                 dir("${k8}") {
