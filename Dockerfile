@@ -16,7 +16,7 @@ RUN apt-get install ca-certificates
 
 COPY package*.json .
 
-RUN npm install axios && npm ci --only=production && mkdir npm-tests
+RUN npm install axios && npm ci --only=production
 # && npm cache clean --force
 
 USER node
