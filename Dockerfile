@@ -16,7 +16,7 @@ RUN apt-get install ca-certificates
 
 COPY package*.json .
 
-RUN npm ci --only=production
+RUN npm install
 # && npm cache clean --force
 
 USER node
