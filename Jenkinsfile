@@ -31,9 +31,7 @@ pipeline {
         stage('setup test') {
             steps {
                 sh '''
-                    sudo -u ansible npm install -g axios
-                    sudo -u ansible npm install -g fs
-                    sudo -u ansible npm install -g jest
+                    sudo /bin/bash /opt/jenkins-slave/workspace/scripts/npm-dev-dep.sh
                 '''
             }
         }
@@ -151,9 +149,7 @@ pipeline {
         stage('remove-dev-dependencies') {
             steps{
                 sh '''
-                    sudo -u ansible npm uninstall -g axios
-                    sudo -u ansible npm uninstall -g fs
-                    sudo -u ansible npm uninstall -g jest
+                    sudo /bin/bash /opt/jenkins-slave/workspace/scripts/npm-dev-cln.sh                
                 '''
             }
         }
