@@ -114,7 +114,6 @@ pipeline {
                 }
                 dir("${backend}") {
                     script {
-                        sh 'kops update cluster --name=kubecluster.shahdevelopment.tech --state=kubedevops001 --yes --admin'
                         def healthCheckResult = sh(returnStatus: true, script: "docker exec ${backend} node dev/tests/path-check.js")
                         if (healthCheckResult != 0) {
                             currentBuild.result = 'UNSTABLE'
@@ -177,6 +176,7 @@ pipeline {
         stage('kubernetes-deploy') {
             steps {
                 dir("${k8}") {
+                    sh 'kops update cluster --name=kubecluster.shahdevelopment.tech --state=kubedevops001 --yes --admin'
                     sh "/bin/bash move.sh"
                     sh "helm upgrade my-app ./helm/profilecharts --set backimage=${registry_back}:v${BUILD_NUMBER} --set frontimage=${registry_front}:v${BUILD_NUMBER}"
                     // the below is for a fresh deploy
