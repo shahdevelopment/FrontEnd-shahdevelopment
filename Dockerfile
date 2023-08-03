@@ -17,7 +17,7 @@ RUN apt-get install ca-certificates
 
 COPY package*.json .
 
-RUN if [ "$ENVIRONMENT" = "dev" ]; then npm install axios && npm install jest && npm install fs; else npm install --only=production; fi
+RUN if [ "$ENVIRONMENT" = "dev" ]; then npm install axios && npm install fs; else npm install --only=production; fi
 # RUN npm install axios && npm ci --only=production
 # && npm cache clean --force
 

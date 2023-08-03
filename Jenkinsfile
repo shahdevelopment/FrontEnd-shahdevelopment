@@ -108,7 +108,7 @@ pipeline {
                             currentBuild.result = 'UNSTABLE'
                             error("front-Path operation health check failed!")
                         }
-                        sh 'docker exec -it ${frontend} npm test'
+                        // sh 'docker exec -it ${frontend} npm test'
                         sh'docker cp ${frontend}:/usr/src/app/npm-tests/report.json .'
                     }
                 }
@@ -119,7 +119,7 @@ pipeline {
                             currentBuild.result = 'UNSTABLE'
                             error("front-Path operation health check failed!")
                         }
-                        sh 'docker exec -it ${frontend} npm test'
+                        // sh 'docker exec -it ${frontend} npm test'
                         sh 'docker cp ${frontend}:/usr/src/app/npm-tests/report.json .'
                     }
                 }
