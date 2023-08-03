@@ -74,7 +74,7 @@ pipeline {
                 }
             }
         }
-        stage('docker-build') {
+        stage('docker-build-dev') {
             steps {
                 dir("${frontend}") {
                     script {
