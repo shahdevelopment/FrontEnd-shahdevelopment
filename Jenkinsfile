@@ -78,7 +78,7 @@ pipeline {
             steps {
                 dir("${frontend}") {
                     script {
-                        dockerImage = docker.build("--no-cache " + "$registry_front" + ":v$BUILD_NUMBER")
+                        dockerImage = docker.build("$registry_front" + ":v$BUILD_NUMBER")
                         sh 'sleep 1'
 
                         docker.withRegistry('', registryCredentials) {
@@ -89,7 +89,7 @@ pipeline {
                 }
                 dir("${backend}") {
                     script {
-                        dockerImage = docker.build("--no-cache " + "$registry_back" + ":v$BUILD_NUMBER")
+                        dockerImage = docker.build("$registry_back" + ":v$BUILD_NUMBER")
                         sh 'sleep 1'
 
                         docker.withRegistry('', registryCredentials) {
