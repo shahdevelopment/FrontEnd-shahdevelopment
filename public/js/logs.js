@@ -7,20 +7,22 @@ async function getData() {
   for (item of data) {
     const logDiv = document.getElementById('log_div');
     const root = document.createElement('p');
-    root.setAttribute('class', 'logs');
     const mood = document.createElement('div');
     const date = document.createElement('div');
     const image = document.createElement('img');
     const button = document.createElement('button');
+
     button.id = "delete";
     button.textContent = "Delete";
-
+    root.setAttribute('class', 'logs');
     mood.textContent = `Status: ${item.mood}`;
+
     // geo.textContent = `${item.lat}°, ${item.lon}°`;
+
     const dateString = new Date(item.timestamp).toLocaleString();
     date.textContent = dateString;
     image.src = item.image64;
-    image.alt = 'Dan Shiffman making silly faces.';
+    image.alt = 'Alt text for the image';
 
     button.addEventListener('click', () => {
       deletePost(item._id);
