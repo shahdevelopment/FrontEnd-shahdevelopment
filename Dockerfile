@@ -19,7 +19,7 @@ COPY package*.json .
 RUN npm install axios && npm ci --only=production
 # && npm cache clean --force
 
-USER node
+# USER node
 
 # ADD requirements.txt ./
 COPY . .
