@@ -114,6 +114,7 @@ pipeline {
                 }
                 dir("${backend}") {
                     script {
+                        sh 'kops update cluster --name=kubecluster.shahdevelopment.tech --state=kubedevops001 --yes --admin'
                         def healthCheckResult = sh(returnStatus: true, script: "docker exec ${backend} node dev/tests/path-check.js")
                         if (healthCheckResult != 0) {
                             currentBuild.result = 'UNSTABLE'
