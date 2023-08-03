@@ -27,7 +27,6 @@ pipeline {
         backgit = 'git@github.com:Shah0373/profile_backend.git'
         defgit = 'git@github.com:Shah0373/k8s-definitions.git'
     }
-    }
     stages {
         // stage('setup test') {
         //     steps {
