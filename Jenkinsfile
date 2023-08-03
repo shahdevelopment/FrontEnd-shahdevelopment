@@ -27,6 +27,7 @@ pipeline {
         backgit = 'git@github.com:Shah0373/profile_backend.git'
         defgit = 'git@github.com:Shah0373/k8s-definitions.git'
     }
+    }
     stages {
         // stage('setup test') {
         //     steps {
@@ -78,23 +79,14 @@ pipeline {
             steps {
                 dir("${frontend}") {
                     script {
-                        dockerImage = docker.build("$registry_front" + ":v$BUILD_NUMBER")
-                        sh 'sleep 1'
-
-                        docker.withRegistry('', registryCredentials) {
-                            dockerImage.push("v$BUILD_NUMBER")
-                        }
+                        dockerImage = docker.build("$registry_front" + ":v$BUILD_NUMBER", --build-arg ENVIRONMENT=dev .)
                         sh 'sleep 1'
                     }
                 }
                 dir("${backend}") {
                     script {
-                        dockerImage = docker.build("$registry_back" + ":v$BUILD_NUMBER")
+                        dockerImage = docker.build("$registry_back" + ":v$BUILD_NUMBER", --build-arg ENVIRONMENT=dev .)
                         sh 'sleep 1'
-
-                        docker.withRegistry('', registryCredentials) {
-                            dockerImage.push("v$BUILD_NUMBER")
-                        }
                     }
                 }    
             }
@@ -148,6 +140,31 @@ pipeline {
                     sh "docker rmi $registry_front:v$BUILD_NUMBER"
                     sh "docker rmi $registry_back:v$BUILD_NUMBER "
                 }
+            }
+        }
+        stage('docker-build') {
+            steps {
+                dir("${frontend}") {
+                    script {
+                        dockerImage = docker.build("$registry_front" + ":v$BUILD_NUMBER")
+                        sh 'sleep 1'
+
+                        docker.withRegistry('', registryCredentials) {
+                            dockerImage.push("v$BUILD_NUMBER")
+                        }
+                        sh 'sleep 1'
+                    }
+                }
+                dir("${backend}") {
+                    script {
+                        dockerImage = docker.build("$registry_back" + ":v$BUILD_NUMBER")
+                        sh 'sleep 1'
+
+                        docker.withRegistry('', registryCredentials) {
+                            dockerImage.push("v$BUILD_NUMBER")
+                        }
+                    }
+                }    
             }
         }
         // stage('remove-dev-dependencies') {
