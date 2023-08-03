@@ -121,6 +121,7 @@ pipeline {
                         }
                         // sh 'docker exec -it ${frontend} npm test'
                         sh 'docker cp ${frontend}:/usr/src/app/npm-tests/report.json .'
+                        sh 'curl '
                     }
                 }
             }
