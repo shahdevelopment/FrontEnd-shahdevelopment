@@ -79,13 +79,13 @@ pipeline {
             steps {
                 dir("${frontend}") {
                     script {
-                        dockerImage = docker.build("$registry_front" + ":v$BUILD_NUMBER", --build-arg ENVIRONMENT=dev .)
+                        dockerImage = docker.build("$registry_front" + ":v$BUILD_NUMBER", "--build-arg ENVIRONMENT=dev .")
                         sh 'sleep 1'
                     }
                 }
                 dir("${backend}") {
                     script {
-                        dockerImage = docker.build("$registry_back" + ":v$BUILD_NUMBER", --build-arg ENVIRONMENT=dev .)
+                        dockerImage = docker.build("$registry_back" + ":v$BUILD_NUMBER", "--build-arg ENVIRONMENT=dev .")
                         sh 'sleep 1'
                     }
                 }    
