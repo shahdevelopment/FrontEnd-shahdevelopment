@@ -1821,78 +1821,77 @@ app.get('/skills', (req, res) => {
 app.get('/data', (req, res) => {
     const modifiedHTML = `
     <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Skill | Project Work</title>
-        <link rel="stylesheet" href="style/style.css">
-    </head>
-    <body>
-        <div class="topnav">
-            <div>
-                <a class="name" href="/">
-                    <p>Shahjehan (Shah) Solehria</p>
-                </a>
-                <h2 class="title">Dev-Ops | AWS/Azure Cloud | Security | Software</h2>
-            </div>
-        </div>
-        <div>
-            <div id="menu-bar">
-                <div id="menu-buttons">
-                    <div class="dropdown">
-                        <button class="dropbtn">Experience</button>
-                        <div class="dropdown-content">
-                            <a href="/rivermeadow">Migration Engineer</a>
-                            <a href="/seniorsystemsadmin">Senior IS Network Admin</a>
-                            <a href="/i-sightII">Systems Administrator</a>
-                            <a href="/i-sight">Junior Systems Admin</a>
-                        </div>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Skill | Project Work</title>
+    <link rel="stylesheet" href="style/style.css">
+</head>
+<div class="topnav">
+    <div>
+        <a class="name" href="/">
+            <p>Shahjehan (Shah) Solehria</p>
+        </a>
+        <h2 class="title">Dev-Ops | AWS/Azure Cloud | Security | Software</h2>
+    </div>
+    <div>
+        <div id="menu-bar">
+            <div id="menu-buttons">
+                <div class="dropdown">
+                    <button class="dropbtn">Experience</button>
+                    <div class="dropdown-content">
+                        <a href="/rivermeadow">Migration Engineer</a>
+                        <a href="/seniorsystemsadmin">Senior IS Network Admin</a>
+                        <a href="/i-sightII">Systems Administrator</a>
+                        <a href="/i-sight">Junior Systems Admin</a>
                     </div>
-                    <div class="dropdown">
-                        <button class="dropbtn">Projects</button>
-                        <div class="dropdown-content">
-                            <a href="/fastapi">FastAPI Server</a>
-                            <a href="/geolocate">Geo Location App</a>
-                            <a href="/selfie">Selfie App</a>
-                            <a href="/shahgpt">ChatGPT Clone</a>
-                        </div>
-                    </div>
-                    <button onclick="highlightButton(this)" class="menu"><a href="/education">Education</a></button>
-                    <button onclick="highlightButton(this)" class="menu"><a href="/skills">Skills</a></button>
-                    <button onclick="highlightButton(this)" class="menu"><a href="/contactpage">Contact</a></button>
-                    <button onclick="highlightButton(this)" class="menu">
-                        <a href="Shah_Solehria_Resume.pdf" target="_blank">Resume</a>
-                    </button>
                 </div>
-            </div>
-
-            <div class="ham">
-                <button class="hamburger-menu">
-                <div class="hamburger-line"></div>
-                <div class="hamburger-line"></div>
-                <div class="hamburger-line"></div>
+                <div class="dropdown">
+                    <button class="dropbtn">Projects</button>
+                    <div class="dropdown-content">
+                        <a href="/fastapi">FastAPI Server</a>
+                        <a href="/geolocate">Geo Location App</a>
+                        <a href="/selfie">Selfie App</a>
+                        <a href="/shahgpt">ChatGPT Clone</a>
+                    </div>
+                </div>
+                <button onclick="highlightButton(this)" class="menu"><a href="/education">Education</a></button>
+                <button onclick="highlightButton(this)" class="menu"><a href="/skills">Skills</a></button>
+                <button onclick="highlightButton(this)" class="menu"><a href="/contactpage">Contact</a></button>
+                <button onclick="highlightButton(this)" class="menu">
+                    <a href="Shah_Solehria_Resume.pdf" target="_blank">Resume</a>
                 </button>
-            <div>
-            <script src="js/hamburger.js"></script>
-        </div>
-        <div class="workexp">
-            <div class="workexpc">
-                <h1>Selfie App Logs</h1>
-                <div><a href="/selfie" class="geo">Create Capture</a></div>
-                <script src="js/logs.js"></script>
             </div>
-        </div>
-        <div id="log_div">
-        </div>
-    <div class="footer">
-        <a href="/"><button class="dropbtn">Home</button></a>
-        <div class="footmenu">
-            <a href="/skills"><button class="dropbtn">Skills</button></a>
-            <a href="/education"><button class="dropbtn">Education</button></a>
-            <a href="/contactpage"><button class="dropbtn">Contact Me</button></a>
         </div>
     </div>
+    <div class="ham">
+        <button class="hamburger-menu">
+            <div class="hamburger-line"></div>
+            <div class="hamburger-line"></div>
+            <div class="hamburger-line"></div>
+        </button>
+    </div>
+    <script src="js/hamburger.js"></script>
+</div>
+<body>
+  <div class="workexp">
+    <div class="workexpc">
+      <h1>Selfie App Logs</h1>
+      <div><a href="/selfie" class="geo">Create Capture</a></div>
+      <script src="js/logs.js"></script>
+    </div>
+  </div>
+  <div id="log_div">
+  </div>
 </body>
+<div class="footer">
+  <a href="/"><button class="dropbtn">Home</button></a>
+  <div class="footmenu">
+    <a href="/skills"><button class="dropbtn">Skills</button></a>
+    <a href="/education"><button class="dropbtn">Education</button></a>
+    <a href="/contactpage"><button class="dropbtn">Contact Me</button></a>
+  </div>
+</div>
 </html>
 `;
     res.send(modifiedHTML);

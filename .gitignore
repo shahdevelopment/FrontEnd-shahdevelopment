@@ -1,7 +1,7 @@
 # Standardized
 npm-debug.log
 node_modules
-.vs
+.vscode
 .utils
 build_logs
 git-push.bat
@@ -9,3 +9,5 @@ dev/notes
 
 # Specific:
 .dockerignore
+test
+backup
