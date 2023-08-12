@@ -1188,7 +1188,6 @@ app.get('/selfie', (req, res) => {
         <title>nodeJS and neDB Selfie App</title>
         <link rel="stylesheet" href="style/style.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
-        <script src="js/camera.js"></script>
     </head>
     <div class="topnav">
         <div>
@@ -1257,6 +1256,7 @@ app.get('/selfie', (req, res) => {
                 <br />
                 <br />
                 <div><a href="/data" class="geo">Data Repo</a></div>
+            <script src="js/camera.js"></script>
             </div>
             <div class="cameraDiv">
                 </p>
