@@ -2,43 +2,7 @@ def COLOR_MAP = [
     'SUCCESS': 'good', 
     'FAILURE': 'danger',
 ]
-def maxRetries = 3
-def currentRetry = 0
-def retryIntervalSeconds = 30
-def retryableStep1 = {
-    withCredentials([sshUserPrivateKey(credentialsId: 'gitsshkey', keyFileVariable: 'SSH_KEY')]) {
-        script {
-            dir("${frontend}") {
-                sshagent(['gitsshkey']) {
-                    sh "git clone ${frontgit} ."
-                }
-            }
-        }
-    }
-}
-def retryableStep2 = {
-    withCredentials([sshUserPrivateKey(credentialsId: 'gitsshkey', keyFileVariable: 'SSH_KEY')]) {
-        script {
-            dir("${backend}") {
-                sshagent(['gitsshkey']) {
-                    sh "git clone ${backgit} ."
-                }
-            }
-        }
-    }
-}
-def retryableStep3 = {
-    withCredentials([sshUserPrivateKey(credentialsId: 'gitsshkey', keyFileVariable: 'SSH_KEY')]) {
-        script {
-            dir("${k8}") {
-                sshagent(['gitsshkey']) {
-                    sh "git clone ${defgit} ."
-                }
-            }
-        }
-    }    
 
-}
 
 
 pipeline {
@@ -75,6 +39,43 @@ pipeline {
         //     }
         // }
         stage('project-clone') {
+            def maxRetries = 3
+            def currentRetry = 0
+            def retryIntervalSeconds = 30
+            def retryableStep1 = {
+                withCredentials([sshUserPrivateKey(credentialsId: 'gitsshkey', keyFileVariable: 'SSH_KEY')]) {
+                    script {
+                        dir("${frontend}") {
+                            sshagent(['gitsshkey']) {
+                                sh "git clone ${frontgit} ."
+                            }
+                        }
+                    }
+                }
+            }
+            def retryableStep2 = {
+                withCredentials([sshUserPrivateKey(credentialsId: 'gitsshkey', keyFileVariable: 'SSH_KEY')]) {
+                    script {
+                        dir("${backend}") {
+                            sshagent(['gitsshkey']) {
+                                sh "git clone ${backgit} ."
+                            }
+                        }
+                    }
+                }
+            }
+            def retryableStep3 = {
+                withCredentials([sshUserPrivateKey(credentialsId: 'gitsshkey', keyFileVariable: 'SSH_KEY')]) {
+                    script {
+                        dir("${k8}") {
+                            sshagent(['gitsshkey']) {
+                                sh "git clone ${defgit} ."
+                            }
+                        }
+                    }
+                }    
+
+            }
             steps {
                 cleanWs()
                 while (currentRetry < maxRetries) {
