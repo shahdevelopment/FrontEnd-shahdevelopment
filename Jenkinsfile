@@ -38,26 +38,85 @@ pipeline {
         stage('project-clone') {
             steps {
                 cleanWs()
-                withCredentials([sshUserPrivateKey(credentialsId: 'gitsshkey', keyFileVariable: 'SSH_KEY')]) {
-                    script {
-                        dir("${frontend}") {
-                            sshagent(['gitsshkey']) {
-                                sh "git clone ${frontgit} ."
-                           }
-                        }
-                        dir("${backend}") {
-                            sshagent(['gitsshkey']) {
-                                sh "git clone ${backgit} ."
-                           }
-                        }
-                        dir("${k8}") {
-                            sshagent(['gitsshkey']) {
-                                sh "git clone ${defgit} ."
-                           }
+                def maxRetries = 3
+                def currentRetry = 0
+                def retryIntervalSeconds = 30
+                def retryableStep1 = {
+                    withCredentials([sshUserPrivateKey(credentialsId: 'gitsshkey', keyFileVariable: 'SSH_KEY')]) {
+                        script {
+                            dir("${frontend}") {
+                                sshagent(['gitsshkey']) {
+                                    sh "git clone ${frontgit} ."
+                                }
+                            }
                         }
                     }
-                }    
+                }
+                def retryableStep2 = {
+                    withCredentials([sshUserPrivateKey(credentialsId: 'gitsshkey', keyFileVariable: 'SSH_KEY')]) {
+                        script {
+                            dir("${backend}") {
+                                sshagent(['gitsshkey']) {
+                                    sh "git clone ${backgit} ."
+                                }
+                            }
+                        }
+                    }
+                }
+                def retryableStep3 = {
+                    withCredentials([sshUserPrivateKey(credentialsId: 'gitsshkey', keyFileVariable: 'SSH_KEY')]) {
+                        script {
+                            dir("${k8}") {
+                                sshagent(['gitsshkey']) {
+                                    sh "git clone ${defgit} ."
+                                }
+                            }
+                        }
+                    }    
                 
+                }
+                while (currentRetry < maxRetries) {
+                    try {
+                        retryableStep1()
+                        break // Step succeeded, exit the loop
+                    } catch (Exception ex) {
+                        currentRetry++
+                        if (currentRetry < maxRetries) {
+                            echo "Step failed, retrying in ${retryIntervalSeconds} seconds (Retry ${currentRetry} of ${maxRetries})"
+                            sleep time: retryIntervalSeconds, unit: 'SECONDS'
+                        } else {
+                            error "Max retries reached. Step failed after ${currentRetry} attempts."
+                        }
+                    }
+                }
+                while (currentRetry < maxRetries) {
+                    try {
+                        retryableStep2()
+                        break // Step succeeded, exit the loop
+                    } catch (Exception ex) {
+                        currentRetry++
+                        if (currentRetry < maxRetries) {
+                            echo "Step failed, retrying in ${retryIntervalSeconds} seconds (Retry ${currentRetry} of ${maxRetries})"
+                            sleep time: retryIntervalSeconds, unit: 'SECONDS'
+                        } else {
+                            error "Max retries reached. Step failed after ${currentRetry} attempts."
+                        }
+                    }
+                }
+                while (currentRetry < maxRetries) {
+                    try {
+                        retryableStep3()
+                        break // Step succeeded, exit the loop
+                    } catch (Exception ex) {
+                        currentRetry++
+                        if (currentRetry < maxRetries) {
+                            echo "Step failed, retrying in ${retryIntervalSeconds} seconds (Retry ${currentRetry} of ${maxRetries})"
+                            sleep time: retryIntervalSeconds, unit: 'SECONDS'
+                        } else {
+                            error "Max retries reached. retryableStep3 failed after ${currentRetry} attempts."
+                        }
+                    }
+                }
             }
         }
         stage('sonarqube Analysis') {
