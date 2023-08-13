@@ -163,20 +163,28 @@ pipeline {
             }
             post {
                 always {
-                    sh '''
-                        vm=("${backend}", "${frontend}")
-                        for i in "${vm[@]}"
-                        do
-                            docker kill $i
-                            docker rm $i
-                        done
-
-                        image=("${back_image_name}", "${front_image_name}")
-                        for i in "${image[@]}"
-                        do
-                            docker rmi $i
-                        done
-                    '''
+                    script {
+                        sh "vm=("${backend}", "${frontend}")"
+                        sh '''
+                            echo #########################################################################################################
+                            echo Cleaning local test containers..........
+                            echo #########################################################################################################                            for i in "${vm[@]}"
+                            do
+                                docker kill $i
+                                docker rm $i
+                            done
+                        '''
+                        sh "image=("${back_image_name}", "${front_image_name}")"
+                        sh '''
+                            echo #########################################################################################################
+                            echo Cleaning local test images..........
+                            echo #########################################################################################################
+                            for i in "${image[@]}"
+                            do
+                                docker rmi $i
+                            done
+                        '''  
+                    }
                 }
             }
         }
@@ -223,13 +231,18 @@ pipeline {
             }
             post {
                 always {
-                    sh '''
-                        image=("${back_image_name}", "${front_image_name}")
-                        for i in "${image[@]}"
-                        do
-                            docker rmi $i
-                        done
-                    '''
+                    script {
+                        sh "image=("${back_image_name}", "${front_image_name}")"
+                        sh '''
+                            echo #########################################################################################################
+                            echo Cleaning local prod images..........
+                            echo #########################################################################################################
+                            for i in "${image[@]}"
+                            do
+                                docker rmi $i
+                            done
+                        '''
+                    }
                 }
             }
         }
