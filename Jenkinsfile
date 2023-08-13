@@ -8,9 +8,7 @@ pipeline {
         // // Reuse the workspace from previous builds
         // ws("/opt/jenkins-slave/workspace/profile-site-build")
     // }
-    options {
-        options { skipDefaultCheckout() }
-    }
+    options { skipDefaultCheckout() }
     environment {
         registry_front = "shahdevelopment/kube"
         registry_back = "shahdevelopment/kube_back"
