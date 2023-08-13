@@ -164,7 +164,7 @@ pipeline {
             post {
                 always {
                     script {
-                        sh "vm=("${backend}", "${frontend}")"
+                        sh "vm=["${backend}", "${frontend}"]"
                         sh '''
                             echo #########################################################################################################
                             echo Cleaning local test containers..........
@@ -174,7 +174,7 @@ pipeline {
                                 docker rm $i
                             done
                         '''
-                        sh "image=("${back_image_name}", "${front_image_name}")"
+                        sh "image=["${back_image_name}", "${front_image_name}"]"
                         sh '''
                             echo #########################################################################################################
                             echo Cleaning local test images..........
@@ -232,7 +232,7 @@ pipeline {
             post {
                 always {
                     script {
-                        sh "image=("${back_image_name}", "${front_image_name}")"
+                        sh "image=["${back_image_name}", "${front_image_name}"]"
                         sh '''
                             echo #########################################################################################################
                             echo Cleaning local prod images..........
