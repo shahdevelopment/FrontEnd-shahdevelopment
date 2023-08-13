@@ -40,33 +40,36 @@ pipeline {
         stage('project-clone') {
             steps {
                 cleanWs()
-                withCredentials([sshUserPrivateKey(credentialsId: 'gitsshkey', keyFileVariable: 'SSH_KEY')]) {
                     script {
                         retry(4) {
-                            dir("${frontend}") {
-                                sshagent(['gitsshkey']) {
-                                    sh "git clone ${frontgit} ."
+                            withCredentials([sshUserPrivateKey(credentialsId: 'gitsshkey', keyFileVariable: 'SSH_KEY')]) {
+                                dir("${frontend}") {
+                                    sshagent(['gitsshkey']) {
+                                        sh "git clone ${frontgit} ."
+                                    }
                                 }
                             }
                         }
                         retry(4) {
-                            dir("${backend}") {
-                                sshagent(['gitsshkey']) {
-                                    sh "git clone ${backgit} ."
+                            withCredentials([sshUserPrivateKey(credentialsId: 'gitsshkey', keyFileVariable: 'SSH_KEY')]) {
+                                dir("${backend}") {
+                                    sshagent(['gitsshkey']) {
+                                        sh "git clone ${backgit} ."
+                                    }
                                 }
                             }
                         }
                         retry(4) {
-                            dir("${k8}") {
-                                sshagent(['gitsshkey']) {
-                                    sh "git clone ${defgit} ."
+                            withCredentials([sshUserPrivateKey(credentialsId: 'gitsshkey', keyFileVariable: 'SSH_KEY')]) {
+                                dir("${k8}") {
+                                    sshagent(['gitsshkey']) {
+                                        sh "git clone ${defgit} ."
+                                    }
                                 }
                             }
                         }
                     }
-                }    
-                
-            }
+            }    
         }
         stage('sonarqube Analysis') {
             // environment {
@@ -223,8 +226,6 @@ pipeline {
                 dir("${k8}") {
                     script {
                         sh '''
-
-
                             echo Validating cluster...............
                             echo ##########################################################################################################################################################
                             echo ##########################################################################################################################################################
@@ -336,7 +337,7 @@ pipeline {
             post {
                 always {
                     echo '########## Cluster Health Notification ##########'
-                    slackSend channel: '#devopsbuilds',
+                    slackSend channel: '#kube-cluster-health',
                     color: COLOR_MAP[currentBuild.currentResult],
                     message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
                 }
