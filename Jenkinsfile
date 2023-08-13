@@ -378,8 +378,6 @@ pipeline {
         stage('kubernetes-deploy') {
             steps {
                 dir("${k8}") {
-
-                    sh ''
                     sh "/bin/bash move.sh"
                     sh "helm upgrade my-app ./helm/profilecharts --set backimage=${registry_back}:v${BUILD_NUMBER} --set frontimage=${registry_front}:v${BUILD_NUMBER}"
                     // the below is for a fresh deploy
@@ -407,7 +405,7 @@ pipeline {
                         echo                    ░░░░░░  ░░░░░░░░░░░░░░      ░░░░            
                         echo                            ░░░░░░░░░░░░▒▒      ░░░░░░          
                         echo                            ░░░░░░░░░░░░░░░░      ░░░░░░        
-                        echo                            ░░░░░░░░░░░░░░░░░░      ░░░░░░      
+                        echo                            ░░░░░░░░░░░░░░░░░░░     ░░░░░░      
                         echo                            ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓    ░░░░░░    
                         echo                            ▓▓▓▓▓▓░░░░░░░░░░░░░░▓▓    ░░░░    
                         echo                            ▓▓░░░░░░░░░░░░░░░░░░▒▒    ░░░░░░  
