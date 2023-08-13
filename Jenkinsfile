@@ -139,7 +139,7 @@ pipeline {
                 }
             }
         }
-        stage('frontend-remove-image') {
+        stage('frontend-echoove-image') {
             steps{
                 script {
                     sh "docker stop ${frontend} && docker rm ${frontend}"
@@ -153,6 +153,14 @@ pipeline {
         stage('docker-build') {
             steps {
                 dir("${frontend}") {
+                    sh '''
+                        echo  ____   _    _  _____  _       _____      _____  _______  ______  ____
+                        echo |  _ ) | |  | ||_   _|| |     |  _  \    /   __||__   __||  ____||  __ \
+                        echo | |_|  | |  | |  | |  | |     | | |  |   |  (_     | |   | |__   | |__| |
+                        echo |  _ \ | |  | |  | |  | |     | | |  |    \__  \   | |   |  __|  |  ___/
+                        echo | |_) || |__| | _| |_ | |____ | |_/  /    ___)  |  | |   | |____ | | 
+                        echo |____/  \____/ |_____||______||_____/    |_____/   |_|   |______||_|                    
+                    '''
                     script {
                         dockerImage = docker.build("$registry_front" + ":v$BUILD_NUMBER")
                         sh 'sleep 1'
@@ -190,6 +198,58 @@ pipeline {
                     sh "helm upgrade my-app ./helm/profilecharts --set backimage=${registry_back}:v${BUILD_NUMBER} --set frontimage=${registry_front}:v${BUILD_NUMBER}"
                     // the below is for a fresh deploy
                     // helm upgrade --install --force my-app helm/profilecharts --set backimage=${registry_back}:v${BUILD_NUMBER} --set frontimage=${registry_front}:v${BUILD_NUMBER}
+                    
+                    sh '''
+                        echo                  
+                        echo                                ▓▓▓▓▒▒▒▒▒▒                      
+                        echo                              ▓▓▓▓▒▒▒▒▒▒▓▓▒▒▓▓                  
+                        echo                            ▓▓▓▓▓▓░░░░░░▓▓▓▓▓▓                  
+                        echo                          ▓▓▓▓▓▓░░░░░░░░░░▓▓▓▓▓▓                
+                        echo                          ▓▓▓▓░░░░░░░░░░░░▓▓▓▓▓▓                
+                        echo                    ░░    ▓▓▓▓░░░░░░░░░░░░░░▓▓▓▓                
+                        echo                    ░░░░  ▓▓▓▓░░░░░░░░░░░░░░▓▓▓▓▓▓              
+                        echo                    ░░░░    ▓▓░░░░░░░░░░░░██▓▓▓▓▓▓              
+                        echo                    ░░░░░░  ▓▓██░░░░░░░░▒▒██▓▓▓▓▓▓              
+                        echo                      ░░░░  ▓▓▓▓██▒▒░░▒▒░░██▓▓▓▓                
+                        echo                        ░░  ░░▓▓░░░░░░░░░░░░░░▓▓                
+                        echo                        ░░  ▒▒░░░░░░░░░░░░░░▓▓░░░░              
+                        echo                      ░░░░  ▒▒░░░░▒▒░░░░░░▓▓░░░░░░░░            
+                        echo                      ░░░░▓▓░░░░▒▒░░░░░░▓▓░░░░░░░░░░            
+                        echo                    ░░░░▒▒▓▓▒▒▓▓▓▓▓▓▓▓▓▓▓▓░░░░▒▒░░░░            
+                        echo                    ░░░░▓▓▓▓▓▓▓▓░░▓▓▓▓▓▓▓▓▓▓░░  ░░░░            
+                        echo                    ░░░░░░▓▓▓▓░░░░░░▓▓▓▓▓▓░░    ░░░░            
+                        echo                    ░░░░░░  ░░░░░░░░░░░░░░      ░░░░            
+                        echo                            ░░░░░░░░░░░░▒▒      ░░░░░░          
+                        echo                            ░░░░░░░░░░░░░░░░      ░░░░░░        
+                        echo                            ░░░░░░░░░░░░░░░░░░      ░░░░░░      
+                        echo                            ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓    ░░░░░░    
+                        echo                            ▓▓▓▓▓▓░░░░░░░░░░░░░░▓▓    ░░░░    
+                        echo                            ▓▓░░░░░░░░░░░░░░░░░░▒▒    ░░░░░░  
+                        echo                            ░░░░░░░░░░░░░░░░░░░░░      ░░  ░░  
+                        echo                            ░░░░░░░░░░░░░░░░░░         ░░    ░░
+                        echo                          ░░░░░░░░░░░░░░░░░░                    
+                        echo                        ░░░░░░░░░░░░░░░░░░░░                    
+                        echo                        ░░░░░░░░░░░░░░░░░░░░                    
+                        echo                      ░░░░░░░░░░░░░░░░░░░░░░                    
+                        echo                    ░░░░░░░░░░░░░░░░░░░░░░░░                    
+                        echo                  ░░░░░░░░░░░░░░░░░░░░░░░░░░                    
+                        echo                  ░░░░░░░░░░░░░░░░░░░░░░░░    ░░░░              
+                        echo                  ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░          
+                        echo                    ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░      
+                        echo                                  ░░░░░░░░                      
+                        echo                                  ░░░░░░░░░░                    
+                        echo                                  ░░░░░░░░░░                    
+                        echo                                  ░░░░░░░░░░                    
+                        echo                                    ░░░░░░░░                    
+                        echo                                    ░░░░░░░░                    
+                        echo                                    ░░░░░░                      
+                        echo                                    ░░░░░░                      
+                        echo                                    ░░░░░░                      
+                        echo                                    ░░░░                        
+                        echo                                    ░░░░                        
+                        echo                                  ░░░░░░                        
+                        echo                            ▒▒░░░░░░░░░░░░        
+                    '''      
                 }
             }
             post {
