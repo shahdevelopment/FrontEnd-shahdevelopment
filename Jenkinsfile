@@ -28,18 +28,44 @@ pipeline {
         backgit = 'git@github.com:Shah0373/profile_backend.git'
         defgit = 'git@github.com:Shah0373/k8s-definitions.git'
 
+        back_image_name="$registry_back" + ":v$BUILD_NUMBER"
+        front_image_name="$registry_front" + ":v$BUILD_NUMBER"
+
     }
     stages {
-        // stage('setup test') {
-        //     steps {
-        //         sh '''
-        //             sudo /bin/bash /opt/jenkins-slave/workspace/scripts/npm-dev-dep.sh
-        //         '''
-        //     }
-        // }
-        stage('project-clone') {
+        stage('clean-workspace') {
             steps {
                 cleanWs()
+                sh '''
+                    echo Gather info
+                    echo --------------------------------------------------------------------
+                    echo --------------------------------------------------------------------
+                    echo
+                    free -h -t
+                    echo
+                    echo --------------------------------------------------------------------
+                    echo
+                    df -h
+                    echo
+                    echo --------------------------------------------------------------------
+                    echo
+                    whoami
+                    echo
+                    echo --------------------------------------------------------------------
+                    echo
+                    docker ps
+                    echo
+                    echo --------------------------------------------------------------------
+                    echo
+                    docker images
+                    echo
+                    echo --------------------------------------------------------------------
+                    echo --------------------------------------------------------------------
+                '''
+            }
+        }
+        stage('project-clone') {
+            steps {
                     script {
                         retry(4) {
                             withCredentials([sshUserPrivateKey(credentialsId: 'gitsshkey', keyFileVariable: 'SSH_KEY')]) {
@@ -138,14 +164,14 @@ pipeline {
             post {
                 always {
                     sh '''
-                        vm=($(docker ps -a | awk 'NR>1 {print $1}'))
+                        vm=("${backend}", "${frontend}")
                         for i in "${vm[@]}"
                         do
                             docker kill $i
                             docker rm $i
                         done
 
-                        image=($(docker images | awk 'NR>1 {print $3}'))
+                        image=("${back_image_name}", "${front_image_name}")
                         for i in "${image[@]}"
                         do
                             docker rmi $i
@@ -198,14 +224,7 @@ pipeline {
             post {
                 always {
                     sh '''
-                        vm=($(docker ps -a | awk 'NR>1 {print $1}'))
-                        for i in "${vm[@]}"
-                        do
-                            docker kill $i
-                            docker rm $i
-                        done
-
-                        image=($(docker images | awk 'NR>1 {print $3}'))
+                        image=("${back_image_name}", "${front_image_name}")
                         for i in "${image[@]}"
                         do
                             docker rmi $i
