@@ -186,14 +186,113 @@ pipeline {
         //         '''
         //     }
         // }
+        stage('kubernetes-clustervalidation') {
+            steps {
+                dir("${k8}") {
+                    script {
+                        sh '''
+                            echo Validating cluster...............
+                            echo ##########################################################################################################################################################
+                            kubectl get pods -n profile-site 2>/dev/null
+                            profile-site=$(echo $?)
+                            kubectl get pods -n ingress-nginx 2>/dev/null
+                            ingress-nginx=$(echo $?)
+
+
+
+                            if [ "$profile-site" -ne 0 ] || [ "$ingress-nginx" -ne 0 ]; then
+                                echo Updating cluster....................
+                                echo ##########################################################################################################################################################
+                                kops update cluster --config=/home/ansible/.kube/config --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --yes --admin
+                                kubectl get pods -n profile-site 2>/dev/null
+                                profile-site=$(echo $?)
+                                kubectl get pods -n ingress-nginx 2>/dev/null
+                                ingress-nginx=$(echo $?)
+
+                                if [ "$profile-site" -ne 0 ] || [ "$ingress-nginx" -ne 0 ]; then
+                                    /home/ansible/kube/./default-scale
+
+                                    timeout_duration=600  # Specify timeout duration in seconds
+                                    start_time=$(date +%s)
+
+                                    until [ "$error" == 0 ]
+                                    do
+                                        if [ "$elapsed_time" -ge "$timeout_duration" ]; then
+                                            echo "Timeout reached"
+                                            break
+                                        fi
+                                        echo Checking cluster availability..............................................
+                                        echo ##########################################################################################################################################################
+                                        kops validate cluster --config=/home/ansible/.kube/config --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --time 1m 2>/dev/null
+                                        error=$(echo $?)
+                                        elapsed_time=$((time + 60))
+                                        echo Time Elapsed: $elapsed_time seconds......
+                                    done
+                                    kubectl get pods -n profile-site
+                                    profile-site=$(echo $?)
+                                    kubectl get pods -n ingress-nginx
+                                    ingress-nginx=$(echo $?)
+
+                                    if [ "$profile-site" -ne 0 ] || [ "$ingress-nginx" -ne 0 ]; then; then
+                                            echo Cluster update failed. Temporarily unable to resolve endpoint.
+                                            if ["$profile-site" -ne 0]
+                                                profile-site namespace failed to update.
+                                            fi
+                                            if ["$ingress-nginx" -ne 0]
+                                                echo Nginx ingress controller failed to update.
+                                            fi
+                                            echo ##########################################################################################################################################################
+                                            echo ##########################################################################################################################################################
+                                            echo Diagnostic info:
+                                            echo ------------------------------------------------------------------------------------------------------------------------------
+                                            echo ------------------------------------------------------------------------------------------------------------------------------
+                                            echo
+                                            echo kubectl get all:
+                                            echo
+                                            kubectl get all
+                                            echo
+                                            echo ------------------------------------------------------------------------------------------------------------------------------
+                                            echo
+                                            echo kubectl get nodes:
+                                            echo
+                                            kubectl get nodes
+                                            echo
+                                            echo ------------------------------------------------------------------------------------------------------------------------------
+                                            echo
+                                            echo kops validate cluster --config=/home/ansible/.kube/config --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001:
+                                            echo
+                                            kops validate cluster --config=/home/ansible/.kube/config --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001
+                                            echo
+                                            echo ------------------------------------------------------------------------------------------------------------------------------
+                                            echo
+                                            echo kubectl describe all -n profile-site:
+                                            echo
+                                            kubectl describe all -n profile-site
+                                            echo
+                                            echo ------------------------------------------------------------------------------------------------------------------------------
+                                            echo
+                                            echo kubectl describe all -n ingress-nginx
+                                            echo
+                                            kubectl describe all -n ingress-nginx
+                                            break
+                                    fi
+
+                                else
+                                    echo Cluster is now up and runnning!
+                                fi
+                            else
+                                echo Cluster is runnning!
+                            fi
+                        '''
+                    }
+                }
+            }
+        }
         stage('kubernetes-deploy') {
             steps {
                 dir("${k8}") {
-                    sh '''
-                        kubectl get pods -n profile-site
-                        if
-                    '''
-                    sh 'kops update cluster --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --yes --admin'
+
+                    sh ''
                     sh "/bin/bash move.sh"
                     sh "helm upgrade my-app ./helm/profilecharts --set backimage=${registry_back}:v${BUILD_NUMBER} --set frontimage=${registry_front}:v${BUILD_NUMBER}"
                     // the below is for a fresh deploy
