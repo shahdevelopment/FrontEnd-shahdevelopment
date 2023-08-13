@@ -27,6 +27,7 @@ pipeline {
         frontgit = 'git@github.com:Shah0373/profile_front.git'
         backgit = 'git@github.com:Shah0373/profile_backend.git'
         defgit = 'git@github.com:Shah0373/k8s-definitions.git'
+
     }
     stages {
         // stage('setup test') {
@@ -133,30 +134,43 @@ pipeline {
             }
             post {
                 always {
-                    sh "echo Testing complete."
+                    sh '''
+                        vm=($(docker ps -a | awk 'NR>1 {print $1}'))
+                        for i in "${vm[@]}"
+                        do
+                            docker kill $i
+                            docker rm $i
+                        done
+
+                        image=($(docker images | awk 'NR>1 {print $3}'))
+                        for i in "${image[@]}"
+                        do
+                            docker rmi $i
+                        done
+                    '''
                 }
             }
         }
-        stage('frontend-echoove-image') {
-            steps{
-                script {
-                    sh "docker stop ${frontend} && docker rm ${frontend}"
-                    sh "docker stop ${backend} && docker rm ${backend}"
-                    sh "sleep 2"
-                    sh "docker rmi $registry_front:v$BUILD_NUMBER"
-                    sh "docker rmi $registry_back:v$BUILD_NUMBER "
-                }
-            }
-        }
+        // stage('frontend-echoove-image') {
+        //     steps{
+        //         script {
+        //             sh "docker stop ${frontend} && docker rm ${frontend}"
+        //             sh "docker stop ${backend} && docker rm ${backend}"
+        //             sh "sleep 2"
+        //             sh "docker rmi $registry_front:v$BUILD_NUMBER"
+        //             sh "docker rmi $registry_back:v$BUILD_NUMBER "
+        //         }
+        //     }
+        // }
         stage('docker-build') {
             steps {
                 dir("${frontend}") {
-                    //     echo  ____   _    _  _____  _       _____       _____  ______  ______  _____
-                    //     echo |  _ ) | |  | ||_   _|| |     |  _   |    /   __||__  __||  ____||  __ |
-                    //     echo | |_|  | |  | |  | |  | |     | | |  |   |  (_     | |   | |__   | |__| |
-                    //     echo |  _ | | |  | |  | |  | |     | | |  |    |__  |   | |   |  __|  |  ___/
-                    //     echo | |_) || |__| | _| |_ | |____ | |_/  /    ___)  |  | |   | |____ | |
-                    //     echo |____/ |_____/ |_____||______||_____/    |_____/   |_|   |______||_|
+                    //     echo " ____   _    _  _____  _       _____       _____  ______  ______  _____   "
+                    //     echo "|  _ ) | |  | ||_   _|| |     |  _   |    /   __||__  __||  ____||  __ |  "
+                    //     echo "| |_|  | |  | |  | |  | |     | | |  |   |  (_     | |   | |__   | |__| | "
+                    //     echo "|  _ | | |  | |  | |  | |     | | |  |    |__  |   | |   |  __|  |  ___/  "
+                    //     echo "| |_) || |__| | _| |_ | |____ | |_/  /    ___)  |  | |   | |____ | |      "
+                    //     echo "|____/ |_____/ |_____||______||_____/    |_____/   |_|   |______||_|      "
                     script {
                         dockerImage = docker.build("$registry_front" + ":v$BUILD_NUMBER")
                         sh 'sleep 1'
@@ -178,6 +192,24 @@ pipeline {
                     }
                 }    
             }
+            post {
+                always {
+                    sh '''
+                        vm=($(docker ps -a | awk 'NR>1 {print $1}'))
+                        for i in "${vm[@]}"
+                        do
+                            docker kill $i
+                            docker rm $i
+                        done
+
+                        image=($(docker images | awk 'NR>1 {print $3}'))
+                        for i in "${image[@]}"
+                        do
+                            docker rmi $i
+                        done
+                    '''
+                }
+            }
         }
         // stage('remove-dev-dependencies') {
         //     steps{
@@ -191,25 +223,40 @@ pipeline {
                 dir("${k8}") {
                     script {
                         sh '''
+
+
                             echo Validating cluster...............
                             echo ##########################################################################################################################################################
-                            kubectl get pods -n profile-site 2>/dev/null
-                            profile-site=$(echo $?)
-                            kubectl get pods -n ingress-nginx 2>/dev/null
-                            ingress-nginx=$(echo $?)
-
-
-
-                            if [ "$profile-site" -ne 0 ] || [ "$ingress-nginx" -ne 0 ]; then
+                            echo ##########################################################################################################################################################
+                            set +e
+                            def profile-site-output = sh(
+                                returnStatus: true,
+                                script: 'kubectl get pods -n profile-site'
+                            )
+                            def ingress-nginx-output = sh(
+                                returnStatus: true,
+                                script: 'kubectl get pods -n ingress-nginx'
+                            )
+                            set -e
+                            echo ##########################################################################################################################################################
+                            echo
+                            echo
+                            if [ profile-site-output -ne 0 ] || [ ingress-nginx-output -ne 0 ]; then
                                 echo Updating cluster....................
                                 echo ##########################################################################################################################################################
+                                echo ##########################################################################################################################################################
                                 kops update cluster --config=/home/ansible/.kube/config --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --yes --admin
-                                kubectl get pods -n profile-site 2>/dev/null
-                                profile-site=$(echo $?)
-                                kubectl get pods -n ingress-nginx 2>/dev/null
-                                ingress-nginx=$(echo $?)
-
-                                if [ "$profile-site" -ne 0 ] || [ "$ingress-nginx" -ne 0 ]; then
+                                // set +e
+                                // def profile-site-output = sh(
+                                //     returnStatus: true,
+                                //     script: 'kubectl get pods -n profile-site'
+                                // )
+                                // def ingress-nginx-output = sh(
+                                //     returnStatus: true,
+                                //     script: 'kubectl get pods -n ingress-nginx'
+                                // )
+                                // set -e
+                                if [ profile-site-output -ne 0 ] || [ ingress-nginx-output -ne 0 ]; then
                                     /home/ansible/kube/./default-scale
 
                                     timeout_duration=600  # Specify timeout duration in seconds
@@ -228,17 +275,16 @@ pipeline {
                                         elapsed_time=$((time + 60))
                                         echo Time Elapsed: $elapsed_time seconds......
                                     done
-                                    kubectl get pods -n profile-site
-                                    profile-site=$(echo $?)
-                                    kubectl get pods -n ingress-nginx
-                                    ingress-nginx=$(echo $?)
-
-                                    if [ "$profile-site" -ne 0 ] || [ "$ingress-nginx" -ne 0 ]; then; then
+                                    // kubectl get pods -n profile-site
+                                    // profile-site=$(echo $?)
+                                    // kubectl get pods -n ingress-nginx
+                                    // ingress-nginx=$(echo $?)
+                                    if [ profile-site-output -ne 0 ] || [ ingress-nginx-output -ne 0 ]; then; then
                                             echo Cluster update failed. Temporarily unable to resolve endpoint.
-                                            if ["$profile-site" -ne 0]
+                                            if [ profile-site-output -ne 0]
                                                 profile-site namespace failed to update.
                                             fi
-                                            if ["$ingress-nginx" -ne 0]
+                                            if [ ingress-nginx-output -ne 0]
                                                 echo Nginx ingress controller failed to update.
                                             fi
                                             echo ##########################################################################################################################################################
@@ -285,6 +331,14 @@ pipeline {
                             fi
                         '''
                     }
+                }
+            }
+            post {
+                always {
+                    echo '########## Cluster Health Notification ##########'
+                    slackSend channel: '#devopsbuilds',
+                    color: COLOR_MAP[currentBuild.currentResult],
+                    message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
                 }
             }
         }
