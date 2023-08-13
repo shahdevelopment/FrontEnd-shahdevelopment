@@ -191,6 +191,10 @@ pipeline {
         stage('kubernetes-deploy') {
             steps {
                 dir("${k8}") {
+                    sh '''
+                        kubectl get pods -n profile-site
+                        if
+                    '''
                     sh 'kops update cluster --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --yes --admin'
                     sh "/bin/bash move.sh"
                     sh "helm upgrade my-app ./helm/profilecharts --set backimage=${registry_back}:v${BUILD_NUMBER} --set frontimage=${registry_front}:v${BUILD_NUMBER}"
