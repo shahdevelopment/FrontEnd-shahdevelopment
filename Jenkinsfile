@@ -30,6 +30,8 @@ pipeline {
 
         back_image_name="$registry_back" + ":v$BUILD_NUMBER"
         front_image_name="$registry_front" + ":v$BUILD_NUMBER"
+        vm = ['${backend}' + ' ${frontend}']
+        image = ['${back_image_name}' + ' ${front_image_name}']
 
     }
     stages {
@@ -164,23 +166,24 @@ pipeline {
             post {
                 always {
                     script {
-                        sh "vm = ['${backend}' + ' ${frontend}']"
+                        sh "export VM=$vm" 
+                        sh "export imgur=$image"
                         sh '''
+                            export VM=$vm 
                             echo #########################################################################################################
                             echo Cleaning local test containers..........
                             echo #########################################################################################################                            
-                            for i in "${vm[@]}"
+                            for i in "${VM[@]}"
                             do
                                 docker kill $i
                                 docker rm $i
                             done
                         '''
-                        sh "image = ['${back_image_name}' + ' ${front_image_name}']"
                         sh '''
                             echo #########################################################################################################
                             echo Cleaning local test images..........
                             echo #########################################################################################################
-                            for i in "${image[@]}"
+                            for i in "${imgur[@]}"
                             do
                                 docker rmi $i
                             done
