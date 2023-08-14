@@ -164,17 +164,18 @@ pipeline {
             post {
                 always {
                     script {
-                        sh "vm = ["$${backend}" + " $${frontend}"]"
+                        sh "vm = ['${backend}' + ' ${frontend}']"
                         sh '''
                             echo #########################################################################################################
                             echo Cleaning local test containers..........
-                            echo #########################################################################################################                            for i in "${vm[@]}"
+                            echo #########################################################################################################                            
+                            for i in "${vm[@]}"
                             do
                                 docker kill $i
                                 docker rm $i
                             done
                         '''
-                        sh "image = ["$${back_image_name}" + " $${front_image_name}"]"
+                        sh "image = ['${back_image_name}' + ' ${front_image_name}']"
                         sh '''
                             echo #########################################################################################################
                             echo Cleaning local test images..........
