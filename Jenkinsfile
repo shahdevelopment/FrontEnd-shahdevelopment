@@ -164,7 +164,7 @@ pipeline {
             post {
                 always {
                     script {
-                        sh "vm=["${backend}", "${frontend}"]"
+                        sh "vm = ["$${backend}" + " $${frontend}"]"
                         sh '''
                             echo #########################################################################################################
                             echo Cleaning local test containers..........
@@ -174,7 +174,7 @@ pipeline {
                                 docker rm $i
                             done
                         '''
-                        sh "image=["${back_image_name}", "${front_image_name}"]"
+                        sh "image = ["$${back_image_name}" + " $${front_image_name}"]"
                         sh '''
                             echo #########################################################################################################
                             echo Cleaning local test images..........
@@ -232,7 +232,7 @@ pipeline {
             post {
                 always {
                     script {
-                        sh "image=["${back_image_name}", "${front_image_name}"]"
+                        sh "image=["$${back_image_name}", "$${front_image_name}"]"
                         sh '''
                             echo #########################################################################################################
                             echo Cleaning local prod images..........
@@ -271,24 +271,17 @@ pipeline {
                                 script: 'kubectl get pods -n ingress-nginx'
                             )
                             set -e
+
                             echo ##########################################################################################################################################################
                             echo
                             echo
                             if [ profile-site-output -ne 0 ] || [ ingress-nginx-output -ne 0 ]; then
+
                                 echo Updating cluster....................
                                 echo ##########################################################################################################################################################
                                 echo ##########################################################################################################################################################
                                 kops update cluster --config=/home/ansible/.kube/config --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --yes --admin
-                                // set +e
-                                // def profile-site-output = sh(
-                                //     returnStatus: true,
-                                //     script: 'kubectl get pods -n profile-site'
-                                // )
-                                // def ingress-nginx-output = sh(
-                                //     returnStatus: true,
-                                //     script: 'kubectl get pods -n ingress-nginx'
-                                // )
-                                // set -e
+                                
                                 if [ profile-site-output -ne 0 ] || [ ingress-nginx-output -ne 0 ]; then
                                     /home/ansible/kube/./default-scale
 
