@@ -280,14 +280,15 @@ pipeline {
                             echo ##########################################################################################################################################################
                             echo
                             echo
-                            if [ profile-site-output -ne 0 ] || [ ingress-nginx-output -ne 0 ]; then
-
+                            if [ profile-site-output -ne 0 ] || [ ingress-nginx-output -ne 0 ]
+                            then
                                 echo Updating cluster....................
                                 echo ##########################################################################################################################################################
                                 echo ##########################################################################################################################################################
                                 kops update cluster --config=/home/ansible/.kube/config --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --yes --admin
                                 
-                                if [ profile-site-output -ne 0 ] || [ ingress-nginx-output -ne 0 ]; then
+                                if [ profile-site-output -ne 0 ] || [ ingress-nginx-output -ne 0 ]
+                                then
                                     /home/ansible/kube/./default-scale
 
                                     timeout_duration=600  # Specify timeout duration in seconds
@@ -295,7 +296,8 @@ pipeline {
 
                                     until [ "$error" == 0 ]
                                     do
-                                        if [ "$elapsed_time" -ge "$timeout_duration" ]; then
+                                        if [ "$elapsed_time" -ge "$timeout_duration" ]
+                                        then
                                             echo "Timeout reached"
                                             break
                                         fi
@@ -312,50 +314,50 @@ pipeline {
                                     kubectl get pods -n ingress-nginx
                                     profile-site-output = $?
                                     set -e
-                                    if [ profile-site-output -ne 0 ] || [ ingress-nginx-output -ne 0 ]; then; then
-                                            echo Cluster update failed. Temporarily unable to resolve endpoint.
-                                            if [ profile-site-output -ne 0]
-                                                profile-site namespace failed to update.
-                                            fi
-                                            if [ ingress-nginx-output -ne 0]
-                                                echo Nginx ingress controller failed to update.
-                                            fi
-                                            echo ##########################################################################################################################################################
-                                            echo ##########################################################################################################################################################
-                                            echo Diagnostic info:
-                                            echo ------------------------------------------------------------------------------------------------------------------------------
-                                            echo ------------------------------------------------------------------------------------------------------------------------------
-                                            echo
-                                            echo kubectl get all:
-                                            echo
-                                            kubectl get all
-                                            echo
-                                            echo ------------------------------------------------------------------------------------------------------------------------------
-                                            echo
-                                            echo kubectl get nodes:
-                                            echo
-                                            kubectl get nodes
-                                            echo
-                                            echo ------------------------------------------------------------------------------------------------------------------------------
-                                            echo
-                                            echo kops validate cluster --config=/home/ansible/.kube/config --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001:
-                                            echo
-                                            kops validate cluster --config=/home/ansible/.kube/config --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001
-                                            echo
-                                            echo ------------------------------------------------------------------------------------------------------------------------------
-                                            echo
-                                            echo kubectl describe all -n profile-site:
-                                            echo
-                                            kubectl describe all -n profile-site
-                                            echo
-                                            echo ------------------------------------------------------------------------------------------------------------------------------
-                                            echo
-                                            echo kubectl describe all -n ingress-nginx
-                                            echo
-                                            kubectl describe all -n ingress-nginx
-                                            break
+                                    if [ profile-site-output -ne 0 ] || [ ingress-nginx-output -ne 0 ]
+                                    then
+                                        echo Cluster update failed. Temporarily unable to resolve endpoint.
+                                        if [ profile-site-output -ne 0]
+                                            profile-site namespace failed to update.
+                                        fi
+                                        if [ ingress-nginx-output -ne 0]
+                                            echo Nginx ingress controller failed to update.
+                                        fi
+                                        echo ##########################################################################################################################################################
+                                        echo ##########################################################################################################################################################
+                                        echo Diagnostic info:
+                                        echo ------------------------------------------------------------------------------------------------------------------------------
+                                        echo ------------------------------------------------------------------------------------------------------------------------------
+                                        echo
+                                        echo kubectl get all:
+                                        echo
+                                        kubectl get all
+                                        echo
+                                        echo ------------------------------------------------------------------------------------------------------------------------------
+                                        echo
+                                        echo kubectl get nodes:
+                                        echo
+                                        kubectl get nodes
+                                        echo
+                                        echo ------------------------------------------------------------------------------------------------------------------------------
+                                        echo
+                                        echo kops validate cluster --config=/home/ansible/.kube/config --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001:
+                                        echo
+                                        kops validate cluster --config=/home/ansible/.kube/config --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001
+                                        echo
+                                        echo ------------------------------------------------------------------------------------------------------------------------------
+                                        echo
+                                        echo kubectl describe all -n profile-site:
+                                        echo
+                                        kubectl describe all -n profile-site
+                                        echo
+                                        echo ------------------------------------------------------------------------------------------------------------------------------
+                                        echo
+                                        echo kubectl describe all -n ingress-nginx
+                                        echo
+                                        kubectl describe all -n ingress-nginx
+                                        break
                                     fi
-
                                 else
                                     echo Cluster is now up and runnning!
                                 fi
