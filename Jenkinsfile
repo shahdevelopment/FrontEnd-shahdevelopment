@@ -271,10 +271,12 @@ pipeline {
                             echo Validating cluster...............
                             echo ##########################################################################################################################################################
                             echo ##########################################################################################################################################################
+                            set +e
                             kubectl get pods -n profile-site
                             profile-site-output = $?
                             kubectl get pods -n ingress-nginx
                             profile-site-output = $?
+                            set -e
                             echo ##########################################################################################################################################################
                             echo
                             echo
@@ -304,10 +306,12 @@ pipeline {
                                         elapsed_time=$((time + 60))
                                         echo Time Elapsed: $elapsed_time seconds......
                                     done
+                                    set +e
                                     kubectl get pods -n profile-site
                                     profile-site-output = $?
                                     kubectl get pods -n ingress-nginx
                                     profile-site-output = $?
+                                    set -e
                                     if [ profile-site-output -ne 0 ] || [ ingress-nginx-output -ne 0 ]; then; then
                                             echo Cluster update failed. Temporarily unable to resolve endpoint.
                                             if [ profile-site-output -ne 0]
