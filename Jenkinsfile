@@ -288,7 +288,7 @@ pipeline {
                                 echo ##########################################################################################################################################################
                                 echo ##########################################################################################################################################################
                                 kops update cluster --config=/home/ansible/.kube/config --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --yes --admin
-                                
+                                set +e
                                 kubectl get pods -n profile-site
                                 profilesiteoutput=$?
                                 kubectl get pods -n ingress-nginx
@@ -312,7 +312,7 @@ pipeline {
                                         echo Checking cluster availability..............................................
                                         echo ##########################################################################################################################################################
                                         kops validate cluster --config=/home/ansible/.kube/config --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --time 1m 2>/dev/null
-
+                                        set +e
                                         kubectl get pods -n profile-site
                                         profilesiteoutput=$?
                                         kubectl get pods -n ingress-nginx
