@@ -449,7 +449,7 @@ pipeline {
                         echo B                                    ░░░░                        
                         echo B                                  ░░░░░░                        
                         echo B                            ▒▒░░░░░░░░░░░░        
-                    ''' \\
+                    ''' //
                 }
             }
             post {
