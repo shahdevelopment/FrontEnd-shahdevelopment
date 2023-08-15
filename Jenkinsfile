@@ -163,8 +163,8 @@ pipeline {
             post {
                 always {
                     script {
-                        sh "vm='${backend} ${frontend}'" 
-                        sh "image='${back_image_name} ${front_image_name}'"
+                        sh "vm=('${backend}' '${frontend}')" 
+                        sh "image=('${back_image_name}' '${front_image_name}')"
                         sh '''
                             echo #########################################################################################################
                             echo Cleaning local test containers..........
@@ -232,7 +232,7 @@ pipeline {
             post {
                 always {
                     script {
-                        sh "image='${back_image_name} ${front_image_name}'"
+                        sh "image=('${back_image_name}' '${front_image_name}')"
                         sh '''
                             echo #########################################################################################################
                             echo Cleaning local prod images.
