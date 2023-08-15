@@ -163,8 +163,8 @@ pipeline {
             post {
                 always {
                     script {
-                        /home/ansible/jenkins/./docker-rm-vm.sh
-                        /home/ansible/jenkins/./docker-rmi.sh
+                        sh '/home/ansible/jenkins/./docker-rm-vm.sh'
+                        sh '/home/ansible/jenkins/./docker-rmi.sh'
                         // sh "vm=('${backend}' '${frontend}')" 
                         // sh "image=('${back_image_name}' '${front_image_name}')"
                         // sh '''
@@ -234,16 +234,17 @@ pipeline {
             post {
                 always {
                     script {
-                        sh "image=('${back_image_name}' '${front_image_name}')"
-                        sh '''
-                            echo #########################################################################################################
-                            echo Cleaning local prod images.
-                            echo #########################################################################################################
-                            for i in "${image[@]}"
-                            do
-                                docker rmi $i
-                            done
-                        '''
+                        sh '/home/ansible/jenkins/./docker-rmi.sh'
+                        // sh "image=('${back_image_name}' '${front_image_name}')"
+                        // sh '''
+                        //     echo #########################################################################################################
+                        //     echo Cleaning local prod images.
+                        //     echo #########################################################################################################
+                        //     for i in "${image[@]}"
+                        //     do
+                        //         docker rmi $i
+                        //     done
+                        // '''
                     }
                 }
             }
