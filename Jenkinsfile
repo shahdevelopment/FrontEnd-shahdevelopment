@@ -233,10 +233,10 @@ pipeline {
             post {
                 always {
                     script {
-                        sh "image='${back_image_name}', '${front_image_name}""
+                        sh "image='${back_image_name}', '${front_image_name}'"
                         sh '''
                             echo #########################################################################################################
-                            echo Cleaning local prod images..........
+                            echo Cleaning local prod images.
                             echo #########################################################################################################
                             for i in "${image[@]}"
                             do
