@@ -272,22 +272,19 @@ pipeline {
                             echo ##########################################################################################################################################################
                             echo ##########################################################################################################################################################
                             set +e
-                            kubectl get pods -n profile-site
-                            profile-site-output = $?
-                            kubectl get pods -n ingress-nginx
-                            profile-site-output = $?
+                            kubectl get all
                             set -e
                             echo ##########################################################################################################################################################
                             echo
                             echo
-                            if [ "$profile-site-output" -ne 0 ] || [ "$ingress-nginx-output" -ne 0 ]
+                            if [ "$?" -ne 0 ]
                             then
                                 echo Updating cluster....................
                                 echo ##########################################################################################################################################################
                                 echo ##########################################################################################################################################################
                                 kops update cluster --config=/home/ansible/.kube/config --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --yes --admin
                                 
-                                if [ "$profile-site-output" -ne 0 ] || [ "$ingress-nginx-output" -ne 0 ]
+                                if [ "$?" -ne 0 ]
                                 then
                                     /home/ansible/kube/./default-scale
 
@@ -309,22 +306,11 @@ pipeline {
                                         echo Time Elapsed: $elapsed_time seconds......
                                     done
                                     set +e
-                                    kubectl get pods -n profile-site
-                                    profile-site-output = $?
-                                    kubectl get pods -n ingress-nginx
-                                    profile-site-output = $?
+                                    kubectl get all
                                     set -e
-                                    if [ "$profile-site-output" -ne 0 ] || [ "$ingress-nginx-output" -ne 0 ]
+                                    if [ "$?" -ne 0 ]
                                     then
                                         echo Cluster update failed. Temporarily unable to resolve endpoint.
-                                        if [ "$profile-site-output" -ne 0]
-                                        then
-                                            echo profile-site namespace failed to update.
-                                        fi
-                                        if [ "$ingress-nginx-output" -ne 0]
-                                        then
-                                            echo Nginx ingress controller failed to update.
-                                        fi
                                         echo ##########################################################################################################################################################
                                         echo ##########################################################################################################################################################
                                         echo Diagnostic info:
