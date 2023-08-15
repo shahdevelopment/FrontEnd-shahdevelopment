@@ -304,10 +304,10 @@ pipeline {
                                         elapsed_time=$((time + 60))
                                         echo Time Elapsed: $elapsed_time seconds......
                                     done
-                                    // kubectl get pods -n profile-site
-                                    // profile-site=$(echo $?)
-                                    // kubectl get pods -n ingress-nginx
-                                    // ingress-nginx=$(echo $?)
+                                    kubectl get pods -n profile-site
+                                    profile-site-output = $?
+                                    kubectl get pods -n ingress-nginx
+                                    profile-site-output = $?
                                     if [ profile-site-output -ne 0 ] || [ ingress-nginx-output -ne 0 ]; then; then
                                             echo Cluster update failed. Temporarily unable to resolve endpoint.
                                             if [ profile-site-output -ne 0]
