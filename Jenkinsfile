@@ -164,7 +164,11 @@ pipeline {
                 always {
                     script {
                         sh '/home/ansible/jenkins/./docker-rm-vm.sh'
-                        sh '/home/ansible/jenkins/./docker-rmi.sh'
+                        sh '''
+                            set +e
+                            /home/ansible/jenkins/./docker-rmi.sh
+                            set -e
+                        '''
                         // sh "vm=('${backend}' '${frontend}')" 
                         // sh "image=('${back_image_name}' '${front_image_name}')"
                         // sh '''
