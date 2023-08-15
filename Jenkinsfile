@@ -30,9 +30,6 @@ pipeline {
 
         back_image_name="$registry_back" + ":v$BUILD_NUMBER"
         front_image_name="$registry_front" + ":v$BUILD_NUMBER"
-        vm = ['${backend}' + ' ${frontend}']
-        image = ['${back_image_name}' + ' ${front_image_name}']
-
     }
     stages {
         stage('clean-workspace') {
@@ -166,10 +163,10 @@ pipeline {
             post {
                 always {
                     script {
-                        sh "export VM=$vm" 
-                        sh "export imgur=$image"
+                        sh "export vm='${backend}' + ' ${frontend}'" 
+                        sh "export image='${back_image_name}' + ' ${front_image_name}'"
                         sh '''
-                            export VM=$vm 
+                            // export VM=$vm 
                             echo #########################################################################################################
                             echo Cleaning local test containers..........
                             echo #########################################################################################################                            
@@ -236,7 +233,7 @@ pipeline {
             post {
                 always {
                     script {
-                        sh "image=["$${back_image_name}", "$${front_image_name}"]"
+                        sh "image='${back_image_name}', '${front_image_name}""
                         sh '''
                             echo #########################################################################################################
                             echo Cleaning local prod images..........
