@@ -271,19 +271,10 @@ pipeline {
                             echo Validating cluster...............
                             echo ##########################################################################################################################################################
                             echo ##########################################################################################################################################################
-                        '''
-                            sh "set +e"
-                            def profile-site-output = sh(
-                                returnStatus: true,
-                                script: 'kubectl get pods -n profile-site'
-                            )
-                            def ingress-nginx-output = sh(
-                                returnStatus: true,
-                                script: 'kubectl get pods -n ingress-nginx'
-                            )
-                            sh "set -e"
-                        sh '''
-
+                            kubectl get pods -n profile-site
+                            profile-site-output = $?
+                            kubectl get pods -n ingress-nginx
+                            profile-site-output = $?
                             echo ##########################################################################################################################################################
                             echo
                             echo
