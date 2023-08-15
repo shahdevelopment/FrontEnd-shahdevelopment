@@ -163,10 +163,9 @@ pipeline {
             post {
                 always {
                     script {
-                        sh "export vm='${backend} ${frontend}'" 
-                        sh "export image='${back_image_name} ${front_image_name}'"
+                        sh "vm='${backend} ${frontend}'" 
+                        sh "image='${back_image_name} ${front_image_name}'"
                         sh '''
-                            // export VM=$vm 
                             echo #########################################################################################################
                             echo Cleaning local test containers..........
                             echo #########################################################################################################                            
