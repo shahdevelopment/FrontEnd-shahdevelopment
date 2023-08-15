@@ -238,8 +238,11 @@ pipeline {
             post {
                 always {
                     script {
-                        sh '/home/ansible/jenkins/./docker-rmi.sh'
-                        // sh "image=('${back_image_name}' '${front_image_name}')"
+                        sh '''
+                            set +e
+                            /home/ansible/jenkins/./docker-rmi.sh
+                            set -e
+                        '''                        // sh "image=('${back_image_name}' '${front_image_name}')"
                         // sh '''
                         //     echo #########################################################################################################
                         //     echo Cleaning local prod images.
