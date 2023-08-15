@@ -289,6 +289,12 @@ pipeline {
                                 echo ##########################################################################################################################################################
                                 kops update cluster --config=/home/ansible/.kube/config --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --yes --admin
                                 
+                                kubectl get pods -n profile-site
+                                profilesiteoutput=$?
+                                kubectl get pods -n ingress-nginx
+                                ingressnginxoutput=$?
+                                set -e
+
                                 if [ "$profilesiteoutput" -ne 0 ] || [ "$ingressnginxoutput" -ne 0 ]
                                 then
                                     /home/ansible/kube/./default-scale
