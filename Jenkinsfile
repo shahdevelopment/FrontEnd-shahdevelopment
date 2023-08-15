@@ -163,8 +163,8 @@ pipeline {
             post {
                 always {
                     script {
-                        sh "export vm='${backend}' + ' ${frontend}'" 
-                        sh "export image='${back_image_name}' + ' ${front_image_name}'"
+                        sh "export vm='${backend} ${frontend}'" 
+                        sh "export image='${back_image_name} ${front_image_name}'"
                         sh '''
                             // export VM=$vm 
                             echo #########################################################################################################
@@ -233,7 +233,7 @@ pipeline {
             post {
                 always {
                     script {
-                        sh "image='${back_image_name}', '${front_image_name}'"
+                        sh "image='${back_image_name} ${front_image_name}'"
                         sh '''
                             echo #########################################################################################################
                             echo Cleaning local prod images.
