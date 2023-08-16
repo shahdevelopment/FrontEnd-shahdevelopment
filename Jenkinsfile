@@ -302,8 +302,9 @@ pipeline {
                                     set-e
                                     timeout_duration=600  # Specify timeout duration in seconds
                                     start_time=$(date +%s)
+                                    elapsed_time=0
 
-                                    until [ "$error" == 0 ]
+                                    until [ "$profilesiteoutput" == 0 ] && [ "$ingressnginxoutput" == 0 ]
                                     do
                                         if [ "$elapsed_time" -ge "$timeout_duration" ]
                                         then
@@ -320,9 +321,8 @@ pipeline {
                                         kubectl get pods -n ingress-nginx
                                         ingressnginxoutput=$?
                                         set -e
-
-                                        error=$(echo $?)
-                                        elapsed_time=$((time + 60))
+                                        
+                                        $elapsed_time=$($elapsed_time + 60)
                                         echo Time Elapsed: $elapsed_time seconds......
                                     done
 
