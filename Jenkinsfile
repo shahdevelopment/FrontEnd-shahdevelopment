@@ -322,7 +322,7 @@ pipeline {
                                         ingressnginxoutput=$?
                                         set -e
                                         
-                                        $elapsed_time=$($elapsed_time + 60)
+                                        elapsed_time=$($elapsed_time + 60)
                                         echo Time Elapsed: $elapsed_time seconds......
                                     done
 
