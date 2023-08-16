@@ -297,8 +297,9 @@ pipeline {
 
                                 if [ "$profilesiteoutput" -ne 0 ] || [ "$ingressnginxoutput" -ne 0 ]
                                 then
+                                    set +e
                                     /home/ansible/kube/./default-scale
-
+                                    set-e
                                     timeout_duration=600  # Specify timeout duration in seconds
                                     start_time=$(date +%s)
 
@@ -311,8 +312,9 @@ pipeline {
                                         fi
                                         echo Checking cluster availability..............................................
                                         echo ##########################################################################################################################################################
-                                        kops validate cluster --config=/home/ansible/.kube/config --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --time 1m 2>/dev/null
                                         set +e
+                                        kops validate cluster --config=/home/ansible/.kube/config --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --time 1m 2>/dev/null
+                    
                                         kubectl get pods -n profile-site
                                         profilesiteoutput=$?
                                         kubectl get pods -n ingress-nginx
@@ -349,6 +351,7 @@ pipeline {
                                         echo ------------------------------------------------------------------------------------------------------------------------------
                                         echo
                                         echo
+                                        set +e
                                         kubectl get all
                                         echo
                                         echo ------------------------------------------------------------------------------------------------------------------------------
@@ -370,6 +373,7 @@ pipeline {
                                         echo
                                         echo
                                         kubectl describe all -n ingress-nginx
+                                        set -e
                                         break
                                     fi
                                 else
