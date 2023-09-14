@@ -131,10 +131,10 @@ pipeline {
                 script {
                     sh "docker run -dt --name ${backend} -p 9000:9000 ${registry_back}:v${BUILD_NUMBER}"
                     sh 'sleep 5'
-                    sh "backcont=$(docker service ls | grep ${backend} | awk {'print $1'}) && docker service logs $backcont"
+                    sh "backcont=${docker service ls | grep ${backend} | awk {'print $1'}} && docker service logs $backcont"
                     sh "docker run -dt --name ${frontend} -p 3000:3000 ${registry_front}:v${BUILD_NUMBER}"
                     sh 'sleep 5'
-                    sh "frontcont=$(docker service ls | grep ${frontend} | awk {'print $1'}) && docker service logs $frontcont"
+                    sh "frontcont=${docker service ls | grep ${frontend} | awk {'print $1'}} && docker service logs $frontcont"
                     sh 'sleep 5'
                 }
             }
@@ -391,8 +391,8 @@ pipeline {
                     sh "helm upgrade my-app ./helm/profilecharts --set backimage=${registry_back}:v${BUILD_NUMBER} --set frontimage=${registry_front}:v${BUILD_NUMBER}"
                     // the below is for a fresh deploy
                     // helm upgrade --install --force my-app helm/profilecharts --set backimage=${registry_back}:v${BUILD_NUMBER} --set frontimage=${registry_front}:v${BUILD_NUMBER}
-                    
                     sh '''
+                        set +x
                         echo B                  
                         echo B                                ▓▓▓▓▒▒▒▒▒▒                      
                         echo B                              ▓▓▓▓▒▒▒▒▒▒▓▓▒▒▓▓                  
@@ -442,6 +442,7 @@ pipeline {
                         echo B                                    ░░░░                        
                         echo B                                  ░░░░░░                        
                         echo B                            ▒▒░░░░░░░░░░░░        
+                        set -x
                     ''' //
                 }
             }
