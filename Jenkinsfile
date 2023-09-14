@@ -131,10 +131,10 @@ pipeline {
                 script {
                     sh "docker run -dt --name ${backend} -p 9000:9000 ${registry_back}:v${BUILD_NUMBER}"
                     sh 'sleep 5'
-                    sh "backcont=${docker service ls | grep ${backend} | awk {'print $1'}} && docker service logs $backcont"
+                    sh "docker logs ${backend}"
                     sh "docker run -dt --name ${frontend} -p 3000:3000 ${registry_front}:v${BUILD_NUMBER}"
                     sh 'sleep 5'
-                    sh "frontcont=${docker service ls | grep ${frontend} | awk {'print $1'}} && docker service logs $frontcont"
+                    sh "docker logs ${frontend}"
                     sh 'sleep 5'
                 }
             }
