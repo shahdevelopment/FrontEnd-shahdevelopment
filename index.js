@@ -9,7 +9,7 @@ app.engine('js', (_, options, callback) => {
     callback(null, options.source);
 });
 
-require('dotenv').config();
+// require('dotenv').config();
 
 app.use(express.static('public', {
     setHeaders: (response, path, stat) => {
