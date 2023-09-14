@@ -20,6 +20,7 @@ app.use(express.json({ limit: '1mb' }));
 app.listen(PORT, HOST, () => {
     console.log(`Server is running on http://${HOST}:${PORT}`);
 });
+// #######################################################################
 // app.get('/', (req, res) => {
 //     res.redirect('/index');
 // });
@@ -1225,11 +1226,12 @@ app.get('/selfie', (req, res) => {
                 </div>
             </div>
         </div>
-            <div class="ham">
-    <button class="hamburger-menu">            <div class="hamburger-line"></div>
-            <div class="hamburger-line"></div>
-            <div class="hamburger-line"></div>
-        </button>
+        <div class="ham">
+            <button class="hamburger-menu">            
+                <div class="hamburger-line"></div>
+                <div class="hamburger-line"></div>
+                <div class="hamburger-line"></div>
+            </button>
         </div>
         <script src="js/hamburger.js"></script>
     </div>
@@ -1255,9 +1257,11 @@ app.get('/selfie', (req, res) => {
                 <br />
                 <br />
                 <br />
-                <div><a href="/data" class="geo">Data Repo</a></div>
-            <script src="js/camera.js"></script>
+                <div>
+                    <a href="/data" class="geo">Data Repo</a>
+                </div>
             </div>
+            <script src="js/camera.js"></script>
             <div class="cameraDiv">
                 </p>
                 <div id="cameraid">
