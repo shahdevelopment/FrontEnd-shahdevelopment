@@ -130,12 +130,16 @@ pipeline {
             steps{
                 script {
                     sh "docker run -dt --name ${backend} -p 9000:9000 ${registry_back}:v${BUILD_NUMBER}"
-                    sh 'sleep 1'
-                    sh "docker run -dt --name ${frontend} -p 3000:3000 ${registry_front}:v${BUILD_NUMBER} && sleep 20"
+                    sh 'sleep 5'
+                    sh "backcont=$(docker service ls | grep ${backend} | awk {'print $1'}) && docker service logs $backcont"
+                    sh "docker run -dt --name ${frontend} -p 3000:3000 ${registry_front}:v${BUILD_NUMBER}"
+                    sh 'sleep 5'
+                    sh "frontcont=$(docker service ls | grep ${frontend} | awk {'print $1'}) && docker service logs $frontcont"
+                    sh 'sleep 5'
                 }
             }
         }
-        stage('Test') {
+        stage('test') {
             steps {
                 dir("${frontend}") {
                     script {
@@ -217,9 +221,7 @@ pipeline {
                     script {
                         dockerImage = docker.build("$registry_front" + ":v$BUILD_NUMBER")
                         sh 'sleep 1'
-
-                        docker.withRegistry('', registryCredentials) {
-                            dockerImage.push("v$BUILD_NUMBER")
+                        docker.withRegistry('', registryCredentials) {dockerImage.push("v$BUILD_NUMBER")
                         }
                         sh 'sleep 1'
                     }
@@ -275,26 +277,20 @@ pipeline {
                             set +e
                             kubectl get pods -n profile-site
                             profilesiteoutput=$?
-
                             kubectl get pods -n ingress-nginx
                             ingressnginxoutput=$?
                             set -e
 
                             echo ##########################################################################################################################################################
-                            echo
-                            echo
-
                             if [ "$profilesiteoutput" -ne 0 ] || [ "$ingressnginxoutput" -ne 0 ]
                             then
                                 echo Updating cluster....................
-                                echo ##########################################################################################################################################################
                                 echo ##########################################################################################################################################################
                                 kops update cluster --config=/home/ansible/.kube/config --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --yes --admin
                                 
                                 set +e
                                 kubectl get pods -n profile-site
                                 profilesiteoutput=$?
-
                                 kubectl get pods -n ingress-nginx
                                 ingressnginxoutput=$?
                                 set -e
@@ -336,7 +332,6 @@ pipeline {
                                     set +e
                                     kubectl get pods -n profile-site
                                     profilesiteoutput = $?
-
                                     kubectl get pods -n ingress-nginx
                                     ingressnginxoutput = $?
                                     set -e

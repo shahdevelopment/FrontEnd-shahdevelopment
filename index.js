@@ -19,7 +19,7 @@ app.use(express.static('public', {
     }
 }));
 app.use(express.json({ limit: '1mb' }));
-//
+
 app.listen(PORT, HOST, () => {
     console.log(`Server is running on http://${HOST}:${PORT}`);
 });

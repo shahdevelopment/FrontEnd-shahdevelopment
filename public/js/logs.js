@@ -1,5 +1,4 @@
 getData();
-
 async function getData() {
   const response = await fetch('https://k8-backend.shahdevelopment.tech/api');
   const data = await response.json();
