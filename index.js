@@ -2,12 +2,15 @@ const express = require('express');
 const app = express();
 const PORT = 3000;
 const HOST = '0.0.0.0';
+
 // Set the MIME type for JavaScript files
-// app.set('view engine', 'js');
-// app.engine('js', (_, options, callback) => {
-//     callback(null, options.source);
-// });
-// require('dotenv').config();
+app.set('view engine', 'js');
+app.engine('js', (_, options, callback) => {
+    callback(null, options.source);
+});
+
+require('dotenv').config();
+
 app.use(express.static('public', {
     setHeaders: (response, path, stat) => {
         if (path.endsWith('js')) {

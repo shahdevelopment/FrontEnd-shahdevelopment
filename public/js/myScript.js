@@ -1,4 +1,3 @@
-
 var slideIndex, slides, dots, captionText;
 function initGallery() {
     slideIndex = 0;
@@ -7,7 +6,6 @@ function initGallery() {
 
     captionText = document.querySelector(".captionTextHolder .captionText");
     captionText.innerText = slides[slideIndex].querySelector(".captionText").innerText;
-
     //disable nextPrevBtn if slide count is one
     if (slides.length < 2) {
         var nextPrevBtns = document.querySelector(".leftArrow,.rightArrow");
@@ -16,7 +14,6 @@ function initGallery() {
             nextPrevBtn[i].style.display = "none";
         }
     }
-
     //add dots
     dots = [];
     var dotsContainer = document.getElementById("dotsContainer"), i;
@@ -52,7 +49,6 @@ function moveSlide(n) {
         moveSlideAnimClass.forNext = "moveRightPrevSlide";
         slideTextAnimClass = "slideTextFromBottom";
     }
-
     if (n != slideIndex) {
         next = slides[n];
         current = slides[slideIndex];
@@ -70,7 +66,6 @@ function moveSlide(n) {
         captionText.innerText = slides[n].querySelector(".captionText").innerText;
         captionText.style.display = "block";
     }
-
 }
 var timer = null;
 function setTimer() {

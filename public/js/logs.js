@@ -16,25 +16,22 @@ async function getData() {
     button.textContent = "Delete";
     root.setAttribute('class', 'logs');
     mood.textContent = `Status: ${item.mood}`;
-
     // geo.textContent = `${item.lat}°, ${item.lon}°`;
-
     const dateString = new Date(item.timestamp).toLocaleString();
     date.textContent = dateString;
     image.src = item.image64;
     image.alt = 'Alt text for the image';
 
+    root.append(mood, date, image, button);
+    logDiv.append(root);
+
     button.addEventListener('click', () => {
       deletePost(item._id);
       // Call the deletePost function passing the post ID
     });
-
-    root.append(mood, date, image, button);
-    logDiv.append(root);
   }
   console.log(data);
 }
-
 function deletePost(postId) {
   fetch(`https://k8-backend.shahdevelopment.tech/api/${postId}`, {
     method: 'DELETE'
