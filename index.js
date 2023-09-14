@@ -947,11 +947,11 @@ app.get('/', (req, res) => {
     <div class="latnew">
         <h2>Site Overview & Note</h2>
         <p>
-            This website's / web application's runtime is nodeJS and it was 
-            deployed with NPM running in AWS EC2 instances managed by a Kubernetes Cluster.
+            This website/web apps runtime is nodeJS and it was 
+            deployed with NPM running in AWS EC2 instances managed by a Kubernetes Control Plane.
             For monitoring there is a Lens dashboard using a Prometheus integration.
-            The entire cluster can be deployed easily with GitHub Repo & DockerHub Repo.
-            The Images for this site were created with Dockerfile which also runs in a
+            The entire cluster can be deployed easily with artifacts in GitHub Repo & DockerHub Repo.
+            The Images for this site were created with Dockerfile which also conveniently runs in a
             Docker Swarm configuration as well.
             </br>
             The site makes use of various best practices including env variables, 
@@ -966,8 +966,10 @@ app.get('/', (req, res) => {
             Check out the Projects tab to see my JS API projects including: ChatGPT 
             Clone, Google Maps API and 
             Gelocation, Selfie Application that allows you to store your pictures 
-            and a message (Disclaimer** You can delete your images and posting with 
-            the delete button found by clicking on the "Data Repo" Button.), and finally 
+            and a message You can permanently delete your images and post with 
+            the delete button found by clicking on the "Data Repo" Button (Antivirus may 
+            interfere with the webcam resource accessibility requirements for the proper 
+            functioning of this page). Finally, 
             my Python (fastAPI) and Postgres Social Media App API.
             </br>
             </br>
@@ -991,6 +993,10 @@ app.get('/', (req, res) => {
             <div onclick="plusSlides(-1)" class="nextPrevBtn leftArrow"><span class="arrow arrowLeft"></span></div>
             <div onclick="plusSlides(1)" class="nextPrevBtn rightArrow"><span class="arrow arrowRight"></span></div>
             <div class="captionTextHolder"><p class="captionText slideTextFromTop"></p></div>
+            <div class="imageHolder">
+                <img style='height: 100%; width: 100%; object-fit: contain' src="image/DevOps.jpg">1366X768
+                <p class="captionText">DevOps Beginners to Advanced with Projects</p>
+            </div>
             <div class="imageHolder">
                 <img style='height: 100%; width: 100%; object-fit: contain' src="image/BBA.jpg">1366X768
                 <p class="captionText">Bachelor of Business Administration (BBA)</p>
@@ -1126,7 +1132,7 @@ app.get('/selfie', (req, res) => {
     <body>
         <div class="geoSelfie">
             <div class="geobuttonDiv">
-                <h1>Selfie App</h1>
+                <h1>Selfie App (**Antivirus may block this functionality)</h1>
                 <br />
                 <br />
                 <br />

@@ -198,17 +198,6 @@ pipeline {
                 }
             }
         }
-        // stage('frontend-echoove-image') {
-        //     steps{
-        //         script {
-        //             sh "docker stop ${frontend} && docker rm ${frontend}"
-        //             sh "docker stop ${backend} && docker rm ${backend}"
-        //             sh "sleep 2"
-        //             sh "docker rmi $registry_front:v$BUILD_NUMBER"
-        //             sh "docker rmi $registry_back:v$BUILD_NUMBER "
-        //         }
-        //     }
-        // }
         stage('docker-build') {
             steps {
                 dir("${frontend}") {
@@ -258,13 +247,6 @@ pipeline {
                 }
             }
         }
-        // stage('remove-dev-dependencies') {
-        //     steps{
-        //         sh '''
-        //             sudo /bin/bash /opt/jenkins-slave/workspace/scripts/npm-dev-cln.sh                
-        //         '''
-        //     }
-        // }
         stage('kubernetes-clustervalidation') {
             steps {
                 dir("${k8}") {
