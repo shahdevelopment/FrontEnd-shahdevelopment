@@ -1,10 +1,7 @@
-
 function setup() {
     var startVideo = document.getElementById('startvideo');
     var stopVideo = document.getElementById('stopvideo');
-
     var run = "no"
-
     const button = document.getElementById('submit');
     button.addEventListener('click', async event => {
         const mood = document.getElementById('mood').value;
@@ -27,6 +24,7 @@ function setup() {
         if (run === "yes") {
             alert("Camera Already Running!");
         } else {
+            noCanvas();
             video = createCapture(VIDEO);
             video.parent("cameraid");
             run = "yes";
