@@ -258,12 +258,13 @@ pipeline {
                     script {
                         sh "export timeout_duration=${timeout_duration} && echo $timeout_duration"
                         sh "export elapsed_time=${elapsed_time} && echo $elapsed_time"
-                        sh "export start_time=$SECONDS && echo $start_time"
-                        sh "condition1_met=${condition1_met} && echo $condition1_met"
+                        sh "export condition1_met=${condition1_met} && echo $condition1_met"
+
                         // sh "condition2_met=${condition2_met} && echo $condition2_met"
                         sh '''
-                        echo ##########################################################################################################################################################
-                        echo ##########################################################################################################################################################
+                            export start_time=$SECONDS && echo $start_time
+                            echo ##########################################################################################################################################################
+                            echo ##########################################################################################################################################################
                         '''
                         sh '''
                             set +e
@@ -278,13 +279,12 @@ pipeline {
 
                                 if [ "$proSite" -ne 0 ] || [ "$ingNginx" -ne 0 ]; then
                                     /home/ansible/kube/./default-scale && sleep 2
-                                    sleep 1
                                     echo "Checking cluster availability.............................................."
                                     while ! $condition1_met; do
                                         # && ! $condition2_met; do
                                         echo ----------//----------------------------------------------------------------------------------------//---------------------------
                                         echo ----------//----------------------------------------------------------------------------------------//---------------------------
-                                        if [ $elapsed_time -gt "$timeout_duration" ]; then
+                                        if [ "$elapsed_time" -gt "$timeout_duration" ]; then
                                             echo "Timeout reached"
                                             kubectl get pods -n profile-site && proSite=$?
                                             kubectl get pods -n ingress-nginx && ingNginx=$?
