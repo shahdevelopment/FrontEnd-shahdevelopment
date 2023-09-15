@@ -17,7 +17,6 @@ const pathsToEvaluate = [
     '/i-sightII',
     '/i-sight',
     '/',
-    '/rivermeadow',
     '/selfie',
     '/seniorsystemsadmin',
     '/skills',

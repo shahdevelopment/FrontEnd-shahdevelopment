@@ -30,13 +30,20 @@ pipeline {
 
         back_image_name="$registry_back" + ":v$BUILD_NUMBER"
         front_image_name="$registry_front" + ":v$BUILD_NUMBER"
+
+        timeout_duration=900
+        elapsed_time=1
+        proSite=1
+        ingNginx=1
+        condition1_met='false'
+        // condition2_met='false'
     }
     stages {
         stage('clean-workspace') {
             steps {
                 cleanWs()
                 sh '''
-                    echo Gather info
+                    echo "Gathering resource info on ansible control plane........."
                     echo --------------------------------------------------------------------
                     echo --------------------------------------------------------------------
                     echo
@@ -254,34 +261,32 @@ pipeline {
                         sh '''
                             echo ##########################################################################################################################################################
                             echo ##########################################################################################################################################################
+                            start:
                             set +e
                             kubectl get pods -n profile-site
                             proSite=$?
                             kubectl get pods -n ingress-nginx
                             ingNginx=$?
+                            
                             echo ##########################################################################################################################################################
                             if [ "$proSite" -ne 0 ] || [ "$ingNginx" -ne 0 ]; then
                                 echo Updating cluster....................
                                 kops update cluster --config=/home/ansible/.kube/config --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --yes --admin
-                                echo ##########################################################################################################################################################
+                                
                                 kubectl get pods -n profile-site
                                 proSite=$?
                                 kubectl get pods -n ingress-nginx
                                 ingNginx=$?
-                                echo ##########################################################################################################################################################
+                                
                                 if [ "$proSite" -ne 0 ] || [ "$ingNginx" -ne 0 ]; then
                                     /home/ansible/kube/./default-scale && sleep 2
                                     echo ##########################################################
+
                                     echo ##########################################################
                                     start_time=$SECONDS
-                                    echo $start_time
-                                    timeout_duration=900
-                                    elapsed_time=1
-                                    proSite=1
-                                    ingNginx=1
-                                    condition1_met=false
-                                    # condition2_met=false
+                                    echo $start_time      
                                     echo ##########################################################
+
                                     echo ##########################################################
                                     sleep 1
                                     echo "Checking cluster availability.............................................."
@@ -295,10 +300,12 @@ pipeline {
                                             echo ###################################################################################################
                                             kops validate cluster --config=/home/ansible/.kube/config --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 && sleep 3
                                             echo ###################################################################################################
+                                            
                                             kubectl get pods -n profile-site
                                             proSite=$?
                                             kubectl get pods -n ingress-nginx
                                             ingNginx=$?
+
                                             if [ "$proSite" -eq 0 ] && [ "$ingNginx" -eq 0 ]; then
                                                 condition1_met=true
                                             # if [ $ingNginx -eq 0 ]; then
