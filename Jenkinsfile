@@ -31,10 +31,8 @@ pipeline {
         back_image_name="$registry_back" + ":v$BUILD_NUMBER"
         front_image_name="$registry_front" + ":v$BUILD_NUMBER"
 
-        timeout_duration=900
+        timeout_duration=960
         elapsed_time=1
-        proSite=1
-        ingNginx=1
         condition1_met='false'
         // condition2_met='false'
     }
@@ -258,53 +256,69 @@ pipeline {
             steps {
                 dir("${k8}") {
                     script {
+                        sh "export timeout_duration=${timeout_duration} && echo $timeout_duration"
+                        sh "export elapsed_time=${elapsed_time} && echo $elapsed_time"
+                        sh "export start_time=$SECONDS && echo $start_time"
+                        sh "condition1_met=${condition1_met} && echo $condition1_met"
+                        // sh "condition2_met=${condition2_met} && echo $condition2_met"
                         sh '''
-                            echo ##########################################################################################################################################################
-                            echo ##########################################################################################################################################################
-                            start:
+                        echo ##########################################################################################################################################################
+                        echo ##########################################################################################################################################################
+                        '''
+                        sh '''
                             set +e
-                            kubectl get pods -n profile-site
-                            proSite=$?
-                            kubectl get pods -n ingress-nginx
-                            ingNginx=$?
+                            kubectl get pods -n profile-site && proSite=$?
+                            kubectl get pods -n ingress-nginx && ingNginx=$?
                             
                             echo ##########################################################################################################################################################
                             if [ "$proSite" -ne 0 ] || [ "$ingNginx" -ne 0 ]; then
-                                echo Updating cluster....................
                                 kops update cluster --config=/home/ansible/.kube/config --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --yes --admin
-                                
-                                kubectl get pods -n profile-site
-                                proSite=$?
-                                kubectl get pods -n ingress-nginx
-                                ingNginx=$?
-                                
+                                kubectl get pods -n profile-site && proSite=$?
+                                kubectl get pods -n ingress-nginx && ingNginx=$?
+
                                 if [ "$proSite" -ne 0 ] || [ "$ingNginx" -ne 0 ]; then
                                     /home/ansible/kube/./default-scale && sleep 2
-                                    echo ##########################################################
-
-                                    echo ##########################################################
-                                    start_time=$SECONDS
-                                    echo $start_time      
-                                    echo ##########################################################
-
-                                    echo ##########################################################
                                     sleep 1
                                     echo "Checking cluster availability.............................................."
                                     while ! $condition1_met; do
                                         # && ! $condition2_met; do
-                                        if [ "$elapsed_time" -gt "$timeout_duration" ]; then
+                                        echo ----------//----------------------------------------------------------------------------------------//---------------------------
+                                        echo ----------//----------------------------------------------------------------------------------------//---------------------------
+                                        if [ $elapsed_time -gt "$timeout_duration" ]; then
                                             echo "Timeout reached"
-                                            goto logs
+                                            kubectl get pods -n profile-site && proSite=$?
+                                            kubectl get pods -n ingress-nginx && ingNginx=$?
+
+                                            echo Cluster update failed. Temporarily unable to resolve endpoint.
+                                            if [ "$proSite" -ne 0]; then
+                                                echo profile-site namespace failed to update.
+                                            fi
+                                            if [ "$ingNginx" -ne 0]; then
+                                                echo ingress-nginx namespace failed to update.
+                                            fi
+                                            echo
+                                            echo ----------//----------------------------------------------------------------------------------------//---------------------------                                    
+                                            echo Diagnostic info:
+                                            echo ###################################################################################################
+                                            kubectl get all
+                                            echo ###################################################################################################
+                                            kubectl get nodes
+                                            echo ###################################################################################################
+                                            kops validate cluster --config=/home/ansible/.kube/config --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 && sleep 3
+                                            echo ###################################################################################################
+                                            kubectl describe all -n profile-site
+                                            echo ###################################################################################################
+                                            kubectl describe all -n ingress-nginx
+                                            echo ----------//----------------------------------------------------------------------------------------//---------------------------
+                                            echo ----------//----------------------------------------------------------------------------------------//---------------------------
                                         else
                                             set +e
                                             echo ###################################################################################################
                                             kops validate cluster --config=/home/ansible/.kube/config --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 && sleep 3
                                             echo ###################################################################################################
                                             
-                                            kubectl get pods -n profile-site
-                                            proSite=$?
-                                            kubectl get pods -n ingress-nginx
-                                            ingNginx=$?
+                                            kubectl get pods -n profile-site && proSite=$?
+                                            kubectl get pods -n ingress-nginx && ingNginx=$?
 
                                             if [ "$proSite" -eq 0 ] && [ "$ingNginx" -eq 0 ]; then
                                                 condition1_met=true
@@ -314,48 +328,14 @@ pipeline {
                                         fi
                                         elapsed_time=$((SECONDS-start_time))
                                         set -e
-                                        echo "Elapsed time: $elapsed_time seconds"
-                                    done
-                                    echo ----------//----------------------------------------------------------------------------------------//---------------------------
-                                    echo ----------//----------------------------------------------------------------------------------------//---------------------------                                    
-                                    goto end
-                                    logs:
-                                    kubectl get pods -n profile-site
-                                    proSite = $?
-                                    kubectl get pods -n ingress-nginx
-                                    ingNginx = $?
-
-                                    if [ "$proSite" -ne 0 ] || [ "$ingNginx" -ne 0 ]; then
-                                        echo Cluster update failed. Temporarily unable to resolve endpoint.
-                                        if [ "$proSite" -ne 0]; then
-                                            echo profile-site namespace failed to update.
-                                        fi
-                                        if [ "$ingNginx" -ne 0]; then
-                                            echo ingress-nginx namespace failed to update.
-                                        fi
+                                        echo 'Elapsed time: $elapsed_time seconds'
                                         echo ----------//----------------------------------------------------------------------------------------//---------------------------
                                         echo ----------//----------------------------------------------------------------------------------------//---------------------------                                    
-                                        echo Diagnostic info:
-                                        echo ###################################################################################################
-                                        kubectl get all
-                                        echo ###################################################################################################
-                                        kubectl get nodes
-                                        echo ###################################################################################################
-                                        kops validate cluster --config=/home/ansible/.kube/config --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 && sleep 3
-                                        echo ###################################################################################################
-                                        kubectl describe all -n profile-site
-                                        echo ###################################################################################################
-                                        kubectl describe all -n ingress-nginx
-                                        echo ----------//----------------------------------------------------------------------------------------//---------------------------
-                                        echo ----------//----------------------------------------------------------------------------------------//---------------------------
-                                    else
-                                        goto end
-                                    fi
+                                    done
                                 else
-                                    goto end
+                                    echo Cluster is running!
                                 fi
                             else
-                                end:
                                 echo Cluster is runnning!
                             fi
                         '''
