@@ -10,23 +10,23 @@ pipeline {
     // }
     options { skipDefaultCheckout() }
     environment {
-        registry_front = "shahdevelopment/kube"
-        registry_back = "shahdevelopment/kube_back"
-        registryCredentials = 'dockerhub'
+        registry_front="shahdevelopment/kube"
+        registry_back="shahdevelopment/kube_back"
+        registryCredentials='dockerhub'
         
-        frontend = 'profile_front'
-        backend = 'profile_backend'
-        k8 = 'k8s-definitions'
+        frontend='profile_front'
+        backend='profile_backend'
+        k8='k8s-definitions'
 
-        front = 'front-end-service'
-        back = 'back-end-service'
+        front='front-end-service'
+        back='back-end-service'
 
-        SONAR_PROJECT_KEY = 'profile-site-nodejs'
-        scannerHome = tool 'sonar4.7'
+        SONAR_PROJECT_KEY='profile-site-nodejs'
+        scannerHome=tool 'sonar4.7'
 
-        frontgit = 'git@github.com:Shah0373/profile_front.git'
-        backgit = 'git@github.com:Shah0373/profile_backend.git'
-        defgit = 'git@github.com:Shah0373/k8s-definitions.git'
+        frontgit='git@github.com:Shah0373/profile_front.git'
+        backgit='git@github.com:Shah0373/profile_backend.git'
+        defgit='git@github.com:Shah0373/k8s-definitions.git'
 
         back_image_name="$registry_back" + ":v$BUILD_NUMBER"
         front_image_name="$registry_front" + ":v$BUILD_NUMBER"
@@ -263,15 +263,15 @@ pipeline {
                         // sh "condition2_met=${condition2_met} && echo $condition2_met"
                         sh '''
                             export start_time=$SECONDS && echo $start_time
-                            echo ##########################################################################################################################################################
-                            echo ##########################################################################################################################################################
+                            echo ##################################################################################################
+                            echo ##################################################################################################
                         '''
                         sh '''
                             set +e
                             kubectl get pods -n profile-site && proSite=$?
                             kubectl get pods -n ingress-nginx && ingNginx=$?
                             
-                            echo ##########################################################################################################################################################
+                            echo ##################################################################################################
                             if [ "$proSite" -ne 0 ] || [ "$ingNginx" -ne 0 ]; then
                                 kops update cluster --config=/home/ansible/.kube/config --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --yes --admin
                                 kubectl get pods -n profile-site && proSite=$?
@@ -282,8 +282,8 @@ pipeline {
                                     echo "Checking cluster availability.............................................."
                                     while ! $condition1_met; do
                                         # && ! $condition2_met; do
-                                        echo ----------//----------------------------------------------------------------------------------------//---------------------------
-                                        echo ----------//----------------------------------------------------------------------------------------//---------------------------
+                                        echo ----------//---------------------//---------------------------                                    
+                                        echo ----------//---------------------//---------------------------                                    
                                         if [ "$elapsed_time" -gt "$timeout_duration" ]; then
                                             echo "Timeout reached"
                                             kubectl get pods -n profile-site && proSite=$?
@@ -296,8 +296,20 @@ pipeline {
                                             if [ "$ingNginx" -ne 0]; then
                                                 echo ingress-nginx namespace failed to update.
                                             fi
+                                            echo ----------//---------------------//---------------------------
+                                            echo ----------//---------------------//---------------------------
+                                            echo Attempting Fresh Deployment.........
+                                            kops delete cluster --name kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --yes && sleep 2
+                                            kops create cluster --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --zones=us-west-1b,us-west-1c --node-count=2 --node-image=ami-0d8471611083c0327 --node-size=t2.small --control-plane-image=ami-0d8471611083c0327 --master-size=t2.medium --dns-zone=kubecluster.shahdevelopment.tech --node-volume-size=15 --master-volume-size=15 && sleep 2
+
+                                            kops update cluster --name kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --yes --admin && sleep 2
+                                            set +e
+                                            kops validate cluster --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --wait 15m --count 20 && sleep 2
+
+                                            set -e
+                                            echo ----------//---------------------//---------------------------                                    
+                                            echo ----------//---------------------//---------------------------                                    
                                             echo
-                                            echo ----------//----------------------------------------------------------------------------------------//---------------------------                                    
                                             echo Diagnostic info:
                                             echo ###################################################################################################
                                             kubectl get all
@@ -309,8 +321,8 @@ pipeline {
                                             kubectl describe all -n profile-site
                                             echo ###################################################################################################
                                             kubectl describe all -n ingress-nginx
-                                            echo ----------//----------------------------------------------------------------------------------------//---------------------------
-                                            echo ----------//----------------------------------------------------------------------------------------//---------------------------
+                                            echo ----------//---------------------//---------------------------                                    
+                                            echo ----------//---------------------//---------------------------                                    
                                         else
                                             set +e
                                             echo ###################################################################################################
@@ -329,17 +341,9 @@ pipeline {
                                         elapsed_time=$((SECONDS-start_time))
                                         set -e
                                         echo 'Elapsed time: $elapsed_time seconds'
-                                        echo ----------//----------------------------------------------------------------------------------------//---------------------------
-                                        echo ----------//----------------------------------------------------------------------------------------//---------------------------                                    
+                                        echo ----------//---------------------//---------------------------                                    
+                                        echo ----------//---------------------//---------------------------                                    
                                     done
-                                    kops delete cluster --name kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --yes && sleep 2
-
-                                    kops create cluster --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --zones=us-west-1b,us-west-1c --node-count=2 --node-image=ami-0d8471611083c0327 --node-size=t2.small --control-plane-image=ami-0d8471611083c0327 --master-size=t2.medium --dns-zone=kubecluster.shahdevelopment.tech --node-volume-size=15 --master-volume-size=15 && sleep 2
-
-                                    kops update cluster --name kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --yes --admin && sleep 2
-                                    set +e
-                                    kops validate cluster --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --wait 15m --count 20 && sleep 2
-                                    set -e
                                 else
                                     echo Cluster is running!
                                 fi
