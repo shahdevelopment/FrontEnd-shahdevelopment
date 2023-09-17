@@ -7,10 +7,10 @@ ENV api_key_new=AIzaSyBM96ZlN_58vdEA7F5hbOyZSLkq_4Q5OuQ
 WORKDIR /usr/src/app
 ARG ENVIRONMENT
 # Install deps
-RUN apt-get update
+# RUN apt-get update
 
 # Create Certificate
-RUN apt-get install ca-certificates
+# RUN apt-get install ca-certificates
 
 # RUN npm install
 # If you are building your code for production
