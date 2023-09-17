@@ -358,11 +358,11 @@ pipeline {
                     // sh "helm upgrade my-app ./helm/profilecharts --set backimage=${registry_back}:v${BUILD_NUMBER} --set frontimage=${registry_front}:v${BUILD_NUMBER}"
                     // the below is for a fresh deploy
                     sh '''
-                        kops delete cluster --name kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --yes --admin && sleep 2
+                        kops delete cluster --name kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --yes && sleep 2
 
                         kops create cluster --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --zones=us-west-1b,us-west-1c --node-count=2 --node-image=ami-0c26ecc6634f4b9d3 --node-size=t2.micro --control-plane-image=ami-0c26ecc6634f4b9d3 --master-size=t2.micro --dns-zone=kubecluster.shahdevelopment.tech --node-volume-size=15 --master-volume-size=15 && sleep 2
 
-                        kops update cluster --name kubecluster.shahdevelopment.tech --yes --admin
+                        kops update cluster --name kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --yes --admin
                     '''
                     // sh '''
                     // kops create cluster --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --zones=us-west-1b,us-west-1c --master-size=t3.micro --dns-zone=kubecluster.shahdevelopment.tech --master-volume-size=15 && sleep 2

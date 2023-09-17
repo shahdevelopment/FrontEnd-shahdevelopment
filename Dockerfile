@@ -1,4 +1,4 @@
-FROM node:16
+FROM node:alpine
 
 # Set environment variables
 ENV api_key_new=AIzaSyBM96ZlN_58vdEA7F5hbOyZSLkq_4Q5OuQ
