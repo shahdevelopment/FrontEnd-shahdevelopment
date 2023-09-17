@@ -1087,7 +1087,7 @@ app.get('/selfie', (req, res) => {
         <title>nodeJS and neDB Selfie App</title>
         <link rel="stylesheet" href="style/style.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.dom.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
     </head>
     <div class="topnav">
         <div>
