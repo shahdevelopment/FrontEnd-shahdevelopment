@@ -357,6 +357,12 @@ pipeline {
                     sh "/bin/bash move.sh"
                     // sh "helm upgrade my-app ./helm/profilecharts --set backimage=${registry_back}:v${BUILD_NUMBER} --set frontimage=${registry_front}:v${BUILD_NUMBER}"
                     // the below is for a fresh deploy
+                    sh '''
+                    kops create cluster --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --zones=us-west-1b,us-west-1c --master-size=t3.micro --dns-zone=kubecluster.shahdevelopment.tech --master-volume-size=15 && sleep 2
+
+                    kops create instancegroup nodes --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --role=Node --node-count=2 --zones=us-west-1b,us-west-1c --node-size=t2.micrp --dns-zone=kubecluster.shahdevelopment.tech --node-volume-size=15 && sleep 2
+
+                    '''
                     sh "helm install my-app ./helm/profilecharts --set backimage=${registry_back}:v${BUILD_NUMBER} --set frontimage=${registry_front}:v${BUILD_NUMBER}"
                     sh '''
                         set +x
