@@ -272,28 +272,28 @@ pipeline {
                             kubectl get pods -n ingress-nginx && ingNginx=$?
                             
                             echo ##################################################################################################
-                            if [ "$proSite" -ne 0 ] || [ "$ingNginx" -ne 0 ]; then
+                            if [ ${proSite} -ne 0 ] || [ ${ingNginx} -ne 0 ]; then
                                 kops update cluster --config=/home/ansible/.kube/config --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --yes --admin
                                 kubectl get pods -n profile-site && proSite=$?
                                 kubectl get pods -n ingress-nginx && ingNginx=$?
 
-                                if [ "$proSite" -ne 0 ] || [ "$ingNginx" -ne 0 ]; then
+                                if [ ${proSite} -ne 0 ] || [ ${ingNginx} -ne 0 ]; then
                                     /home/ansible/kube/./default-scale && sleep 2
                                     echo "Checking cluster availability.............................................."
                                     while ! $condition1_met; do
                                         # && ! $condition2_met; do
                                         echo ----------//---------------------//---------------------------                                    
                                         echo ----------//---------------------//---------------------------                                    
-                                        if [ "$elapsed_time" -gt "$timeout_duration" ]; then
+                                        if [ ${elapsed_time} -gt ${timeout_duration} ]; then
                                             echo "Timeout reached"
                                             kubectl get pods -n profile-site && proSite=$?
                                             kubectl get pods -n ingress-nginx && ingNginx=$?
 
                                             echo Cluster update failed. Temporarily unable to resolve endpoint.
-                                            if [ "$proSite" -ne 0]; then
+                                            if [ ${proSite} -ne 0]; then
                                                 echo profile-site namespace failed to update.
                                             fi
-                                            if [ "$ingNginx" -ne 0]; then
+                                            if [ ${ingNginx} -ne 0]; then
                                                 echo ingress-nginx namespace failed to update.
                                             fi
                                             echo ----------//---------------------//---------------------------
@@ -332,7 +332,7 @@ pipeline {
                                             kubectl get pods -n profile-site && proSite=$?
                                             kubectl get pods -n ingress-nginx && ingNginx=$?
 
-                                            if [ "$proSite" -eq 0 ] && [ "$ingNginx" -eq 0 ]; then
+                                            if [ ${proSite} -eq 0 ] && [ ${ingNginx} -eq 0 ]; then
                                                 condition1_met=true
                                             # if [ $ingNginx -eq 0 ]; then
                                                 # condition2_met=true
@@ -340,7 +340,7 @@ pipeline {
                                         fi
                                         elapsed_time=$((SECONDS-start_time))
                                         set -e
-                                        echo 'Elapsed time: $elapsed_time seconds'
+                                        echo 'Elapsed time: ${elapsed_time} seconds'
                                         echo ----------//---------------------//---------------------------                                    
                                         echo ----------//---------------------//---------------------------                                    
                                     done
