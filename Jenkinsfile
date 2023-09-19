@@ -33,7 +33,7 @@ pipeline {
 
         kubecluster='kubecluster.shahdevelopment.tech'
         s3bucket='s3://kubedevops001'
-        configfile='~/.kube/config'
+        configfile='/home/ansible/.kube/config'
 
         awsregion='us-west-1'
         awszones='us-west-1b,us-west-1c'
