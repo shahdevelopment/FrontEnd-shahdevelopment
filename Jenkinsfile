@@ -268,12 +268,12 @@ pipeline {
                             kops update cluster --name kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --yes --admin && sleep 2
                             set +e
                             kops validate cluster --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --wait 15m --count 20 && sleep 2
-                            if [ $? -neq 0 ]; then
-                                echo Cluster not running after 15m!
-                            else
+                            if [ $? -eq 0 ]; then
                                 echo Cluster is now up and running!
                                 echo Please add DNS entry for:
                                 aws elbv2 describe-load-balancers | grep DNSName
+                            else
+                                echo Cluster not running after 15m!
                             fi
                             echo ----------//---------------------//---------------------------
                             echo ----------//---------------------//---------------------------
@@ -295,26 +295,6 @@ pipeline {
                 dir("${k8}") {
                     sh "/bin/bash move.sh"
                     // sh "helm upgrade my-app ./helm/profilecharts --set backimage=${registry_back}:v${BUILD_NUMBER} --set frontimage=${registry_front}:v${BUILD_NUMBER}"
-                    // the below is for a fresh deploy
-                    // sh '''
-                    //     kops delete cluster --name kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --yes && sleep 2
-
-                    //     kops create cluster --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --zones=us-west-1b,us-west-1c --node-count=2 --node-image=ami-0d8471611083c0327 --node-size=t2.small --control-plane-image=ami-0d8471611083c0327 --master-size=t2.medium --dns-zone=kubecluster.shahdevelopment.tech --node-volume-size=15 --master-volume-size=15 && sleep 2
-
-                    //     kops update cluster --name kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --yes --admin && sleep 2
-                    //     set +e
-                    //     kops validate cluster --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --wait 15m --count 20 && sleep 2
-                    //     set -e
-                    // '''
-                    // sh '''
-                    // kops create cluster --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --zones=us-west-1b,us-west-1c --master-size=t3.small --dns-zone=kubecluster.shahdevelopment.tech --master-volume-size=15 && sleep 2
-
-                    // kops create instancegroup nodes-us-west-1b --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --role=Node --zones=us-west-1b --node-size=t2.small --dns-zone=kubecluster.shahdevelopment.tech --node-volume-size=15
-
-                    // kops create instancegroup nodes-us-west-1c --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --role=Node --zones=us-west-1c --node-size=t2.small --dns-zone=kubecluster.shahdevelopment.tech --node-volume-size=15
-
-                    // kops update cluster --name kubecluster.shahdevelopment.tech --yes --admin
-                    // '''
                     sh "helm upgrade --install --force my-app ./helm/profilecharts --set backimage=${registry_back}:v${BUILD_NUMBER} --set frontimage=${registry_front}:v${BUILD_NUMBER}"
                     sh '''
                         set +x

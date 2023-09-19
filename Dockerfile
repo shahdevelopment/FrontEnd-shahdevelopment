@@ -1,4 +1,4 @@
-FROM node:alpine
+FROM node:16
 
 # Set environment variables
 ENV api_key_new=AIzaSyBM96ZlN_58vdEA7F5hbOyZSLkq_4Q5OuQ
@@ -7,10 +7,10 @@ ENV api_key_new=AIzaSyBM96ZlN_58vdEA7F5hbOyZSLkq_4Q5OuQ
 WORKDIR /usr/src/app
 ARG ENVIRONMENT
 # Install deps
-RUN apk update
+RUN apt-get update
 
 # Create Certificate
-RUN apk add ca-certificates
+RUN apt-get install ca-certificates
 
 # RUN npm install
 # If you are building your code for production
