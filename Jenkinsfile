@@ -39,6 +39,24 @@ pipeline {
         awszones='us-west-1b,us-west-1c'
     }
     stages {
+        // stage('Cluster-Delete') {
+        //     steps {
+        //         dir("${k8}") {
+        //             script {
+        //                 sh '''
+        //                     echo ----------//---------------------//---------------------------
+        //                     echo ----------//---------------------//---------------------------
+        //                     echo "Deleting Deployment........."
+        //                 '''
+        //                 sh """
+        //                     set +e
+        //                     kops delete cluster --region=${awsregion} --config=${configfile} --name ${kubecluster} --state=${s3bucket} --yes && sleep 30
+        //                     set -e
+        //                 """
+        //             }
+        //         }
+        //     }
+        // }
         stage('Clean Workspace & System Check') {
             steps {
                 cleanWs()
@@ -244,62 +262,49 @@ pipeline {
                 }
             }
         }
-        stage('Cluster-Deployment') {
-            steps {
-                dir("${k8}") {
-                    script {
-                        sh '''
-                            echo ----------//---------------------//---------------------------
-                            echo ----------//---------------------//---------------------------
-                            echo "Deleting Deployment........."
-                        '''
-                        sh """
-                            set +e
-                            kops delete cluster --region=${awsregion} --config=${configfile} --name ${kubecluster} --state=${s3bucket} --yes && sleep 30
-                            set -e
-                        """
-                        sh '''
-                            echo ----------//---------------------//---------------------------
-                            echo "Attempting Deployment..............."
-                        '''
-                        sh "kops create cluster --config=${configfile} --name=${kubecluster} --state=${s3bucket} --zones=${awszones} --node-count=2 --node-size=t3.medium --master-size=t3.medium --dns-zone=${kubecluster} --node-volume-size=15 --master-volume-size=15 && sleep 2"
-                        sh "echo ----------//---------------------//---------------------------"
-                        sh "kops update cluster --config=${configfile} --name ${kubecluster} --state=${s3bucket} --yes --admin && sleep 2"
-                        sh "echo ----------//---------------------//---------------------------"
-                        sh """
-                            set +e
-                            kops validate cluster --config=${configfile} --name=${kubecluster} --state=${s3bucket} --wait 20m --count 5 && sleep 2
-                            set -e
-                        """
-                        sh '''
-                            echo ----------//---------------------//---------------------------
-                            echo ----------//---------------------//---------------------------
-                        '''
-                    }
-                }
-            }
-            post {
-                always {
-                    echo '########## Cluster Health Notification ##########'
-                    slackSend channel: '#kube-cluster-health',
-                    color: COLOR_MAP[currentBuild.currentResult],
-                    message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
-                }
-            }
-        }
+        // stage('Cluster-Deployment') {
+        //     steps {
+        //         dir("${k8}") {
+        //             script {
+        //                 sh '''
+        //                     echo ----------//---------------------//---------------------------
+        //                     echo ----------//---------------------//---------------------------
+        //                     echo "Attempting Deployment..............."
+        //                 '''
+        //                 sh "kops create cluster --config=${configfile} --name=${kubecluster} --state=${s3bucket} --zones=${awszones} --node-count=2 --node-size=t3.medium --master-size=t3.medium --dns-zone=${kubecluster} --node-volume-size=15 --master-volume-size=15 && sleep 2"
+        //                 sh "echo ----------//---------------------//---------------------------"
+        //                 sh "kops update cluster --config=${configfile} --name ${kubecluster} --state=${s3bucket} --yes --admin && sleep 2"
+        //                 sh "echo ----------//---------------------//---------------------------"
+        //                 sh """
+        //                     set +e
+        //                     kops validate cluster --config=${configfile} --name=${kubecluster} --state=${s3bucket} --wait 20m --count 5 && sleep 2
+        //                     set -e
+        //                 """
+        //                 sh '''
+        //                     echo ----------//---------------------//---------------------------
+        //                     echo ----------//---------------------//---------------------------
+        //                 '''
+        //             }
+        //         }
+        //     }
+        //     post {
+        //         always {
+        //             echo '########## Cluster Health Notification ##########'
+        //             slackSend channel: '#kube-cluster-health',
+        //             color: COLOR_MAP[currentBuild.currentResult],
+        //             message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
+        //         }
+        //     }
+        // }
         stage('Application-Deployment') {
             steps {
                 dir("${k8}") {
                     sh "/bin/bash move.sh"
                     // sh "helm upgrade my-app ./helm/profilecharts --set backimage=${registry_back}:v${BUILD_NUMBER} --set frontimage=${registry_front}:v${BUILD_NUMBER}"
-                    sh "helm upgrade --install --force --kubeconfig=${configfile} my-app ./helm/profilecharts --set backimage=${registry_back}:v${BUILD_NUMBER} --set frontimage=${registry_front}:v${BUILD_NUMBER}"
+                    sh "helm upgrade --force --kubeconfig=${configfile} my-app ./helm/profilecharts --set backimage=${registry_back}:v${BUILD_NUMBER} --set frontimage=${registry_front}:v${BUILD_NUMBER}"
 
                     sh '''
-                    for ((i=240; i>=1; i--)); do
-                        echo "$i"
-                        sleep 1
-                    done
-
+                    sleep 240
                     if [ $? -eq 0 ]; then
                         echo "Cluster is now up and running!"
                         echo "Please add DNS entry for:"
