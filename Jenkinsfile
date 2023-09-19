@@ -256,101 +256,26 @@ pipeline {
             steps {
                 dir("${k8}") {
                     script {
-                        sh "export timeout_duration=${timeout_duration} && echo $timeout_duration"
-                        sh "export elapsed_time=${elapsed_time} && echo $elapsed_time"
-                        sh "export condition1_met=${condition1_met} && echo $condition1_met"
-
-                        // sh "condition2_met=${condition2_met} && echo $condition2_met"
                         sh '''
-                            export start_time=$SECONDS && echo $start_time
-                            echo ##################################################################################################
-                            echo ##################################################################################################
-                        '''
-                        sh '''
+                            echo ----------//---------------------//---------------------------
+                            echo ----------//---------------------//---------------------------
+                            echo "Deleting Deployment........."
                             set +e
-                            kubectl get pods -n profile-site && proSite=$?
-                            kubectl get pods -n ingress-nginx && ingNginx=$?
-                            
-                            echo ##################################################################################################
-                            if [ ${proSite} -ne 0 ] || [ ${ingNginx} -ne 0 ]; then
-                                kops update cluster --config=/home/ansible/.kube/config --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --yes --admin
-                                kubectl get pods -n profile-site && proSite=$?
-                                kubectl get pods -n ingress-nginx && ingNginx=$?
-
-                                if [ ${proSite} -ne 0 ] || [ ${ingNginx} -ne 0 ]; then
-                                    /home/ansible/kube/./default-scale && sleep 2
-                                    echo "Checking cluster availability.............................................."
-                                    while ! $condition1_met; do
-                                        # && ! $condition2_met; do
-                                        echo ----------//---------------------//---------------------------                                    
-                                        echo ----------//---------------------//---------------------------                                    
-                                        if [ ${elapsed_time} -gt ${timeout_duration} ]; then
-                                            echo "Timeout reached"
-                                            kubectl get pods -n profile-site && proSite=$?
-                                            kubectl get pods -n ingress-nginx && ingNginx=$?
-
-                                            echo Cluster update failed. Temporarily unable to resolve endpoint.
-                                            if [ ${proSite} -ne 0]; then
-                                                echo profile-site namespace failed to update.
-                                            fi
-                                            if [ ${ingNginx} -ne 0]; then
-                                                echo ingress-nginx namespace failed to update.
-                                            fi
-                                            echo ----------//---------------------//---------------------------
-                                            echo ----------//---------------------//---------------------------
-                                            echo Attempting Fresh Deployment.........
-                                            kops delete cluster --name kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --yes && sleep 2
-                                            kops create cluster --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --zones=us-west-1b,us-west-1c --node-count=2 --node-image=ami-0d8471611083c0327 --node-size=t2.small --control-plane-image=ami-0d8471611083c0327 --master-size=t2.medium --dns-zone=kubecluster.shahdevelopment.tech --node-volume-size=15 --master-volume-size=15 && sleep 2
-
-                                            kops update cluster --name kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --yes --admin && sleep 2
-                                            set +e
-                                            kops validate cluster --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --wait 15m --count 20 && sleep 2
-
-                                            set -e
-                                            echo ----------//---------------------//---------------------------                                    
-                                            echo ----------//---------------------//---------------------------                                    
-                                            echo
-                                            echo Diagnostic info:
-                                            echo ###################################################################################################
-                                            kubectl get all
-                                            echo ###################################################################################################
-                                            kubectl get nodes
-                                            echo ###################################################################################################
-                                            kops validate cluster --config=/home/ansible/.kube/config --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 && sleep 3
-                                            echo ###################################################################################################
-                                            kubectl describe all -n profile-site
-                                            echo ###################################################################################################
-                                            kubectl describe all -n ingress-nginx
-                                            echo ----------//---------------------//---------------------------                                    
-                                            echo ----------//---------------------//---------------------------                                    
-                                        else
-                                            set +e
-                                            echo ###################################################################################################
-                                            kops validate cluster --config=/home/ansible/.kube/config --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 && sleep 3
-                                            echo ###################################################################################################
-                                            
-                                            kubectl get pods -n profile-site && proSite=$?
-                                            kubectl get pods -n ingress-nginx && ingNginx=$?
-
-                                            if [ ${proSite} -eq 0 ] && [ ${ingNginx} -eq 0 ]; then
-                                                condition1_met=true
-                                            # if [ $ingNginx -eq 0 ]; then
-                                                # condition2_met=true
-                                            fi
-                                        fi
-                                        elapsed_time=$((SECONDS-start_time))
-                                        set -e
-                                        echo 'Elapsed time: ${elapsed_time} seconds'
-                                        echo ----------//---------------------//---------------------------                                    
-                                        echo ----------//---------------------//---------------------------                                    
-                                    done
-                                else
-                                    echo Cluster is running!
-                                fi
+                            kops delete cluster --name kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --yes && sleep 2
+                            set -e
+                            echo "Attempting Deployment..............."
+                            kops create cluster --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --zones=us-west-1b,us-west-1c --node-count=2 --node-image=ami-0d8471611083c0327 --node-size=t2.small --control-plane-image=ami-0d8471611083c0327 --master-size=t2.medium --dns-zone=kubecluster.shahdevelopment.tech --node-volume-size=15 --master-volume-size=15 && sleep 2
+                            kops update cluster --name kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --yes --admin && sleep 2
+                            set +e
+                            kops validate cluster --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --wait 15m --count 20 && sleep 2
+                            if [ $? -neq 0 ]; then
+                                echo Cluster not running after 15m!
                             else
-                                echo Cluster is runnning!
+                                echo Cluster is now up and running!
                             fi
-                        '''
+                            echo ----------//---------------------//---------------------------
+                            echo ----------//---------------------//---------------------------
+
                     }
                 }
             }
