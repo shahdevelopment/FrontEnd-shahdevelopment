@@ -32,11 +32,11 @@ pipeline {
         front_image_name="$registry_front" + ":v$BUILD_NUMBER"
 
         kubecluster='kubecluster.shahdevelopment.tech'
-        s3-bucket='s3://kubedevops001'
-        config-file='~/.kube/config'
+        s3bucket='s3://kubedevops001'
+        configfile='~/.kube/config'
 
-        aws_region='us-west-1'
-        aws_zones='us-west-1b,us-west-1c'
+        awsregion='us-west-1'
+        awszones='us-west-1b,us-west-1c'
     }
     stages {
         stage('Clean Workspace & System Check') {
@@ -253,17 +253,17 @@ pipeline {
                             echo ----------//---------------------//---------------------------
                             echo "Deleting Deployment........."
                         '''
-                        sh "set +e && kops delete cluster --region=${aws_region} --config=${config-file} --name ${kubecluster} --state=${s3-bucket} --yes && sleep 30 && set -e"    
+                        sh "set +e && kops delete cluster --region=${awsregion} --config=${configfile} --name ${kubecluster} --state=${s3bucket} --yes && sleep 30 && set -e"    
                         sh '''
                             echo ----------//---------------------//---------------------------
                             echo "Attempting Deployment..............."
                         '''
-                        sh "kops create cluster --config=${config-file} --name=${kubecluster} --state=${s3-bucket} --zones=${aws_zones} --node-count=2 --node-size=t3.medium --master-size=t3.medium --dns-zone=${kubecluster} --node-volume-size=15 --master-volume-size=15 && sleep 2"
+                        sh "kops create cluster --config=${configfile} --name=${kubecluster} --state=${s3bucket} --zones=${awszones} --node-count=2 --node-size=t3.medium --master-size=t3.medium --dns-zone=${kubecluster} --node-volume-size=15 --master-volume-size=15 && sleep 2"
                             
                         sh "echo ----------//---------------------//---------------------------"
-                        sh "kops update cluster --config=${config-file} --name ${kubecluster} --state=${s3-bucket} --yes --admin && sleep 2"
+                        sh "kops update cluster --config=${configfile} --name ${kubecluster} --state=${s3bucket} --yes --admin && sleep 2"
                         sh "echo ----------//---------------------//---------------------------"
-                        sh "set +e && kops validate cluster --config=${config-file} --name=${kubecluster} --state=${s3-bucket} --wait 20m --count 5 && sleep 2 && set -e"
+                        sh "set +e && kops validate cluster --config=${configfile} --name=${kubecluster} --state=${s3bucket} --wait 20m --count 5 && sleep 2 && set -e"
                         sh '''
                             echo ----------//---------------------//---------------------------
                             echo ----------//---------------------//---------------------------
@@ -285,7 +285,7 @@ pipeline {
                 dir("${k8}") {
                     sh "/bin/bash move.sh"
                     // sh "helm upgrade my-app ./helm/profilecharts --set backimage=${registry_back}:v${BUILD_NUMBER} --set frontimage=${registry_front}:v${BUILD_NUMBER}"
-                    sh "helm upgrade --install --force --kubeconfig=${config-file} my-app ./helm/profilecharts --set backimage=${registry_back}:v${BUILD_NUMBER} --set frontimage=${registry_front}:v${BUILD_NUMBER}"
+                    sh "helm upgrade --install --force --kubeconfig=${configfile} my-app ./helm/profilecharts --set backimage=${registry_back}:v${BUILD_NUMBER} --set frontimage=${registry_front}:v${BUILD_NUMBER}"
 
                     sh '''
                     for ((i=240; i>=1; i--)); do
