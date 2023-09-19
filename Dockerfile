@@ -10,7 +10,7 @@ ARG ENVIRONMENT
 RUN apk update
 
 # Create Certificate
-RUN apk install ca-certificates
+RUN apk add ca-certificates
 
 # RUN npm install
 # If you are building your code for production
