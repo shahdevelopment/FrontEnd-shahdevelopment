@@ -264,7 +264,7 @@ pipeline {
                             kops delete cluster --name kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --yes && sleep 30
                             set -e
                             echo "Attempting Deployment..............."
-                            kops create cluster --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --zones=us-west-1b,us-west-1c --node-count=2  --node-size=t2.small --control-plane-image=ami-0d8471611083c0327 --master-size=t2.medium --dns-zone=kubecluster.shahdevelopment.tech --node-volume-size=15 --master-volume-size=15 && sleep 2
+                            kops create cluster --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --zones=us-west-1b,us-west-1c --node-count=2 --node-size=t2.small --master-size=t2.medium --dns-zone=kubecluster.shahdevelopment.tech --node-volume-size=15 --master-volume-size=15 && sleep 2
                             kops update cluster --name kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --yes --admin && sleep 2
                             set +e
                             kops validate cluster --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --wait 15m --count 20 && sleep 2
