@@ -31,44 +31,36 @@ pipeline {
         back_image_name="$registry_back" + ":v$BUILD_NUMBER"
         front_image_name="$registry_front" + ":v$BUILD_NUMBER"
 
-        timeout_duration=960
-        elapsed_time=1
-        condition1_met='false'
-        // condition2_met='false'
+        kubecluster='kubecluster.shahdevelopment.tech'
+        s3-bucket='s3://kubedevops001'
+        config-file='~/.kube/config'
+
+        aws_region='us-west-1'
+        aws_zones='us-west-1b,us-west-1c'
     }
     stages {
-        stage('clean-workspace') {
+        stage('Clean Workspace & System Check') {
             steps {
                 cleanWs()
                 sh '''
                     echo "Gathering resource info on ansible control plane........."
                     echo --------------------------------------------------------------------
                     echo --------------------------------------------------------------------
-                    echo
                     free -h -t
-                    echo
                     echo --------------------------------------------------------------------
-                    echo
                     df -h
-                    echo
                     echo --------------------------------------------------------------------
-                    echo
                     whoami
-                    echo
                     echo --------------------------------------------------------------------
-                    echo
                     docker ps
-                    echo
                     echo --------------------------------------------------------------------
-                    echo
                     docker images
-                    echo
                     echo --------------------------------------------------------------------
                     echo --------------------------------------------------------------------
                 '''
             }
         }
-        stage('project-clone') {
+        stage('Clone Github Repos') {
             steps {
                     script {
                         retry(4) {
@@ -101,7 +93,7 @@ pipeline {
                     }
             }    
         }
-        stage('sonarqube Analysis') {
+        stage('Code Sonarqube Analysis') {
             // environment {
             //     scannerHome = tool 'sonar4.7'
             // }
@@ -115,7 +107,7 @@ pipeline {
                 }
             }
         }
-        stage('docker-build-dev') {
+        stage('Build Test Container') {
             steps {
                 dir("${frontend}") {
                     script {
@@ -131,7 +123,7 @@ pipeline {
                 }    
             }
         }
-        stage('run container') {
+        stage('Run Test Containers') {
             steps{
                 script {
                     sh "docker run -dt --name ${backend} -p 9000:9000 ${registry_back}:v${BUILD_NUMBER}"
@@ -144,7 +136,7 @@ pipeline {
                 }
             }
         }
-        stage('test') {
+        stage('Run Path Check on Test Containers') {
             steps {
                 dir("${frontend}") {
                     script {
@@ -154,7 +146,7 @@ pipeline {
                             error("front-Path operation health check failed!")
                         }
                         // sh 'docker exec -it ${frontend} npm test'
-                        sh'docker cp ${frontend}:/usr/src/app/npm-tests/report.json .'
+                        sh 'docker cp ${frontend}:/usr/src/app/npm-tests/report.json .'
                     }
                 }
                 dir("${backend}") {
@@ -203,7 +195,7 @@ pipeline {
                 }
             }
         }
-        stage('docker-build') {
+        stage('Docker-Build') {
             steps {
                 dir("${frontend}") {
                     //     echo " ____   _    _  _____  _       _____       _____  ______  ______  _____   "
@@ -252,7 +244,7 @@ pipeline {
                 }
             }
         }
-        stage('kubernetes-clustervalidation') {
+        stage('Cluster-Deployment') {
             steps {
                 dir("${k8}") {
                     script {
@@ -260,18 +252,19 @@ pipeline {
                             echo ----------//---------------------//---------------------------
                             echo ----------//---------------------//---------------------------
                             echo "Deleting Deployment........."
-                            set +e
-                            kops delete cluster --region=us-west-1 --config=/home/ansible/.kube/config --name kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --yes && sleep 30
-                            set -e
+                        '''
+                        sh "set +e && kops delete cluster --region=${aws_region} --config=${config-file} --name ${kubecluster} --state=${s3-bucket} --yes && sleep 30 && set -e"    
+                        sh '''
                             echo ----------//---------------------//---------------------------
                             echo "Attempting Deployment..............."
-                            kops create cluster --config=/home/ansible/.kube/config --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --zones=us-west-1b,us-west-1c --node-count=2 --node-size=t2.small --master-size=t2.small --dns-zone=kubecluster.shahdevelopment.tech --node-volume-size=15 --master-volume-size=15 && sleep 2
-                            echo ----------//---------------------//---------------------------
-                            kops update cluster --config=/home/ansible/.kube/config --name kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --yes --admin && sleep 2
-                            echo ----------//---------------------//---------------------------
-                            set +e
-                            kops validate cluster --config=/home/ansible/.kube/config --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --wait 20m --count 5 && sleep 2
-                            set -e
+                        '''
+                        sh "kops create cluster --config=${config-file} --name=${kubecluster} --state=${s3-bucket} --zones=${aws_zones} --node-count=2 --node-size=t3.medium --master-size=t3.medium --dns-zone=${kubecluster} --node-volume-size=15 --master-volume-size=15 && sleep 2"
+                            
+                        sh "echo ----------//---------------------//---------------------------"
+                        sh "kops update cluster --config=${config-file} --name ${kubecluster} --state=${s3-bucket} --yes --admin && sleep 2"
+                        sh "echo ----------//---------------------//---------------------------"
+                        sh "set +e && kops validate cluster --config=${config-file} --name=${kubecluster} --state=${s3-bucket} --wait 20m --count 5 && sleep 2 && set -e"
+                        sh '''
                             echo ----------//---------------------//---------------------------
                             echo ----------//---------------------//---------------------------
                         '''
@@ -287,12 +280,12 @@ pipeline {
                 }
             }
         }
-        stage('kubernetes-deploy') {
+        stage('Application-Deployment') {
             steps {
                 dir("${k8}") {
                     sh "/bin/bash move.sh"
                     // sh "helm upgrade my-app ./helm/profilecharts --set backimage=${registry_back}:v${BUILD_NUMBER} --set frontimage=${registry_front}:v${BUILD_NUMBER}"
-                    sh "helm upgrade --install --force --kubeconfig=/home/ansible/.kube/config my-app ./helm/profilecharts --set backimage=${registry_back}:v${BUILD_NUMBER} --set frontimage=${registry_front}:v${BUILD_NUMBER}"
+                    sh "helm upgrade --install --force --kubeconfig=${config-file} my-app ./helm/profilecharts --set backimage=${registry_back}:v${BUILD_NUMBER} --set frontimage=${registry_front}:v${BUILD_NUMBER}"
 
                     sh '''
                     for ((i=240; i>=1; i--)); do
