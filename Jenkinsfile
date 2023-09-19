@@ -261,20 +261,17 @@ pipeline {
                             echo ----------//---------------------//---------------------------
                             echo "Deleting Deployment........."
                             set +e
-                            kops delete cluster --kubeconfig=/home/ansible/.kube/config --name kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --yes && sleep 30
+                            kops delete cluster --region=us-west-1 --config=/home/ansible/.kube/config --name kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --yes && sleep 30
                             set -e
+                            echo ----------//---------------------//---------------------------
                             echo "Attempting Deployment..............."
-                            kops create cluster --kubeconfig=/home/ansible/.kube/config --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --zones=us-west-1b,us-west-1c --node-count=2 --node-size=t3.medium --master-size=t3.medium --dns-zone=kubecluster.shahdevelopment.tech --node-volume-size=15 --master-volume-size=15 && sleep 2
-                            kops update cluster --kubeconfig=/home/ansible/.kube/config --name kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --yes --admin && sleep 2
+                            kops create cluster --config=/home/ansible/.kube/config --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --zones=us-west-1b,us-west-1c --node-count=2 --node-size=t2.small --master-size=t2.small --dns-zone=kubecluster.shahdevelopment.tech --node-volume-size=15 --master-volume-size=15 && sleep 2
+                            echo ----------//---------------------//---------------------------
+                            kops update cluster --config=/home/ansible/.kube/config --name kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --yes --admin && sleep 2
+                            echo ----------//---------------------//---------------------------
                             set +e
-                            kops validate cluster --kubeconfig=/home/ansible/.kube/config --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --wait 15m --count 20 && sleep 2
-                            if [ $? -eq 0 ]; then
-                                echo "Cluster is now up and running!"
-                                echo "Please add DNS entry for:"
-                                aws elbv2 describe-load-balancers | grep DNSName
-                            else
-                                echo Cluster not running after 15m!
-                            fi
+                            kops validate cluster --config=/home/ansible/.kube/config --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --wait 20m --count 5 && sleep 2
+                            set -e
                             echo ----------//---------------------//---------------------------
                             echo ----------//---------------------//---------------------------
                         '''
@@ -295,7 +292,23 @@ pipeline {
                 dir("${k8}") {
                     sh "/bin/bash move.sh"
                     // sh "helm upgrade my-app ./helm/profilecharts --set backimage=${registry_back}:v${BUILD_NUMBER} --set frontimage=${registry_front}:v${BUILD_NUMBER}"
-                    sh "helm upgrade --install --force my-app ./helm/profilecharts --set backimage=${registry_back}:v${BUILD_NUMBER} --set frontimage=${registry_front}:v${BUILD_NUMBER}"
+                    sh "helm upgrade --install --force --kubeconfig=/home/ansible/.kube/config my-app ./helm/profilecharts --set backimage=${registry_back}:v${BUILD_NUMBER} --set frontimage=${registry_front}:v${BUILD_NUMBER}"
+
+                    sh '''
+                    for ((i=240; i>=1; i--)); do
+                        echo "$i"
+                        sleep 1
+                    done
+
+                    if [ $? -eq 0 ]; then
+                        echo "Cluster is now up and running!"
+                        echo "Please add DNS entry for:"
+                        aws elbv2 describe-load-balancers | grep DNSName
+                    else
+                        echo Cluster not running after 15m!
+                    fi
+                    '''
+
                     sh '''
                         set +x
                         echo B                  

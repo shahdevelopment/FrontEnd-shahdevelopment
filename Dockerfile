@@ -1,4 +1,4 @@
-FROM node:16
+FROM node
 
 # Set environment variables
 ENV api_key_new=AIzaSyBM96ZlN_58vdEA7F5hbOyZSLkq_4Q5OuQ
@@ -10,7 +10,7 @@ ARG ENVIRONMENT
 RUN apt-get update
 
 # Create Certificate
-RUN apt-get install ca-certificates
+RUN apt-get install ca-certificates && apt autoremove
 
 # RUN npm install
 # If you are building your code for production
