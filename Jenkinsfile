@@ -253,9 +253,10 @@ pipeline {
                             echo ----------//---------------------//---------------------------
                             echo "Deleting Deployment........."
                         '''
-                        sh "set +e"
-                        sh "kops delete cluster --region=${awsregion} --config=${configfile} --name ${kubecluster} --state=${s3bucket} --yes && sleep 30"
-                        sh "set -e"
+                        sh "set +e \
+                            kops delete cluster --region=${awsregion} --config=${configfile} --name ${kubecluster} --state=${s3bucket} --yes \
+                            sleep 30 \
+                            set -e"
                         sh '''
                             echo ----------//---------------------//---------------------------
                             echo "Attempting Deployment..............."
@@ -264,9 +265,10 @@ pipeline {
                         sh "echo ----------//---------------------//---------------------------"
                         sh "kops update cluster --config=${configfile} --name ${kubecluster} --state=${s3bucket} --yes --admin && sleep 2"
                         sh "echo ----------//---------------------//---------------------------"
-                        sh "set +e"
-                        sh "kops validate cluster --config=${configfile} --name=${kubecluster} --state=${s3bucket} --wait 20m --count 5 && sleep 2"
-                        sh "set -e"
+                        sh "set +e \
+                            kops validate cluster --config=${configfile} --name=${kubecluster} --state=${s3bucket} --wait 20m --count 5 \
+                            sleep 2 \
+                            set -e"
                         sh '''
                             echo ----------//---------------------//---------------------------
                             echo ----------//---------------------//---------------------------
