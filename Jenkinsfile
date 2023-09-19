@@ -272,10 +272,12 @@ pipeline {
                                 echo Cluster not running after 15m!
                             else
                                 echo Cluster is now up and running!
+                                echo Please add DNS entry for:
+                                aws elbv2 describe-load-balancers | grep DNSName
                             fi
                             echo ----------//---------------------//---------------------------
                             echo ----------//---------------------//---------------------------
-
+                        '''
                     }
                 }
             }
