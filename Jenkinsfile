@@ -253,17 +253,20 @@ pipeline {
                             echo ----------//---------------------//---------------------------
                             echo "Deleting Deployment........."
                         '''
-                        sh "set +e && kops delete cluster --region=${awsregion} --config=${configfile} --name ${kubecluster} --state=${s3bucket} --yes && sleep 30 && set -e"    
+                        sh "set +e"
+                        sh "kops delete cluster --region=${awsregion} --config=${configfile} --name ${kubecluster} --state=${s3bucket} --yes && sleep 30"
+                        sh "set -e"
                         sh '''
                             echo ----------//---------------------//---------------------------
                             echo "Attempting Deployment..............."
                         '''
                         sh "kops create cluster --config=${configfile} --name=${kubecluster} --state=${s3bucket} --zones=${awszones} --node-count=2 --node-size=t3.medium --master-size=t3.medium --dns-zone=${kubecluster} --node-volume-size=15 --master-volume-size=15 && sleep 2"
-                            
                         sh "echo ----------//---------------------//---------------------------"
                         sh "kops update cluster --config=${configfile} --name ${kubecluster} --state=${s3bucket} --yes --admin && sleep 2"
                         sh "echo ----------//---------------------//---------------------------"
-                        sh "set +e && kops validate cluster --config=${configfile} --name=${kubecluster} --state=${s3bucket} --wait 20m --count 5 && sleep 2 && set -e"
+                        sh "set +e"
+                        sh "kops validate cluster --config=${configfile} --name=${kubecluster} --state=${s3bucket} --wait 20m --count 5 && sleep 2"
+                        sh "set -e"
                         sh '''
                             echo ----------//---------------------//---------------------------
                             echo ----------//---------------------//---------------------------
