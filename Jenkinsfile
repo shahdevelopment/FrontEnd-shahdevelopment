@@ -264,13 +264,13 @@ pipeline {
                             kops delete cluster --name kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --yes && sleep 30
                             set -e
                             echo "Attempting Deployment..............."
-                            kops create cluster --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --zones=us-west-1b,us-west-1c --node-count=2 --node-size=t2.small --master-size=t2.medium --dns-zone=kubecluster.shahdevelopment.tech --node-volume-size=15 --master-volume-size=15 && sleep 2
+                            kops create cluster --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --zones=us-west-1b,us-west-1c --node-count=2 --node-size=t2.medium --master-size=t2.medium --dns-zone=kubecluster.shahdevelopment.tech --node-volume-size=15 --master-volume-size=15 && sleep 2
                             kops update cluster --name kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --yes --admin && sleep 2
                             set +e
                             kops validate cluster --name=kubecluster.shahdevelopment.tech --state=s3://kubedevops001 --wait 15m --count 20 && sleep 2
                             if [ $? -eq 0 ]; then
-                                echo Cluster is now up and running!
-                                echo Please add DNS entry for:
+                                echo "Cluster is now up and running!"
+                                echo "Please add DNS entry for:"
                                 aws elbv2 describe-load-balancers | grep DNSName
                             else
                                 echo Cluster not running after 15m!
@@ -299,54 +299,54 @@ pipeline {
                     sh '''
                         set +x
                         echo B                  
-                        echo B                                ▓▓▓▓▒▒▒▒▒▒                      
-                        echo B                              ▓▓▓▓▒▒▒▒▒▒▓▓▒▒▓▓                  
-                        echo B                            ▓▓▓▓▓▓░░░░░░▓▓▓▓▓▓                  
-                        echo B                          ▓▓▓▓▓▓░░░░░░░░░░▓▓▓▓▓▓                
-                        echo B                          ▓▓▓▓░░░░░░░░░░░░▓▓▓▓▓▓                
-                        echo B                    ░░    ▓▓▓▓░░░░░░░░░░░░░░▓▓▓▓                
-                        echo B                    ░░░░  ▓▓▓▓░░░░░░░░░░░░░░▓▓▓▓▓▓              
-                        echo B                    ░░░░    ▓▓░░░░░░░░░░░░██▓▓▓▓▓▓              
-                        echo B                    ░░░░░░  ▓▓██░░░░░░░░▒▒██▓▓▓▓▓▓              
-                        echo B                      ░░░░  ▓▓▓▓██▒▒░░▒▒░░██▓▓▓▓                
-                        echo B                        ░░  ░░▓▓░░░░░░░░░░░░░░▓▓                
-                        echo B                        ░░  ▒▒░░░░░░░░░░░░░░▓▓░░░░              
-                        echo B                      ░░░░  ▒▒░░░░▒▒░░░░░░▓▓░░░░░░░░            
-                        echo B                      ░░░░▓▓░░░░▒▒░░░░░░▓▓░░░░░░░░░░            
-                        echo B                    ░░░░▒▒▓▓▒▒▓▓▓▓▓▓▓▓▓▓▓▓░░░░▒▒░░░░            
-                        echo B                    ░░░░▓▓▓▓▓▓▓▓░░▓▓▓▓▓▓▓▓▓▓░░  ░░░░            
-                        echo B                    ░░░░░░▓▓▓▓░░░░░░▓▓▓▓▓▓░░    ░░░░            
-                        echo B                    ░░░░░░  ░░░░░░░░░░░░░░      ░░░░            
-                        echo B                            ░░░░░░░░░░░░▒▒      ░░░░░░          
-                        echo B                            ░░░░░░░░░░░░░░░░      ░░░░░░        
-                        echo B                            ░░░░░░░░░░░░░░░░░░░     ░░░░░░      
-                        echo B                            ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓    ░░░░░░    
-                        echo B                            ▓▓▓▓▓▓░░░░░░░░░░░░░░▓▓    ░░░░    
-                        echo B                            ▓▓░░░░░░░░░░░░░░░░░░▒▒    ░░░░░░  
-                        echo B                            ░░░░░░░░░░░░░░░░░░░░░      ░░  ░░  
-                        echo B                            ░░░░░░░░░░░░░░░░░░         ░░    ░░
-                        echo B                          ░░░░░░░░░░░░░░░░░░                    
-                        echo B                        ░░░░░░░░░░░░░░░░░░░░                    
-                        echo B                        ░░░░░░░░░░░░░░░░░░░░                    
-                        echo B                      ░░░░░░░░░░░░░░░░░░░░░░                    
-                        echo B                    ░░░░░░░░░░░░░░░░░░░░░░░░                    
-                        echo B                  ░░░░░░░░░░░░░░░░░░░░░░░░░░                    
-                        echo B                  ░░░░░░░░░░░░░░░░░░░░░░░░    ░░░░              
-                        echo B                  ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░          
-                        echo B                    ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░      
-                        echo B                                  ░░░░░░░░                      
-                        echo B                                  ░░░░░░░░░░                    
-                        echo B                                  ░░░░░░░░░░                    
-                        echo B                                  ░░░░░░░░░░                    
-                        echo B                                    ░░░░░░░░                    
-                        echo B                                    ░░░░░░░░                    
-                        echo B                                    ░░░░░░                      
-                        echo B                                    ░░░░░░                      
-                        echo B                                    ░░░░░░                      
-                        echo B                                    ░░░░                        
-                        echo B                                    ░░░░                        
-                        echo B                                  ░░░░░░                        
-                        echo B                            ▒▒░░░░░░░░░░░░        
+                        echo B "                               ▓▓▓▓▒▒▒▒▒▒                      "
+                        echo B "                             ▓▓▓▓▒▒▒▒▒▒▓▓▒▒▓▓                  "
+                        echo B "                           ▓▓▓▓▓▓░░░░░░▓▓▓▓▓▓                  "
+                        echo B "                         ▓▓▓▓▓▓░░░░░░░░░░▓▓▓▓▓▓                "
+                        echo B "                         ▓▓▓▓░░░░░░░░░░░░▓▓▓▓▓▓                "
+                        echo B "                   ░░    ▓▓▓▓░░░░░░░░░░░░░░▓▓▓▓                "
+                        echo B "                   ░░░░  ▓▓▓▓░░░░░░░░░░░░░░▓▓▓▓▓▓              "
+                        echo B "                   ░░░░    ▓▓░░░░░░░░░░░░██▓▓▓▓▓▓              "
+                        echo B "                   ░░░░░░  ▓▓██░░░░░░░░▒▒██▓▓▓▓▓▓              "
+                        echo B '                     ░░░░  ▓▓▓▓██▒▒░░▒▒░░██▓▓▓▓                "
+                        echo B "                       ░░  ░░▓▓░░░░░░░░░░░░░░▓▓                "
+                        echo B "                       ░░  ▒▒░░░░░░░░░░░░░░▓▓░░░░              "
+                        echo B "                     ░░░░  ▒▒░░░░▒▒░░░░░░▓▓░░░░░░░░            "
+                        echo B "                     ░░░░▓▓░░░░▒▒░░░░░░▓▓░░░░░░░░░░            "
+                        echo B "                   ░░░░▒▒▓▓▒▒▓▓▓▓▓▓▓▓▓▓▓▓░░░░▒▒░░░░            "
+                        echo B "                   ░░░░▓▓▓▓▓▓▓▓░░▓▓▓▓▓▓▓▓▓▓░░  ░░░░            "
+                        echo B "                   ░░░░░░▓▓▓▓░░░░░░▓▓▓▓▓▓░░    ░░░░            "
+                        echo B "                   ░░░░░░  ░░░░░░░░░░░░░░      ░░░░            "
+                        echo B "                           ░░░░░░░░░░░░▒▒      ░░░░░░          "
+                        echo B "                           ░░░░░░░░░░░░░░░░      ░░░░░░        "
+                        echo B "                           ░░░░░░░░░░░░░░░░░░░     ░░░░░░      "
+                        echo B "                           ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓    ░░░░░░    "
+                        echo B "                           ▓▓▓▓▓▓░░░░░░░░░░░░░░▓▓    ░░░░    "
+                        echo B "                           ▓▓░░░░░░░░░░░░░░░░░░▒▒    ░░░░░░  "
+                        echo B "                           ░░░░░░░░░░░░░░░░░░░░░      ░░  ░░  "
+                        echo B "                           ░░░░░░░░░░░░░░░░░░         ░░    ░░"
+                        echo B "                         ░░░░░░░░░░░░░░░░░░                    "
+                        echo B "                       ░░░░░░░░░░░░░░░░░░░░                    "
+                        echo B "                       ░░░░░░░░░░░░░░░░░░░░                    "
+                        echo B "                     ░░░░░░░░░░░░░░░░░░░░░░                    "
+                        echo B "                   ░░░░░░░░░░░░░░░░░░░░░░░░                    "
+                        echo B "                 ░░░░░░░░░░░░░░░░░░░░░░░░░░                    "
+                        echo B "                 ░░░░░░░░░░░░░░░░░░░░░░░░    ░░░░              "
+                        echo B "                 ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░          "
+                        echo B "                   ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░      "
+                        echo B "                                 ░░░░░░░░                      "
+                        echo B "                                 ░░░░░░░░░░                    "
+                        echo B "                                 ░░░░░░░░░░                    "
+                        echo B "                                 ░░░░░░░░░░                    "
+                        echo B "                                   ░░░░░░░░                    "
+                        echo B "                                   ░░░░░░░░                    "
+                        echo B "                                   ░░░░░░                      "
+                        echo B "                                   ░░░░░░                      "
+                        echo B "                                   ░░░░░░                      "
+                        echo B "                                   ░░░░                        "
+                        echo B "                                   ░░░░                        "
+                        echo B "                                 ░░░░░░                        "
+                        echo B "                           ▒▒░░░░░░░░░░░░        "
                         set -x
                     ''' //
                 }
