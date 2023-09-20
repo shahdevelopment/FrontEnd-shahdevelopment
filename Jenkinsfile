@@ -12,7 +12,7 @@ pipeline {
     // }
     options { skipDefaultCheckout() }
     parameters  {
-        def configFileContent = readFile 'configFile'
+        def configFileContent = readFile configFile
 
         def registry_front = configFileContent =~ /^registry\.front=(.*)$/ ? configFileContent[0][1] : null
         def registry_back = configFileContent =~ /^registry\.back=(.*)$/ ? configFileContent[1][1] : null
