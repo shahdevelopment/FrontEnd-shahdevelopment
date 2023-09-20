@@ -12,35 +12,39 @@ pipeline {
         // ws("/opt/jenkins-slave/workspace/profile-site-build")
     // }
     options { skipDefaultCheckout() }
-    writeFile file: 'env-vars', text: params.environment
-    configFileContent = readFile 'env-vars'
-    registry_front = (configFileContent =~ /^registry\.front=(.*)$/)[0][1]
-    registry_back = (configFileContent =~ /^registry\.back=(.*)$/)[0][1]
-    registryCredentials = (configFileContent =~ /^registry\.creds=(.*)$/)[0][1]
-    frontend = (configFileContent =~ /^app\.frontend=(.*)$/)[0][1]
-    backend = (configFileContent =~ /^app\.backend=(.*)$/)[0][1]
-    k8 = (configFileContent =~ /^kube\.k8=(.*)$/)[0][1]
-    front = (configFileContent =~ /^service\.front=(.*)$/)[0][1]
-    back = (configFileContent =~ /^service\.back=(.*)$/)[0][1]
-    SONARPROJECT_KEY = (configFileContent =~ /^sonar\.projectkey=(.*)$/)[0][1]
-    scannerHome = (configFileContent =~ /^sonar\.scannerhome=(.*)$/)[0][1]
-    frontgit = (configFileContent =~ /^git\.front=(.*)$/)[0][1]
-    backgit = (configFileContent =~ /^git\.back=(.*)$/)[0][1]
-    defgit = (configFileContent =~ /^git\.definition=(.*)$/)[0][1]
-    back_image_name = (configFileContent =~ /^image\.back=(.*)$/)[0][1]
-    front_image_name = (configFileContent =~ /^image\.front=(.*)$/)[0][1]
-    kubecluster = (configFileContent =~ /^kube\.url=(.*)$/)[0][1]
-    s3bucket = (configFileContent =~ /^s3\.bucket=(.*)$/)[0][1]
-    config = (configFileContent =~ /^kube\.config=(.*)$/)[0][1]
-    awsregion = (configFileContent =~ /^aws\.region=(.*)$/)[0][1]
-    awszones = (configFileContent =~ /^aws\.zones=(.*)$/)[0][1]
-    api_maps_key = (configFileContent =~ /^api\.maps_key=(.*)$/)[0][1]
-    api_chat_key = (configFileContent =~ /^api\.chat_key=(.*)$/)[0][1]
-    docker_config_json = (configFileContent =~ /^docker\.configjson=(.*)$/)[0][1]
-    ssl_tls_crt = (configFileContent =~ /^tls\.crt=(.*)$/)[0][1]
-    ssl_tls_key = (configFileContent =~ /^tls\.key=(.*)$/)[0][1]
+    // registry_front = (configFileContent =~ /^registry\.front=(.*)$/)[0][1]
+    // registry_back = (configFileContent =~ /^registry\.back=(.*)$/)[0][1]
+    // registryCredentials = (configFileContent =~ /^registry\.creds=(.*)$/)[0][1]
+    // frontend = (configFileContent =~ /^app\.frontend=(.*)$/)[0][1]
+    // backend = (configFileContent =~ /^app\.backend=(.*)$/)[0][1]
+    // k8 = (configFileContent =~ /^kube\.k8=(.*)$/)[0][1]
+    // front = (configFileContent =~ /^service\.front=(.*)$/)[0][1]
+    // back = (configFileContent =~ /^service\.back=(.*)$/)[0][1]
+    // SONARPROJECT_KEY = (configFileContent =~ /^sonar\.projectkey=(.*)$/)[0][1]
+    // scannerHome = (configFileContent =~ /^sonar\.scannerhome=(.*)$/)[0][1]
+    // frontgit = (configFileContent =~ /^git\.front=(.*)$/)[0][1]
+    // backgit = (configFileContent =~ /^git\.back=(.*)$/)[0][1]
+    // defgit = (configFileContent =~ /^git\.definition=(.*)$/)[0][1]
+    // back_image_name = (configFileContent =~ /^image\.back=(.*)$/)[0][1]
+    // front_image_name = (configFileContent =~ /^image\.front=(.*)$/)[0][1]
+    // kubecluster = (configFileContent =~ /^kube\.url=(.*)$/)[0][1]
+    // s3bucket = (configFileContent =~ /^s3\.bucket=(.*)$/)[0][1]
+    // config = (configFileContent =~ /^kube\.config=(.*)$/)[0][1]
+    // awsregion = (configFileContent =~ /^aws\.region=(.*)$/)[0][1]
+    // awszones = (configFileContent =~ /^aws\.zones=(.*)$/)[0][1]
+    // api_maps_key = (configFileContent =~ /^api\.maps_key=(.*)$/)[0][1]
+    // api_chat_key = (configFileContent =~ /^api\.chat_key=(.*)$/)[0][1]
+    // docker_config_json = (configFileContent =~ /^docker\.configjson=(.*)$/)[0][1]
+    // ssl_tls_crt = (configFileContent =~ /^tls\.crt=(.*)$/)[0][1]
+    // ssl_tls_key = (configFileContent =~ /^tls\.key=(.*)$/)[0][1]
 
     stages {
+        stage('Create Params') {
+            steps {
+                writeFile file: 'env-vars', text: params.environment
+                def configFileContent = readFile 'env-vars'
+            }
+        }
         // stage('Cluster-Delete') {
         //     steps {
         //         dir("${k8}") {
