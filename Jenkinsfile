@@ -1,13 +1,14 @@
 node {
     stage('File Param WA') {
         writeFile file: 'env-var', text: params.environment
+        def configFile = 'env-var'
+
     }
 }
 def COLOR_MAP = [
     'SUCCESS': 'good', 
     'FAILURE': 'danger',
 ]
-def configFile = 'env-var'
 def configFileContent = readFile params.configFile
 
 def registry_front = (configFileContent =~ /^registry\.front=(.*)$/)[0][1]
