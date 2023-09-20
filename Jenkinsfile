@@ -4,42 +4,95 @@ node {
             writeFile file: 'env-var', text: params.environment
             configFile = './env-var'
             configFileContent = readFile configFile
-            registry_front = (configFileContent =~ /^registry\.front=(.*)$/).size() > 0 ? (configFileContent =~ /^registry\.front=(.*)$/)[0][1] : null
+            
+            
+            configFileContent.eachLine { line ->
+                def parts = line.split('=')
+                if (parts.size() == 2) {
+                    def paramName = parts[0].trim()
+                    def paramValue = parts[1].trim()
+                    parameters[paramName] = paramValue
+                }
+            }
+            
+            echo registry_front=${parameters['registry.front']}
+            echo registry_back=${parameters['registry.back']}
+            echo registryCredentials=${parameters['registry.creds']}
+            
+            echo frontend=${parameters['app.frontend']}
+            echo backend=${parameters['app.backend']}
+            echo k8=${parameters['kube.k8']}
+            
+            echo front=${parameters['service.front']}
+            echo back=${parameters['service.back']}
+            
+            echo SONARPROJECT_KEY=${parameters['sonar.projectkey']}
+            echo scannerHome=${parameters['sonar.scannerhome']}
+            
+            echo frontgit=${parameters['git.front']}
+            echo backgit=${parameters['git.back']}
+            echo defgit=${parameters['git.definition']}
+            
+            echo back_image_name=${parameters['image.back']}
+            echo front_image_name=${parameters['image.front']}
+            
+            echo kubecluster=${parameters['kube.url']}
+            echo s3bucket=${parameters['s3.bucket']}
+            echo config=${parameters['kube.config']}
+            
+            echo awsregion=${parameters['aws.region']}
+            echo awszones=${parameters['aws.zones']}
 
-            registry_back = (configFileContent =~ /^registry\.back=(.*)$/).size() > 0 ? (configFileContent =~ /^registry\.back=(.*)$/)[0][1] : null
-            registryCredentials = (configFileContent =~ /^registry\.creds=(.*)$/).size() > 0 ? (configFileContent =~ /^registry\.creds=(.*)$/)[0][1] : null
+            echo api_maps_key=${parameters['api.maps_key']}
+            echo api_chat_key=${parameters['api.chat_key']}
             
-            frontend = (configFileContent =~ /^app\.frontend=(.*)$/).size() > 0 ? (configFileContent =~ /^app\.frontend=(.*)$/)[0][1] : null
-            backend = (configFileContent =~ /^app\.backend=(.*)$/).size() > 0 ? (configFileContent =~ /^app\.backend=(.*)$/)[0][1] : null
-            k8 = (configFileContent =~ /^kube\.k8=(.*)$/).size() > 0 ? (configFileContent =~ /^kube\.k8=(.*)$/)[0][1] : null
+            echo docker_config_json=${parameters['docker.configjson']}
             
-            front = (configFileContent =~ /^service\.front=(.*)$/).size() > 0 ? (configFileContent =~ /^service\.front=(.*)$/)[0][1] : null
-            back = (configFileContent =~ /^service\.back=(.*)$/).size() > 0 ? (configFileContent =~ /^service\.back=(.*)$/)[0][1] : null
+            echo ssl_tls_crt=${parameters['tls.crt']}
+            echo ssl_tls_key=${parameters['tls.key']}
+
+
+
+
+            // registry_front = (configFileContent =~ /^registry\.front=(.*)$/).size() > 0 ? (configFileContent =~ /^registry\.front=(.*)$/)[0][1] : null
+
+            // registry_back = (configFileContent =~ /^registry\.back=(.*)$/).size() > 0 ? (configFileContent =~ /^registry\.back=(.*)$/)[0][1] : null
+            // registryCredentials = (configFileContent =~ /^registry\.creds=(.*)$/).size() > 0 ? (configFileContent =~ /^registry\.creds=(.*)$/)[0][1] : null
             
-            SONARPROJECT_KEY = (configFileContent =~ /^sonar\.projectkey=(.*)$/).size() > 0 ? (configFileContent =~ /^sonar\.projectkey=(.*)$/)[0][1] : null
-            scannerHome = (configFileContent =~ /^sonar\.scannerhome=(.*)$/).size() > 0 ? (configFileContent =~ /^sonar\.scannerhome=(.*)$/)[0][1] : null
+            // frontend = (configFileContent =~ /^app\.frontend=(.*)$/).size() > 0 ? (configFileContent =~ /^app\.frontend=(.*)$/)[0][1] : null
+            // backend = (configFileContent =~ /^app\.backend=(.*)$/).size() > 0 ? (configFileContent =~ /^app\.backend=(.*)$/)[0][1] : null
+            // k8 = (configFileContent =~ /^kube\.k8=(.*)$/).size() > 0 ? (configFileContent =~ /^kube\.k8=(.*)$/)[0][1] : null
             
-            frontgit = (configFileContent =~ /^git\.front=(.*)$/).size() > 0 ? (configFileContent =~ /^git\.front=(.*)$/)[0][1] : null
-            backgit = (configFileContent =~ /^git\.back=(.*)$/).size() > 0 ? (configFileContent =~ /^git\.back=(.*)$/)[0][1] : null
-            defgit = (configFileContent =~ /^git\.def=(.*)$/).size() > 0 ? (configFileContent =~ /^git\.def=(.*)$/)[0][1] : null
+            // front = (configFileContent =~ /^service\.front=(.*)$/).size() > 0 ? (configFileContent =~ /^service\.front=(.*)$/)[0][1] : null
+            // back = (configFileContent =~ /^service\.back=(.*)$/).size() > 0 ? (configFileContent =~ /^service\.back=(.*)$/)[0][1] : null
             
-            back_image_name = (configFileContent =~ /^image\.back=(.*)$/).size() > 0 ? (configFileContent =~ /^image\.back=(.*)$/)[0][1] : null
-            front_image_name = (configFileContent =~ /^image\.front=(.*)$/).size() > 0 ? (configFileContent =~ /^image\.front=(.*)$/)[0][1] : null
+            // SONARPROJECT_KEY = (configFileContent =~ /^sonar\.projectkey=(.*)$/).size() > 0 ? (configFileContent =~ /^sonar\.projectkey=(.*)$/)[0][1] : null
+            // scannerHome = (configFileContent =~ /^sonar\.scannerhome=(.*)$/).size() > 0 ? (configFileContent =~ /^sonar\.scannerhome=(.*)$/)[0][1] : null
             
-            kubecluster = (configFileContent =~ /^kube\.url=(.*)$/).size() > 0 ? (configFileContent =~ /^kube\.url=(.*)$/)[0][1] : null
-            s3bucket = (configFileContent =~ /^s3\.bucket=(.*)$/).size() > 0 ? (configFileContent =~ /^s3\.bucket=(.*)$/)[0][1] : null
-            config = (configFileContent =~ /^kube\.config=(.*)$/).size() > 0 ? (configFileContent =~ /^kube\.config=(.*)$/)[0][1] : null
+            // frontgit = (configFileContent =~ /^git\.front=(.*)$/).size() > 0 ? (configFileContent =~ /^git\.front=(.*)$/)[0][1] : null
+            // backgit = (configFileContent =~ /^git\.back=(.*)$/).size() > 0 ? (configFileContent =~ /^git\.back=(.*)$/)[0][1] : null
+            // defgit = (configFileContent =~ /^git\.def=(.*)$/).size() > 0 ? (configFileContent =~ /^git\.def=(.*)$/)[0][1] : null
             
-            awsregion = (configFileContent =~ /^aws\.region=(.*)$/).size() > 0 ? (configFileContent =~ /^aws\.region=(.*)$/)[0][1] : null
-            awszones = (configFileContent =~ /^aws\.zones=(.*)$/).size() > 0 ? (configFileContent =~ /^aws\.zones=(.*)$/)[0][1] : null
+            // back_image_name = (configFileContent =~ /^image\.back=(.*)$/).size() > 0 ? (configFileContent =~ /^image\.back=(.*)$/)[0][1] : null
+            // front_image_name = (configFileContent =~ /^image\.front=(.*)$/).size() > 0 ? (configFileContent =~ /^image\.front=(.*)$/)[0][1] : null
             
-            api_maps_key = (configFileContent =~ /^api\.maps_key=(.*)$/).size() > 0 ? (configFileContent =~ /^api\.maps_key=(.*)$/)[0][1] : null
-            api_chat_key = (configFileContent =~ /^api\.chat_key=(.*)$/).size() > 0 ? (configFileContent =~ /^api\.chat_key=(.*)$/)[0][1] : null
+            // kubecluster = (configFileContent =~ /^kube\.url=(.*)$/).size() > 0 ? (configFileContent =~ /^kube\.url=(.*)$/)[0][1] : null
+            // s3bucket = (configFileContent =~ /^s3\.bucket=(.*)$/).size() > 0 ? (configFileContent =~ /^s3\.bucket=(.*)$/)[0][1] : null
+            // config = (configFileContent =~ /^kube\.config=(.*)$/).size() > 0 ? (configFileContent =~ /^kube\.config=(.*)$/)[0][1] : null
             
-            docker_config_json = (configFileContent =~ /^docker\.configjson=(.*)$/).size() > 0 ? (configFileContent =~ /^docker\.configjson=(.*)$/)[0][1] : null
+            // awsregion = (configFileContent =~ /^aws\.region=(.*)$/).size() > 0 ? (configFileContent =~ /^aws\.region=(.*)$/)[0][1] : null
+            // awszones = (configFileContent =~ /^aws\.zones=(.*)$/).size() > 0 ? (configFileContent =~ /^aws\.zones=(.*)$/)[0][1] : null
             
-            ssl_tls_crt = (configFileContent =~ /^tls\.crt=(.*)$/).size() > 0 ? (configFileContent =~ /^tls\.crt=(.*)$/)[0][1] : null
-            ssl_tls_key = (configFileContent =~ /^tls\.key=(.*)$/).size() > 0 ? (configFileContent =~ /^tls\.key=(.*)$/)[0][1] : null
+            // api_maps_key = (configFileContent =~ /^api\.maps_key=(.*)$/).size() > 0 ? (configFileContent =~ /^api\.maps_key=(.*)$/)[0][1] : null
+            // api_chat_key = (configFileContent =~ /^api\.chat_key=(.*)$/).size() > 0 ? (configFileContent =~ /^api\.chat_key=(.*)$/)[0][1] : null
+            
+            // docker_config_json = (configFileContent =~ /^docker\.configjson=(.*)$/).size() > 0 ? (configFileContent =~ /^docker\.configjson=(.*)$/)[0][1] : null
+            
+            // ssl_tls_crt = (configFileContent =~ /^tls\.crt=(.*)$/).size() > 0 ? (configFileContent =~ /^tls\.crt=(.*)$/)[0][1] : null
+            // ssl_tls_key = (configFileContent =~ /^tls\.key=(.*)$/).size() > 0 ? (configFileContent =~ /^tls\.key=(.*)$/)[0][1] : null
+
+
+
 
         }
     }
