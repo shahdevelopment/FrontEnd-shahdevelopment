@@ -17,41 +17,66 @@ node {
                 }
             }
             
-            echo registry_front="${parameters['registry.front']}"
-            echo registry_back="${parameters['registry.back']}"
-            echo registryCredentials="${parameters['registry.creds']}"
+            registry_front="${parameters['registry.front']}"
+            echo ${registry_front}
+            registry_back="${parameters['registry.back']}"
+            echo ${registry_back}
+            registryCredentials="${parameters['registry.creds']}"
+            echo ${registryCredentials}
             
-            echo frontend="${parameters['app.frontend']}"
-            echo backend="${parameters['app.backend']}"
-            echo k8="${parameters['kube.k8']}"
+            frontend="${parameters['app.frontend']}"
+            echo ${frontend}
+            backend="${parameters['app.backend']}"
+            echo ${backend}
+            k8="${parameters['kube.k8']}"
+            echo ${k8}
             
-            echo front="${parameters['service.front']}"
-            echo back="${parameters['service.back']}"
+            front="${parameters['service.front']}"
+            echo ${front}
+            back="${parameters['service.back']}"
+            echo ${back}
             
-            echo SONARPROJECT_KEY="${parameters['sonar.projectkey']}"
-            echo scannerHome="${parameters['sonar.scannerhome']}"
+            SONARPROJECT_KEY="${parameters['sonar.projectkey']}"
+            echo ${SONARPROJECT_KEY}
+            scannerHome="${parameters['sonar.scannerhome']}"
+            echo ${scannerHome}
             
-            echo frontgit="${parameters['git.front']}"
-            echo backgit="${parameters['git.back']}"
-            echo defgit="${parameters['git.definition']}"
+            frontgit="${parameters['git.front']}"
+            echo ${frontgit}
+            backgit="${parameters['git.back']}"
+            echo ${backgit}
+            defgit="${parameters['git.definition']}"
+            echo ${defgit}
             
-            echo back_image_name="${parameters['image.back']}"
-            echo front_image_name="${parameters['image.front']}"
+            back_image_name="${parameters['image.back']}"
+            echo ${back_image_name}
+            front_image_name="${parameters['image.front']}"
+            echo ${front_image_name}
             
-            echo kubecluster="${parameters['kube.url']}"
-            echo s3bucket="${parameters['s3.bucket']}"
-            echo config="${parameters['kube.config']}"
+            kubecluster="${parameters['kube.url']}"
+            echo ${kubecluster}
+            s3bucket="${parameters['s3.bucket']}"
+            echo ${s3bucket}
+            config="${parameters['kube.config']}"
+            echo ${config}
             
-            echo awsregion="${parameters['aws.region']}"
-            echo awszones="${parameters['aws.zones']}"
+            awsregion="${parameters['aws.region']}"
+            echo ${awsregion}
+            awszones="${parameters['aws.zones']}"
+            echo ${awszones}
 
-            echo api_maps_key="${parameters['api.maps_key']}"
-            echo api_chat_key="${parameters['api.chat_key']}"
+            api_maps_key="${parameters['api.maps_key']}"
+            echo ${api_maps_key}
+            api_chat_key="${parameters['api.chat_key']}"
+            echo ${api_chat_key}
             
-            echo docker_config_json="${parameters['docker.configjson']}"
+            docker_config_json="${parameters['docker.configjson']}"
+            echo ${docker_config_json}
             
-            echo ssl_tls_crt="${parameters['tls.crt']}"
-            echo ssl_tls_key="${parameters['tls.key']}"
+            ssl_tls_crt="${parameters['tls.crt']}"
+            echo ${ssl_tls_crt}
+            ssl_tls_key="${parameters['tls.key']}"
+            echo ${ssl_tls_key}
 
 
 
