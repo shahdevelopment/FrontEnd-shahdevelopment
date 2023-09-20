@@ -1,8 +1,7 @@
 FROM node
 
 # Set environment variables
-ENV api_key_new=AIzaSyBM96ZlN_58vdEA7F5hbOyZSLkq_4Q5OuQ
-#     user_password=h4b32hi4b32ihbr34itb43ugb3uqgbo38g7oq53w85h8oqeriuh2f793
+ENV api_key_new=$maps_key
 # Set the working directory
 WORKDIR /usr/src/app
 ARG ENVIRONMENT

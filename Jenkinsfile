@@ -2,6 +2,43 @@ def COLOR_MAP = [
     'SUCCESS': 'good', 
     'FAILURE': 'danger',
 ]
+def configFileContent = readFile 'params.configFile'
+
+def registry_front = configFileContent =~ /^registry\.front=(.*)$/ ? configFileContent[0][1] : null
+def registry_back = configFileContent =~ /^registry\.back=(.*)$/ ? configFileContent[1][1] : null
+def registryCredentials = configFileContent =~ /^registry\.creds=(.*)$/ ? configFileContent[2][1] : null
+
+def frontend = configFileContent =~ /^app\.frontend=(.*)$/ ? configFileContent[0][1] : null
+def backend = configFileContent =~ /^app\.backend=(.*)$/ ? configFileContent[1][1] : null
+def k8 = configFileContent =~ /^kube\.k8=(.*)$/ ? configFileContent[2][1] : null
+
+def front = configFileContent =~ /^service\.front=(.*)$/ ? configFileContent[0][1] : null
+def back = configFileContent =~ /^service\.back=(.*)$/ ? configFileContent[1][1] : null
+
+def SONARPROJECT_KEY = configFileContent =~ /^sonar\.projectkey=(.*)$/ ? configFileContent[2][1] : null
+def scannerHome = configFileContent =~ /^sonar\.scannerhome=(.*)$/ ? configFileContent[0][1] : null
+
+def frontgit = configFileContent =~ /^git\.front=(.*)$/ ? configFileContent[1][1] : null
+def backgit = configFileContent =~ /^git\.back=(.*)$/ ? configFileContent[2][1] : null
+def defgit = configFileContent =~ /^git\.def=(.*)$/ ? configFileContent[0][1] : null
+
+def back_image_name = configFileContent =~ /^image\.back=(.*)$/ ? configFileContent[1][1] : null
+def front_image_name = configFileContent =~ /^image\.front=(.*)$/ ? configFileContent[2][1] : null
+
+def kubecluster = configFileContent =~ /^kube\.url=(.*)$/ ? configFileContent[0][1] : null
+def s3bucket = configFileContent =~ /^s3\.bucket=(.*)$/ ? configFileContent[1][1] : null
+def config = configFileContent =~ /^kube\.config=(.*)$/ ? configFileContent[2][1] : null
+
+def awsregion = configFileContent =~ /^aws\.region=(.*)$/ ? configFileContent[0][1] : null
+def awszones = configFileContent =~ /^aws\.zones=(.*)$/ ? configFileContent[1][1] : null
+
+def api_maps_key = configFileContent =~ /^api\.maps_key=(.*)$/ ? configFileContent[0][1] : null
+def api_chat_key = configFileContent =~ /^api\.chat_key=(.*)$/ ? configFileContent[1][1] : null
+
+def docker_config_json = configFileContent =~ /^docker\.configjson=(.*)$/ ? configFileContent[0][1] : null
+def ssl_tls_crt = configFileContent =~ /^tls\.crt=(.*)$/ ? configFileContent[1][1] : null
+def ssl_tls_key = configFileContent =~ /^tls\.key=(.*)$/ ? configFileContent[1][1] : null
+
 pipeline {
     agent {label 'ansible'}
     // options {
@@ -9,35 +46,6 @@ pipeline {
         // ws("/opt/jenkins-slave/workspace/profile-site-build")
     // }
     options { skipDefaultCheckout() }
-    environment {
-        registry_front="shahdevelopment/kube"
-        registry_back="shahdevelopment/kube_back"
-        registryCredentials='dockerhub'
-        
-        frontend='profile_front'
-        backend='profile_backend'
-        k8='k8s-definitions'
-
-        front='front-end-service'
-        back='back-end-service'
-
-        SONAR_PROJECT_KEY='profile-site-nodejs'
-        scannerHome=tool 'sonar4.7'
-
-        frontgit='git@github.com:Shah0373/profile_front.git'
-        backgit='git@github.com:Shah0373/profile_backend.git'
-        defgit='git@github.com:Shah0373/k8s-definitions.git'
-
-        back_image_name="$registry_back" + ":v$BUILD_NUMBER"
-        front_image_name="$registry_front" + ":v$BUILD_NUMBER"
-
-        kubecluster='kubecluster.shahdevelopment.tech'
-        s3bucket='s3://kubedevops001'
-        configfile='/home/ansible/.kube/config'
-
-        awsregion='us-west-1'
-        awszones='us-west-1b,us-west-1c'
-    }
     stages {
         // stage('Cluster-Delete') {
         //     steps {
@@ -50,7 +58,7 @@ pipeline {
         //                 '''
         //                 sh """
         //                     set +e
-        //                     kops delete cluster --region=${awsregion} --config=${configfile} --name ${kubecluster} --state=${s3bucket} --yes && sleep 30
+        //                     kops delete cluster --region=${awsregion} --config=${config} --name ${kubecluster} --state=${s3bucket} --yes && sleep 30
         //                     set -e
         //                 """
         //             }
@@ -129,13 +137,13 @@ pipeline {
             steps {
                 dir("${frontend}") {
                     script {
-                        dockerImage = docker.build("$registry_front" + ":v$BUILD_NUMBER", "--build-arg ENVIRONMENT=dev .")
+                        dockerImage = docker.build("$registry_front" + ":v$BUILD_NUMBER", "--build-arg maps_key=${api_maps_key} --build-arg ENVIRONMENT=dev  .")
                         sh 'sleep 1'
                     }
                 }
                 dir("${backend}") {
                     script {
-                        dockerImage = docker.build("$registry_back" + ":v$BUILD_NUMBER", "--build-arg ENVIRONMENT=dev .")
+                        dockerImage = docker.build("$registry_back" + ":v$BUILD_NUMBER", "--build-arg chat_key=${api_chat_key} --build-arg ENVIRONMENT=dev .")
                         sh 'sleep 1'
                     }
                 }    
@@ -223,7 +231,7 @@ pipeline {
                     //     echo "| |_) || |__| | _| |_ | |____ | |_/  /    ___)  |  | |   | |____ | |      "
                     //     echo "|____/ |_____/ |_____||______||_____/    |_____/   |_|   |______||_|      "
                     script {
-                        dockerImage = docker.build("$registry_front" + ":v$BUILD_NUMBER")
+                        dockerImage = docker.build("$registry_front" + ":v$BUILD_NUMBER", "--build-arg maps_key=${api_maps_key} .")
                         sh 'sleep 1'
                         docker.withRegistry('', registryCredentials) {dockerImage.push("v$BUILD_NUMBER")
                         }
@@ -232,7 +240,7 @@ pipeline {
                 }
                 dir("${backend}") {
                     script {
-                        dockerImage = docker.build("$registry_back" + ":v$BUILD_NUMBER")
+                        dockerImage = docker.build("$registry_back" + ":v$BUILD_NUMBER", "--build-arg chat_key=${api_chat_key} .")
                         sh 'sleep 1'
 
                         docker.withRegistry('', registryCredentials) {
@@ -271,13 +279,13 @@ pipeline {
         //                     echo ----------//---------------------//---------------------------
         //                     echo "Attempting Deployment..............."
         //                 '''
-        //                 sh "kops create cluster --config=${configfile} --name=${kubecluster} --state=${s3bucket} --zones=${awszones} --node-count=2 --node-size=t3.medium --master-size=t3.medium --dns-zone=${kubecluster} --node-volume-size=15 --master-volume-size=15 && sleep 2"
+        //                 sh "kops create cluster --config=${config} --name=${kubecluster} --state=${s3bucket} --zones=${awszones} --node-count=2 --node-size=t3.medium --master-size=t3.medium --dns-zone=${kubecluster} --node-volume-size=15 --master-volume-size=15 && sleep 2"
         //                 sh "echo ----------//---------------------//---------------------------"
-        //                 sh "kops update cluster --config=${configfile} --name ${kubecluster} --state=${s3bucket} --yes --admin && sleep 2"
+        //                 sh "kops update cluster --config=${config} --name ${kubecluster} --state=${s3bucket} --yes --admin && sleep 2"
         //                 sh "echo ----------//---------------------//---------------------------"
         //                 sh """
         //                     set +e
-        //                     kops validate cluster --config=${configfile} --name=${kubecluster} --state=${s3bucket} --wait 20m --count 5 && sleep 2
+        //                     kops validate cluster --config=${config} --name=${kubecluster} --state=${s3bucket} --wait 20m --count 5 && sleep 2
         //                     set -e
         //                 """
         //                 sh '''
@@ -299,9 +307,10 @@ pipeline {
         stage('Application-Deployment') {
             steps {
                 dir("${k8}") {
+                    sh "/home/ansible/kube/./default-scale"
                     sh "/bin/bash move.sh"
-                    sh "helm upgrade my-app ./helm/profilecharts --set backimage=${registry_back}:v${BUILD_NUMBER} --set frontimage=${registry_front}:v${BUILD_NUMBER}"
-                    // sh "helm upgrade --install --force --kubeconfig=${configfile} my-app ./helm/profilecharts --set backimage=${registry_back}:v${BUILD_NUMBER} --set frontimage=${registry_front}:v${BUILD_NUMBER}"
+                    sh "helm upgrade my-app ./helm/profilecharts --set backimage=${registry_back}:v${BUILD_NUMBER} --set frontimage=${registry_front}:v${BUILD_NUMBER} --set docker_configjson=${docker_config_json} --set tls_crt=${ssl_tls_crt} --set tls_key=${ssl_tls_key}"
+                    // sh "helm upgrade --install --force --kubeconfig=${config} my-app ./helm/profilecharts --set backimage=${registry_back}:v${BUILD_NUMBER} --set frontimage=${registry_front}:v${BUILD_NUMBER}"
 
                     sh '''
                     sleep 240
