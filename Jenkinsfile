@@ -4,32 +4,42 @@ node {
             writeFile file: 'env-var', text: params.environment
             configFile = './env-var'
             configFileContent = readFile configFile
+            registry_front = (configFileContent =~ /^registry\.front=(.*)$/).size() > 0 ? (configFileContent =~ /^registry\.front=(.*)$/)[0][1] : null
+
+            registry_back = (configFileContent =~ /^registry\.back=(.*)$/).size() > 0 ? (configFileContent =~ /^registry\.back=(.*)$/)[0][1] : null
+            registryCredentials = (configFileContent =~ /^registry\.creds=(.*)$/).size() > 0 ? (configFileContent =~ /^registry\.creds=(.*)$/)[0][1] : null
             
-            registry_front = (configFileContent =~ /^registry\.front=(.*)$/)[0][1]
-            registry_back = (configFileContent =~ /^registry\.back=(.*)$/)[0][1]
-            registryCredentials = (configFileContent =~ /^registry\.creds=(.*)$/)[0][1]
-            frontend = (configFileContent =~ /^app\.frontend=(.*)$/)[0][1]
-            backend = (configFileContent =~ /^app\.backend=(.*)$/)[0][1]
-            k8 = (configFileContent =~ /^kube\.k8=(.*)$/)[0][1]
-            front = (configFileContent =~ /^service\.front=(.*)$/)[0][1]
-            back = (configFileContent =~ /^service\.back=(.*)$/)[0][1]
-            SONARPROJECT_KEY = (configFileContent =~ /^sonar\.projectkey=(.*)$/)[0][1]
-            scannerHome = (configFileContent =~ /^sonar\.scannerhome=(.*)$/)[0][1]
-            frontgit = (configFileContent =~ /^git\.front=(.*)$/)[0][1]
-            backgit = (configFileContent =~ /^git\.back=(.*)$/)[0][1]
-            defgit = (configFileContent =~ /^git\.def=(.*)$/)[0][1]
-            back_image_name = (configFileContent =~ /^image\.back=(.*)$/)[0][1]
-            front_image_name = (configFileContent =~ /^image\.front=(.*)$/)[0][1]
-            kubecluster = (configFileContent =~ /^kube\.url=(.*)$/)[0][1]
-            s3bucket = (configFileContent =~ /^s3\.bucket=(.*)$/)[0][1]
-            config = (configFileContent =~ /^kube\.config=(.*)$/)[0][1]
-            awsregion = (configFileContent =~ /^aws\.region=(.*)$/)[0][1]
-            awszones = (configFileContent =~ /^aws\.zones=(.*)$/)[0][1]
-            api_maps_key = (configFileContent =~ /^api\.maps_key=(.*)$/)[0][1]
-            api_chat_key = (configFileContent =~ /^api\.chat_key=(.*)$/)[0][1]
-            docker_config_json = (configFileContent =~ /^docker\.configjson=(.*)$/)[0][1]
-            ssl_tls_crt = (configFileContent =~ /^tls\.crt=(.*)$/)[0][1]
-            ssl_tls_key = (configFileContent =~ /^tls\.key=(.*)$/)[0][1]
+            frontend = (configFileContent =~ /^app\.frontend=(.*)$/).size() > 0 ? (configFileContent =~ /^app\.frontend=(.*)$/)[0][1] : null
+            backend = (configFileContent =~ /^app\.backend=(.*)$/).size() > 0 ? (configFileContent =~ /^app\.backend=(.*)$/)[0][1] : null
+            k8 = (configFileContent =~ /^kube\.k8=(.*)$/).size() > 0 ? (configFileContent =~ /^kube\.k8=(.*)$/)[0][1] : null
+            
+            front = (configFileContent =~ /^service\.front=(.*)$/).size() > 0 ? (configFileContent =~ /^service\.front=(.*)$/)[0][1] : null
+            back = (configFileContent =~ /^service\.back=(.*)$/).size() > 0 ? (configFileContent =~ /^service\.back=(.*)$/)[0][1] : null
+            
+            SONARPROJECT_KEY = (configFileContent =~ /^sonar\.projectkey=(.*)$/).size() > 0 ? (configFileContent =~ /^sonar\.projectkey=(.*)$/)[0][1] : null
+            scannerHome = (configFileContent =~ /^sonar\.scannerhome=(.*)$/).size() > 0 ? (configFileContent =~ /^sonar\.scannerhome=(.*)$/)[0][1] : null
+            
+            frontgit = (configFileContent =~ /^git\.front=(.*)$/).size() > 0 ? (configFileContent =~ /^git\.front=(.*)$/)[0][1] : null
+            backgit = (configFileContent =~ /^git\.back=(.*)$/).size() > 0 ? (configFileContent =~ /^git\.back=(.*)$/)[0][1] : null
+            defgit = (configFileContent =~ /^git\.def=(.*)$/).size() > 0 ? (configFileContent =~ /^git\.def=(.*)$/)[0][1] : null
+            
+            back_image_name = (configFileContent =~ /^image\.back=(.*)$/).size() > 0 ? (configFileContent =~ /^image\.back=(.*)$/)[0][1] : null
+            front_image_name = (configFileContent =~ /^image\.front=(.*)$/).size() > 0 ? (configFileContent =~ /^image\.front=(.*)$/)[0][1] : null
+            
+            kubecluster = (configFileContent =~ /^kube\.url=(.*)$/).size() > 0 ? (configFileContent =~ /^kube\.url=(.*)$/)[0][1] : null
+            s3bucket = (configFileContent =~ /^s3\.bucket=(.*)$/).size() > 0 ? (configFileContent =~ /^s3\.bucket=(.*)$/)[0][1] : null
+            config = (configFileContent =~ /^kube\.config=(.*)$/).size() > 0 ? (configFileContent =~ /^kube\.config=(.*)$/)[0][1] : null
+            
+            awsregion = (configFileContent =~ /^aws\.region=(.*)$/).size() > 0 ? (configFileContent =~ /^aws\.region=(.*)$/)[0][1] : null
+            awszones = (configFileContent =~ /^aws\.zones=(.*)$/).size() > 0 ? (configFileContent =~ /^aws\.zones=(.*)$/)[0][1] : null
+            
+            api_maps_key = (configFileContent =~ /^api\.maps_key=(.*)$/).size() > 0 ? (configFileContent =~ /^api\.maps_key=(.*)$/)[0][1] : null
+            api_chat_key = (configFileContent =~ /^api\.chat_key=(.*)$/).size() > 0 ? (configFileContent =~ /^api\.chat_key=(.*)$/)[0][1] : null
+            
+            docker_config_json = (configFileContent =~ /^docker\.configjson=(.*)$/).size() > 0 ? (configFileContent =~ /^docker\.configjson=(.*)$/)[0][1] : null
+            
+            ssl_tls_crt = (configFileContent =~ /^tls\.crt=(.*)$/).size() > 0 ? (configFileContent =~ /^tls\.crt=(.*)$/)[0][1] : null
+            ssl_tls_key = (configFileContent =~ /^tls\.key=(.*)$/).size() > 0 ? (configFileContent =~ /^tls\.key=(.*)$/)[0][1] : null
 
         }
     }
