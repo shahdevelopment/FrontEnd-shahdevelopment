@@ -5,31 +5,31 @@ node {
             configFile = './env-var'
             configFileContent = readFile configFile
             
-            registry_front = (configFileContent =~ /^registry\.front=(.*)$/)
-            registry_back = (configFileContent =~ /^registry\.back=(.*)$/)
-            registryCredentials = (configFileContent =~ /^registry\.creds=(.*)$/)
-            frontend = (configFileContent =~ /^app\.frontend=(.*)$/)
-            backend = (configFileContent =~ /^app\.backend=(.*)$/)
-            k8 = (configFileContent =~ /^kube\.k8=(.*)$/)
-            front = (configFileContent =~ /^service\.front=(.*)$/)
-            back = (configFileContent =~ /^service\.back=(.*)$/)
-            SONARPROJECT_KEY = (configFileContent =~ /^sonar\.projectkey=(.*)$/)
-            scannerHome = (configFileContent =~ /^sonar\.scannerhome=(.*)$/)
-            frontgit = (configFileContent =~ /^git\.front=(.*)$/)
-            backgit = (configFileContent =~ /^git\.back=(.*)$/)
-            defgit = (configFileContent =~ /^git\.def=(.*)$/)
-            back_image_name = (configFileContent =~ /^image\.back=(.*)$/)
-            front_image_name = (configFileContent =~ /^image\.front=(.*)$/)
-            kubecluster = (configFileContent =~ /^kube\.url=(.*)$/)
-            s3bucket = (configFileContent =~ /^s3\.bucket=(.*)$/)
-            config = (configFileContent =~ /^kube\.config=(.*)$/)
-            awsregion = (configFileContent =~ /^aws\.region=(.*)$/)
-            awszones = (configFileContent =~ /^aws\.zones=(.*)$/)
-            api_maps_key = (configFileContent =~ /^api\.maps_key=(.*)$/)
-            api_chat_key = (configFileContent =~ /^api\.chat_key=(.*)$/)
-            docker_config_json = (configFileContent =~ /^docker\.configjson=(.*)$/)
-            ssl_tls_crt = (configFileContent =~ /^tls\.crt=(.*)$/)
-            ssl_tls_key = (configFileContent =~ /^tls\.key=(.*)$/)
+            registry_front = (configFileContent =~ /^registry\.front=(.*)$/)[1]
+            registry_back = (configFileContent =~ /^registry\.back=(.*)$/)[1]
+            registryCredentials = (configFileContent =~ /^registry\.creds=(.*)$/)[1]
+            frontend = (configFileContent =~ /^app\.frontend=(.*)$/)[1]
+            backend = (configFileContent =~ /^app\.backend=(.*)$/)[1]
+            k8 = (configFileContent =~ /^kube\.k8=(.*)$/)[1]
+            front = (configFileContent =~ /^service\.front=(.*)$/)[1]
+            back = (configFileContent =~ /^service\.back=(.*)$/)[1]
+            SONARPROJECT_KEY = (configFileContent =~ /^sonar\.projectkey=(.*)$/)[1]
+            scannerHome = (configFileContent =~ /^sonar\.scannerhome=(.*)$/)[1]
+            frontgit = (configFileContent =~ /^git\.front=(.*)$/)[1]
+            backgit = (configFileContent =~ /^git\.back=(.*)$/)[1]
+            defgit = (configFileContent =~ /^git\.def=(.*)$/)[1]
+            back_image_name = (configFileContent =~ /^image\.back=(.*)$/)[1]
+            front_image_name = (configFileContent =~ /^image\.front=(.*)$/)[1]
+            kubecluster = (configFileContent =~ /^kube\.url=(.*)$/)[1]
+            s3bucket = (configFileContent =~ /^s3\.bucket=(.*)$/)[1]
+            config = (configFileContent =~ /^kube\.config=(.*)$/)[1]
+            awsregion = (configFileContent =~ /^aws\.region=(.*)$/)[1]
+            awszones = (configFileContent =~ /^aws\.zones=(.*)$/)[1]
+            api_maps_key = (configFileContent =~ /^api\.maps_key=(.*)$/)[1]
+            api_chat_key = (configFileContent =~ /^api\.chat_key=(.*)$/)[1]
+            docker_config_json = (configFileContent =~ /^docker\.configjson=(.*)$/)[1]
+            ssl_tls_crt = (configFileContent =~ /^tls\.crt=(.*)$/)[1]
+            ssl_tls_key = (configFileContent =~ /^tls\.key=(.*)$/)[1]
 
         }
     }
