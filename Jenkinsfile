@@ -3,6 +3,8 @@ node {
         script {
             writeFile file: 'env-var', text: params.environment
             def configFile = 'env-var'
+            def configFileContent = readFile params.configFile
+
         }
     }
 }
@@ -10,7 +12,6 @@ def COLOR_MAP = [
     'SUCCESS': 'good', 
     'FAILURE': 'danger',
 ]
-def configFileContent = readFile params.configFile
 
 def registry_front = (configFileContent =~ /^registry\.front=(.*)$/)[0][1]
 def registry_back = (configFileContent =~ /^registry\.back=(.*)$/)[0][1]
