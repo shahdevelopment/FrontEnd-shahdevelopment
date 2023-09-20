@@ -10,8 +10,11 @@ pipeline {
         // ws("/opt/jenkins-slave/workspace/profile-site-build")
     // }
     options { skipDefaultCheckout() }
+    wrap([$configFileContent: parameters.myFileParam]) {
+        sh 'cat myFileParam'
+    }
     parameters {
-        def configFileContent = readFile params.configFile
+        // def configFileContent = readFile params.configFile
 
         def registry_front = (configFileContent =~ /^registry\.front=(.*)$/)[0][1]
         def registry_back = (configFileContent =~ /^registry\.back=(.*)$/)[0][1]
@@ -25,7 +28,7 @@ pipeline {
         def scannerHome = (configFileContent =~ /^sonar\.scannerhome=(.*)$/)[0][1]
         def frontgit = (configFileContent =~ /^git\.front=(.*)$/)[0][1]
         def backgit = (configFileContent =~ /^git\.back=(.*)$/)[0][1]
-        def defgit = (configFileContent =~ /^git\.def=(.*)$/)[0][1]
+        def defgit = (configFileContent =~ /^git\.definition=(.*)$/)[0][1]
         def back_image_name = (configFileContent =~ /^image\.back=(.*)$/)[0][1]
         def front_image_name = (configFileContent =~ /^image\.front=(.*)$/)[0][1]
         def kubecluster = (configFileContent =~ /^kube\.url=(.*)$/)[0][1]
