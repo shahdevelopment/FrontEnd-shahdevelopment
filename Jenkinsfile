@@ -2,34 +2,34 @@ node {
     stage('File Param WA') {
         script {
             writeFile file: 'env-var', text: params.environment
-            def configFile = './env-var'
-            def configFileContent = readFile configFile
+            configFile = './env-var'
+            configFileContent = readFile configFile
             
-            def registry_front = (configFileContent =~ /^registry\.front=(.*)$/)
-            def registry_back = (configFileContent =~ /^registry\.back=(.*)$/)
-            def registryCredentials = (configFileContent =~ /^registry\.creds=(.*)$/)
-            def frontend = (configFileContent =~ /^app\.frontend=(.*)$/)
-            def backend = (configFileContent =~ /^app\.backend=(.*)$/)
-            def k8 = (configFileContent =~ /^kube\.k8=(.*)$/)
-            def front = (configFileContent =~ /^service\.front=(.*)$/)
-            def back = (configFileContent =~ /^service\.back=(.*)$/)
-            def SONARPROJECT_KEY = (configFileContent =~ /^sonar\.projectkey=(.*)$/)
-            def scannerHome = (configFileContent =~ /^sonar\.scannerhome=(.*)$/)
-            def frontgit = (configFileContent =~ /^git\.front=(.*)$/)
-            def backgit = (configFileContent =~ /^git\.back=(.*)$/)
-            def defgit = (configFileContent =~ /^git\.def=(.*)$/)
-            def back_image_name = (configFileContent =~ /^image\.back=(.*)$/)
-            def front_image_name = (configFileContent =~ /^image\.front=(.*)$/)
-            def kubecluster = (configFileContent =~ /^kube\.url=(.*)$/)
-            def s3bucket = (configFileContent =~ /^s3\.bucket=(.*)$/)
-            def config = (configFileContent =~ /^kube\.config=(.*)$/)
-            def awsregion = (configFileContent =~ /^aws\.region=(.*)$/)
-            def awszones = (configFileContent =~ /^aws\.zones=(.*)$/)
-            def api_maps_key = (configFileContent =~ /^api\.maps_key=(.*)$/)
-            def api_chat_key = (configFileContent =~ /^api\.chat_key=(.*)$/)
-            def docker_config_json = (configFileContent =~ /^docker\.configjson=(.*)$/)
-            def ssl_tls_crt = (configFileContent =~ /^tls\.crt=(.*)$/)
-            def ssl_tls_key = (configFileContent =~ /^tls\.key=(.*)$/)
+            registry_front = (configFileContent =~ /^registry\.front=(.*)$/)
+            registry_back = (configFileContent =~ /^registry\.back=(.*)$/)
+            registryCredentials = (configFileContent =~ /^registry\.creds=(.*)$/)
+            frontend = (configFileContent =~ /^app\.frontend=(.*)$/)
+            backend = (configFileContent =~ /^app\.backend=(.*)$/)
+            k8 = (configFileContent =~ /^kube\.k8=(.*)$/)
+            front = (configFileContent =~ /^service\.front=(.*)$/)
+            back = (configFileContent =~ /^service\.back=(.*)$/)
+            SONARPROJECT_KEY = (configFileContent =~ /^sonar\.projectkey=(.*)$/)
+            scannerHome = (configFileContent =~ /^sonar\.scannerhome=(.*)$/)
+            frontgit = (configFileContent =~ /^git\.front=(.*)$/)
+            backgit = (configFileContent =~ /^git\.back=(.*)$/)
+            defgit = (configFileContent =~ /^git\.def=(.*)$/)
+            back_image_name = (configFileContent =~ /^image\.back=(.*)$/)
+            front_image_name = (configFileContent =~ /^image\.front=(.*)$/)
+            kubecluster = (configFileContent =~ /^kube\.url=(.*)$/)
+            s3bucket = (configFileContent =~ /^s3\.bucket=(.*)$/)
+            config = (configFileContent =~ /^kube\.config=(.*)$/)
+            awsregion = (configFileContent =~ /^aws\.region=(.*)$/)
+            awszones = (configFileContent =~ /^aws\.zones=(.*)$/)
+            api_maps_key = (configFileContent =~ /^api\.maps_key=(.*)$/)
+            api_chat_key = (configFileContent =~ /^api\.chat_key=(.*)$/)
+            docker_config_json = (configFileContent =~ /^docker\.configjson=(.*)$/)
+            ssl_tls_crt = (configFileContent =~ /^tls\.crt=(.*)$/)
+            ssl_tls_key = (configFileContent =~ /^tls\.key=(.*)$/)
 
         }
     }
