@@ -2,43 +2,6 @@ def COLOR_MAP = [
     'SUCCESS': 'good', 
     'FAILURE': 'danger',
 ]
-def configFileContent = readFile configFile
-
-def registry_front = configFileContent =~ /^registry\.front=(.*)$/ ? configFileContent[0][1] : null
-def registry_back = configFileContent =~ /^registry\.back=(.*)$/ ? configFileContent[1][1] : null
-def registryCredentials = configFileContent =~ /^registry\.creds=(.*)$/ ? configFileContent[2][1] : null
-
-def frontend = configFileContent =~ /^app\.frontend=(.*)$/ ? configFileContent[0][1] : null
-def backend = configFileContent =~ /^app\.backend=(.*)$/ ? configFileContent[1][1] : null
-def k8 = configFileContent =~ /^kube\.k8=(.*)$/ ? configFileContent[2][1] : null
-
-def front = configFileContent =~ /^service\.front=(.*)$/ ? configFileContent[0][1] : null
-def back = configFileContent =~ /^service\.back=(.*)$/ ? configFileContent[1][1] : null
-
-def SONARPROJECT_KEY = configFileContent =~ /^sonar\.projectkey=(.*)$/ ? configFileContent[2][1] : null
-def scannerHome = configFileContent =~ /^sonar\.scannerhome=(.*)$/ ? configFileContent[0][1] : null
-
-def frontgit = configFileContent =~ /^git\.front=(.*)$/ ? configFileContent[1][1] : null
-def backgit = configFileContent =~ /^git\.back=(.*)$/ ? configFileContent[2][1] : null
-def defgit = configFileContent =~ /^git\.def=(.*)$/ ? configFileContent[0][1] : null
-
-def back_image_name = configFileContent =~ /^image\.back=(.*)$/ ? configFileContent[1][1] : null
-def front_image_name = configFileContent =~ /^image\.front=(.*)$/ ? configFileContent[2][1] : null
-
-def kubecluster = configFileContent =~ /^kube\.url=(.*)$/ ? configFileContent[0][1] : null
-def s3bucket = configFileContent =~ /^s3\.bucket=(.*)$/ ? configFileContent[1][1] : null
-def config = configFileContent =~ /^kube\.config=(.*)$/ ? configFileContent[2][1] : null
-
-def awsregion = configFileContent =~ /^aws\.region=(.*)$/ ? configFileContent[0][1] : null
-def awszones = configFileContent =~ /^aws\.zones=(.*)$/ ? configFileContent[1][1] : null
-
-def api_maps_key = configFileContent =~ /^api\.maps_key=(.*)$/ ? configFileContent[0][1] : null
-def api_chat_key = configFileContent =~ /^api\.chat_key=(.*)$/ ? configFileContent[1][1] : null
-
-def docker_config_json = configFileContent =~ /^docker\.configjson=(.*)$/ ? configFileContent[0][1] : null
-def ssl_tls_crt = configFileContent =~ /^tls\.crt=(.*)$/ ? configFileContent[1][1] : null
-def ssl_tls_key = configFileContent =~ /^tls\.key=(.*)$/ ? configFileContent[1][1] : null
-
 
 pipeline {
     agent {label 'ansible'}
@@ -47,6 +10,34 @@ pipeline {
         // ws("/opt/jenkins-slave/workspace/profile-site-build")
     // }
     options { skipDefaultCheckout() }
+    environment {
+        def configFileContent = readFile params.configFile
+        def registry_front = (configFileContent =~ /^registry\.front=(.*)$/)[0][1]
+        def registry_back = (configFileContent =~ /^registry\.back=(.*)$/)[0][1]
+        def registryCredentials = (configFileContent =~ /^registry\.creds=(.*)$/)[0][1]
+        def frontend = (configFileContent =~ /^app\.frontend=(.*)$/)[0][1]
+        def backend = (configFileContent =~ /^app\.backend=(.*)$/)[0][1]
+        def k8 = (configFileContent =~ /^kube\.k8=(.*)$/)[0][1]
+        def front = (configFileContent =~ /^service\.front=(.*)$/)[0][1]
+        def back = (configFileContent =~ /^service\.back=(.*)$/)[0][1]
+        def SONARPROJECT_KEY = (configFileContent =~ /^sonar\.projectkey=(.*)$/)[0][1]
+        def scannerHome = (configFileContent =~ /^sonar\.scannerhome=(.*)$/)[0][1]
+        def frontgit = (configFileContent =~ /^git\.front=(.*)$/)[0][1]
+        def backgit = (configFileContent =~ /^git\.back=(.*)$/)[0][1]
+        def defgit = (configFileContent =~ /^git\.def=(.*)$/)[0][1]
+        def back_image_name = (configFileContent =~ /^image\.back=(.*)$/)[0][1]
+        def front_image_name = (configFileContent =~ /^image\.front=(.*)$/)[0][1]
+        def kubecluster = (configFileContent =~ /^kube\.url=(.*)$/)[0][1]
+        def s3bucket = (configFileContent =~ /^s3\.bucket=(.*)$/)[0][1]
+        def config = (configFileContent =~ /^kube\.config=(.*)$/)[0][1]
+        def awsregion = (configFileContent =~ /^aws\.region=(.*)$/)[0][1]
+        def awszones = (configFileContent =~ /^aws\.zones=(.*)$/)[0][1]
+        def api_maps_key = (configFileContent =~ /^api\.maps_key=(.*)$/)[0][1]
+        def api_chat_key = (configFileContent =~ /^api\.chat_key=(.*)$/)[0][1]
+        def docker_config_json = (configFileContent =~ /^docker\.configjson=(.*)$/)[0][1]
+        def ssl_tls_crt = (configFileContent =~ /^tls\.crt=(.*)$/)[0][1]
+        def ssl_tls_key = (configFileContent =~ /^tls\.key=(.*)$/)[0][1]
+    }
     stages {
         // stage('Cluster-Delete') {
         //     steps {
