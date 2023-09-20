@@ -22,7 +22,6 @@ pipeline {
     // back = (configFileContent =~ /^service\.back=(.*)$/)[0][1]
     // SONARPROJECT_KEY = (configFileContent =~ /^sonar\.projectkey=(.*)$/)[0][1]
     // scannerHome = (configFileContent =~ /^sonar\.scannerhome=(.*)$/)[0][1]
-    // frontgit = (configFileContent =~ /^git\.front=(.*)$/)[0][1]
     // backgit = (configFileContent =~ /^git\.back=(.*)$/)[0][1]
     // defgit = (configFileContent =~ /^git\.definition=(.*)$/)[0][1]
     // back_image_name = (configFileContent =~ /^image\.back=(.*)$/)[0][1]
@@ -41,8 +40,11 @@ pipeline {
     stages {
         stage('Create Params') {
             steps {
-                writeFile file: 'env-vars', text: params.environment
-                def configFileContent = readFile 'env-vars'
+                dir("${frontend}") {
+                    script {
+                        writeFile file: 'env-vars', text: params.environment
+                    }
+                }
             }
         }
         // stage('Cluster-Delete') {
@@ -90,8 +92,12 @@ pipeline {
                         retry(4) {
                             withCredentials([sshUserPrivateKey(credentialsId: 'gitsshkey', keyFileVariable: 'SSH_KEY')]) {
                                 dir("${frontend}") {
-                                    sshagent(['gitsshkey']) {
-                                        sh "git clone ${frontgit} ."
+                                    script {
+                                        def configFileContent = readFile 'env-vars'
+                                        frontgit = (configFileContent =~ /^git\.front=(.*)$/)[0][1]
+                                        sshagent(['gitsshkey']) {
+                                            sh "git clone ${frontgit} ."
+                                        }
                                     }
                                 }
                             }
