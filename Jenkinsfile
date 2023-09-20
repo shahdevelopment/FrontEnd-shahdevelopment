@@ -2,9 +2,8 @@ node {
     stage('File Param WA') {
         script {
             writeFile file: 'env-var', text: params.environment
-            def configFile = 'env-var'
+            def configFile = './env-var'
             def configFileContent = readFile params.configFile
-
         }
     }
 }
