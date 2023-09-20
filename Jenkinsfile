@@ -4,6 +4,8 @@ node {
             writeFile file: 'env-var', text: params.environment
             configFile = './env-var'
             configFileContent = readFile configFile
+
+            def parameters = [:]
             
             
             configFileContent.eachLine { line ->
