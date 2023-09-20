@@ -1,42 +1,42 @@
-node {
-    stage('File Param WA') {
-        script {
-            writeFile file: 'env-var', text: params.environment
-            def configFile = './env-var'
-            def configFileContent = readFile params.configFile
-        }
-    }
-}
+// node {
+//     stage('File Param WA') {
+//         script {
+//             writeFile file: 'env-var', text: params.environment
+//             def configFile = './env-var'
+//             def configFileContent = readFile params.configFile
+//         }
+//     }
+// }
 def COLOR_MAP = [
     'SUCCESS': 'good', 
     'FAILURE': 'danger',
 ]
 
-def registry_front = (configFileContent =~ /^registry\.front=(.*)$/)[0][1]
-def registry_back = (configFileContent =~ /^registry\.back=(.*)$/)[0][1]
-def registryCredentials = (configFileContent =~ /^registry\.creds=(.*)$/)[0][1]
-def frontend = (configFileContent =~ /^app\.frontend=(.*)$/)[0][1]
-def backend = (configFileContent =~ /^app\.backend=(.*)$/)[0][1]
-def k8 = (configFileContent =~ /^kube\.k8=(.*)$/)[0][1]
-def front = (configFileContent =~ /^service\.front=(.*)$/)[0][1]
-def back = (configFileContent =~ /^service\.back=(.*)$/)[0][1]
-def SONARPROJECT_KEY = (configFileContent =~ /^sonar\.projectkey=(.*)$/)[0][1]
-def scannerHome = (configFileContent =~ /^sonar\.scannerhome=(.*)$/)[0][1]
-def frontgit = (configFileContent =~ /^git\.front=(.*)$/)[0][1]
-def backgit = (configFileContent =~ /^git\.back=(.*)$/)[0][1]
-def defgit = (configFileContent =~ /^git\.def=(.*)$/)[0][1]
-def back_image_name = (configFileContent =~ /^image\.back=(.*)$/)[0][1]
-def front_image_name = (configFileContent =~ /^image\.front=(.*)$/)[0][1]
-def kubecluster = (configFileContent =~ /^kube\.url=(.*)$/)[0][1]
-def s3bucket = (configFileContent =~ /^s3\.bucket=(.*)$/)[0][1]
-def config = (configFileContent =~ /^kube\.config=(.*)$/)[0][1]
-def awsregion = (configFileContent =~ /^aws\.region=(.*)$/)[0][1]
-def awszones = (configFileContent =~ /^aws\.zones=(.*)$/)[0][1]
-def api_maps_key = (configFileContent =~ /^api\.maps_key=(.*)$/)[0][1]
-def api_chat_key = (configFileContent =~ /^api\.chat_key=(.*)$/)[0][1]
-def docker_config_json = (configFileContent =~ /^docker\.configjson=(.*)$/)[0][1]
-def ssl_tls_crt = (configFileContent =~ /^tls\.crt=(.*)$/)[0][1]
-def ssl_tls_key = (configFileContent =~ /^tls\.key=(.*)$/)[0][1]
+// def registry_front = (configFileContent =~ /^registry\.front=(.*)$/)[0][1]
+// def registry_back = (configFileContent =~ /^registry\.back=(.*)$/)[0][1]
+// def registryCredentials = (configFileContent =~ /^registry\.creds=(.*)$/)[0][1]
+// def frontend = (configFileContent =~ /^app\.frontend=(.*)$/)[0][1]
+// def backend = (configFileContent =~ /^app\.backend=(.*)$/)[0][1]
+// def k8 = (configFileContent =~ /^kube\.k8=(.*)$/)[0][1]
+// def front = (configFileContent =~ /^service\.front=(.*)$/)[0][1]
+// def back = (configFileContent =~ /^service\.back=(.*)$/)[0][1]
+// def SONARPROJECT_KEY = (configFileContent =~ /^sonar\.projectkey=(.*)$/)[0][1]
+// def scannerHome = (configFileContent =~ /^sonar\.scannerhome=(.*)$/)[0][1]
+// def frontgit = (configFileContent =~ /^git\.front=(.*)$/)[0][1]
+// def backgit = (configFileContent =~ /^git\.back=(.*)$/)[0][1]
+// def defgit = (configFileContent =~ /^git\.def=(.*)$/)[0][1]
+// def back_image_name = (configFileContent =~ /^image\.back=(.*)$/)[0][1]
+// def front_image_name = (configFileContent =~ /^image\.front=(.*)$/)[0][1]
+// def kubecluster = (configFileContent =~ /^kube\.url=(.*)$/)[0][1]
+// def s3bucket = (configFileContent =~ /^s3\.bucket=(.*)$/)[0][1]
+// def config = (configFileContent =~ /^kube\.config=(.*)$/)[0][1]
+// def awsregion = (configFileContent =~ /^aws\.region=(.*)$/)[0][1]
+// def awszones = (configFileContent =~ /^aws\.zones=(.*)$/)[0][1]
+// def api_maps_key = (configFileContent =~ /^api\.maps_key=(.*)$/)[0][1]
+// def api_chat_key = (configFileContent =~ /^api\.chat_key=(.*)$/)[0][1]
+// def docker_config_json = (configFileContent =~ /^docker\.configjson=(.*)$/)[0][1]
+// def ssl_tls_crt = (configFileContent =~ /^tls\.crt=(.*)$/)[0][1]
+// def ssl_tls_key = (configFileContent =~ /^tls\.key=(.*)$/)[0][1]
 
 pipeline {
     agent {label 'ansible'}
