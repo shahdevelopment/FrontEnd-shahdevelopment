@@ -300,8 +300,8 @@ pipeline {
             steps {
                 dir("${k8}") {
                     sh "/bin/bash move.sh"
-                    // sh "helm upgrade my-app ./helm/profilecharts --set backimage=${registry_back}:v${BUILD_NUMBER} --set frontimage=${registry_front}:v${BUILD_NUMBER}"
-                    sh "helm upgrade --force --kubeconfig=${configfile} my-app ./helm/profilecharts --set backimage=${registry_back}:v${BUILD_NUMBER} --set frontimage=${registry_front}:v${BUILD_NUMBER}"
+                    sh "helm upgrade my-app ./helm/profilecharts --set backimage=${registry_back}:v${BUILD_NUMBER} --set frontimage=${registry_front}:v${BUILD_NUMBER}"
+                    // sh "helm upgrade --install --force --kubeconfig=${configfile} my-app ./helm/profilecharts --set backimage=${registry_back}:v${BUILD_NUMBER} --set frontimage=${registry_front}:v${BUILD_NUMBER}"
 
                     sh '''
                     sleep 240
