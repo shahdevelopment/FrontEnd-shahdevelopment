@@ -11,8 +11,8 @@ pipeline {
         // ws("/opt/jenkins-slave/workspace/profile-site-build")
     // }
     options { skipDefaultCheckout() }
-    environment {
-        def configFileContent = readFile 'params.configFile'
+    parameters  {
+        def configFileContent = readFile 'configFile'
 
         def registry_front = configFileContent =~ /^registry\.front=(.*)$/ ? configFileContent[0][1] : null
         def registry_back = configFileContent =~ /^registry\.back=(.*)$/ ? configFileContent[1][1] : null
