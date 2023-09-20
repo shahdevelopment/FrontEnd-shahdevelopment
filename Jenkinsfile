@@ -1,8 +1,9 @@
 node {
     stage('File Param WA') {
-        writeFile file: 'env-var', text: params.environment
-        def configFile = 'env-var'
-
+        script {
+            writeFile file: 'env-var', text: params.environment
+            def configFile = 'env-var'
+        }
     }
 }
 def COLOR_MAP = [
