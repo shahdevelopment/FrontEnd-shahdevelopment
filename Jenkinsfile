@@ -18,65 +18,65 @@ node {
             }
             
             registry_front="${parameters['registry.front']}"
-            echo ${registry_front}
+            echo "${registry_front}"
             registry_back="${parameters['registry.back']}"
-            echo ${registry_back}
+            echo "${registry_back}"
             registryCredentials="${parameters['registry.creds']}"
-            echo ${registryCredentials}
+            echo "${registryCredentials}"
             
             frontend="${parameters['app.frontend']}"
-            echo ${frontend}
+            echo "${frontend}"
             backend="${parameters['app.backend']}"
-            echo ${backend}
+            echo "${backend}"
             k8="${parameters['kube.k8']}"
-            echo ${k8}
+            echo "${k8}"
             
             front="${parameters['service.front']}"
-            echo ${front}
+            echo "${front}"
             back="${parameters['service.back']}"
-            echo ${back}
+            echo "${back}"
             
             SONARPROJECT_KEY="${parameters['sonar.projectkey']}"
-            echo ${SONARPROJECT_KEY}
+            echo "${SONARPROJECT_KEY}"
             scannerHome="${parameters['sonar.scannerhome']}"
-            echo ${scannerHome}
+            echo "${scannerHome}"
             
             frontgit="${parameters['git.front']}"
-            echo ${frontgit}
+            echo "${frontgit}"
             backgit="${parameters['git.back']}"
-            echo ${backgit}
+            echo "${backgit}"
             defgit="${parameters['git.definition']}"
-            echo ${defgit}
+            echo "${defgit}"
             
             back_image_name="${parameters['image.back']}"
-            echo ${back_image_name}
+            echo "${back_image_name}"
             front_image_name="${parameters['image.front']}"
-            echo ${front_image_name}
+            echo "${front_image_name}"
             
             kubecluster="${parameters['kube.url']}"
-            echo ${kubecluster}
+            echo "${kubecluster}"
             s3bucket="${parameters['s3.bucket']}"
-            echo ${s3bucket}
+            echo "${s3bucket}"
             config="${parameters['kube.config']}"
-            echo ${config}
+            echo "${config}"
             
             awsregion="${parameters['aws.region']}"
-            echo ${awsregion}
+            echo "${awsregion}"
             awszones="${parameters['aws.zones']}"
-            echo ${awszones}
+            echo "${awszones}"
 
             api_maps_key="${parameters['api.maps_key']}"
-            echo ${api_maps_key}
+            echo "${api_maps_key}"
             api_chat_key="${parameters['api.chat_key']}"
-            echo ${api_chat_key}
+            echo "${api_chat_key}"
             
             docker_config_json="${parameters['docker.configjson']}"
-            echo ${docker_config_json}
+            echo "${docker_config_json}"
             
             ssl_tls_crt="${parameters['tls.crt']}"
-            echo ${ssl_tls_crt}
+            echo "${ssl_tls_crt}"
             ssl_tls_key="${parameters['tls.key']}"
-            echo ${ssl_tls_key}
+            echo "${ssl_tls_key}"
 
 
 
