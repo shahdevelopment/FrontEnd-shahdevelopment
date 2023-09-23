@@ -109,6 +109,8 @@ pipeline {
                     scannerHome = parameters['sonar.scannerhome']
                     
                     frontgit = parameters['git.front']
+                    echo frontgit
+
                     backgit = parameters['git.back']
                     defgit = parameters['git.definition']
                     
@@ -157,13 +159,12 @@ pipeline {
         stage('Clone Github Repos') {
             steps {
                     script {
+                        echo frontgit
                         retry(4) {
                             withCredentials([sshUserPrivateKey(credentialsId: 'gitsshkey', keyFileVariable: 'SSH_KEY')]) {
                                 dir("${frontend}") {
                                     sshagent(['gitsshkey']) {
-                                        script{
-                                            sh "git clone ${frontgit} ."
-                                        }
+                                        sh "git clone ${frontgit} ."
                                     }
                                 }
                             }
@@ -172,9 +173,7 @@ pipeline {
                             withCredentials([sshUserPrivateKey(credentialsId: 'gitsshkey', keyFileVariable: 'SSH_KEY')]) {
                                 dir("${backend}") {
                                     sshagent(['gitsshkey']) {
-                                        script{
-                                            sh "git clone ${backgit} ."
-                                        }
+                                        sh "git clone ${backgit} ."
                                     }
                                 }
                             }
@@ -183,9 +182,7 @@ pipeline {
                             withCredentials([sshUserPrivateKey(credentialsId: 'gitsshkey', keyFileVariable: 'SSH_KEY')]) {
                                 dir("${k8}") {
                                     sshagent(['gitsshkey']) {
-                                        script{
-                                            sh "git clone ${defgit} ."
-                                        }
+                                        sh "git clone ${defgit} ."
                                     }
                                 }
                             }
