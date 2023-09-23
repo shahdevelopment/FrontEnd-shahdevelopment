@@ -11,42 +11,87 @@ pipeline {
         // ws("/opt/jenkins-slave/workspace/profile-site-build")
     // }
     environment {
-        // Docker Registry Info
-        registry_front = ''
-        registry_back = ''
-        registryCredentials = ''
-        // Workspace Subdirectories
-        frontend = ''
-        backend = ''
-        k8 = ''
-        // Unknown
-        // front = ''
-        // back = ''
-        // Sonarqube
-        SONARPROJECT_KEY = ''
-        scannerHome = tool 'sonar4.7'
-        // GitHub Repos
-        frontgit = ''
-        backgit = ''
-        defgit = ''
-        // Docker Images
-        back_image_name = ''
-        front_image_name = ''
-        // Kops
-        kubecluster = ''
-        s3bucket = ''
-        config = ''
-        // AWS
-        awsregion = ''
-        awszones = ''
-        // API Keys
-        api_maps_key = ''
-        api_chat_key = ''
-        // Docker Creds 
-        docker_config_json = ''
-        // SSL
-        ssl_tls_crt = ''
-        ssl_tls_key = ''
+        // // Docker Registry Info
+        // registry_front = ''
+        // registry_back = ''
+        // registryCredentials = ''
+        // // Workspace Subdirectories
+        // frontend = ''
+        // backend = ''
+        // k8 = ''
+        // // Unknown
+        // // front = ''
+        // // back = ''
+        // // Sonarqube
+        // SONARPROJECT_KEY = ''
+        // scannerHome = tool 'sonar4.7'
+        // // GitHub Repos
+        // frontgit = ''
+        // backgit = ''
+        // defgit = ''
+        // // Docker Images
+        // back_image_name = ''
+        // front_image_name = ''
+        // // Kops
+        // kubecluster = ''
+        // s3bucket = ''
+        // config = ''
+        // // AWS
+        // awsregion = ''
+        // awszones = ''
+        // // API Keys
+        // api_maps_key = ''
+        // api_chat_key = ''
+        // // Docker Creds 
+        // docker_config_json = ''
+        // // SSL
+        // ssl_tls_crt = ''
+        // ssl_tls_key = ''
+
+
+        // echo "PARAM1: ${parameters['registry.front']}"
+
+        registry_front = parameters['registry.front']
+        // echo registry_front
+
+        registry_back = parameters['registry.back']
+        // echo registry_back
+        registryCredentials = parameters['registry.creds']
+        
+        frontend = parameters['app.frontend']
+        backend = parameters['app.backend']
+        k8 = parameters['kube.k8']
+        
+        front = parameters['service.front']
+        back = parameters['service.back']
+        
+        SONARPROJECT_KEY = parameters['sonar.projectkey']
+        // scannerHome = parameters['sonar.scannerhome']
+        
+        frontgit = parameters['git.front']
+        echo parameters['git.front']
+        // echo frontgit
+        backgit = parameters['git.back']
+        defgit = parameters['git.definition']
+        
+        back_image_name = parameters['image.back']
+        front_image_name = parameters['image.front']
+        
+        kubecluster = parameters['kube.url']
+        s3bucket = parameters['s3.bucket']
+        config = parameters['kube.config']
+        
+        awsregion = parameters['aws.region']
+        awszones = parameters['aws.zones']
+
+        api_maps_key = parameters['api.maps_key']
+        api_chat_key = parameters['api.chat_key']
+        
+        docker_config_json = parameters['docker.configjson']
+        
+        ssl_tls_crt = parameters['tls.crt']
+        ssl_tls_key = parameters['tls.key']
+        
     }
     options { skipDefaultCheckout() }
     // parameters {
@@ -91,48 +136,6 @@ pipeline {
                             parameters[paramName] = paramValue
                         }
                     }
-                    echo "PARAM1: ${parameters['registry.front']}"
-
-                    registry_front = parameters['registry.front']
-                    echo registry_front
-
-                    registry_back = parameters['registry.back']
-                    echo registry_back
-                    registryCredentials = parameters['registry.creds']
-                    
-                    frontend = parameters['app.frontend']
-                    backend = parameters['app.backend']
-                    k8 = parameters['kube.k8']
-                    
-                    front = parameters['service.front']
-                    back = parameters['service.back']
-                    
-                    SONARPROJECT_KEY = parameters['sonar.projectkey']
-                    // scannerHome = parameters['sonar.scannerhome']
-                    
-                    frontgit = parameters['git.front']
-                    echo parameters['git.front']
-                    echo frontgit
-                    backgit = parameters['git.back']
-                    defgit = parameters['git.definition']
-                    
-                    back_image_name = parameters['image.back']
-                    front_image_name = parameters['image.front']
-                    
-                    kubecluster = parameters['kube.url']
-                    s3bucket = parameters['s3.bucket']
-                    config = parameters['kube.config']
-                    
-                    awsregion = parameters['aws.region']
-                    awszones = parameters['aws.zones']
-
-                    api_maps_key = parameters['api.maps_key']
-                    api_chat_key = parameters['api.chat_key']
-                    
-                    docker_config_json = parameters['docker.configjson']
-                    
-                    ssl_tls_crt = parameters['tls.crt']
-                    ssl_tls_key = parameters['tls.key']
                 }
 
             }
