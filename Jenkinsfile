@@ -35,7 +35,8 @@ pipeline {
                 script {
                     writeFile file: 'env-var', text: params.environment
                     configFile = './env-var'
-                    configFileContent = readFile configFile
+                    configFileContent = params.environment
+                    // configFileContent = readFile configFile
 
                     def parameters = [:]
                     
