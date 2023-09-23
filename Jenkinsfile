@@ -101,6 +101,9 @@ pipeline {
                     registry_front = parameters['registry.front']
                     registry_back = parameters['registry.back']
 
+                    echo registry_front
+                    echo registry_back
+
                     registryCredentials = parameters['registry.creds']
                     
                     frontend = parameters['app.frontend']
