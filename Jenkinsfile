@@ -87,13 +87,17 @@ pipeline {
                 cleanWs()
                 script {
                     writeFile file: 'env_vars.txt', text: params.environment
-                    sh 'cat env_vars.txt | xargs -I {} export {}'
-                    // sh 'chmod +x envvar.sh'
-                    // sh 'cp envvar.sh /tmp/envvar.sh'
-                    // sh 'cd /tmp && . ./envvar.sh'
-                    sh 'echo $registry_back'
-                    sh 'echo $registry_front'
-
+                    sh '''
+                        cat env_vars.txt | xargs -I {} export {}
+                        echo $registry_back
+                        echo $registry_front
+                    '''
+                    // sh '''
+                    //     chmod +x env_vars.sh
+                    //     . ./env_vars.sh
+                    //     echo $registry_back
+                    //     echo $registry_front
+                    // '''
                     // configFile = 'envvar'
                     // configFileContent = params.environment
                     // configFileContent = readFile configFile
