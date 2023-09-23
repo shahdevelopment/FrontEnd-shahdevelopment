@@ -10,6 +10,43 @@ pipeline {
         // // Reuse the workspace from previous builds
         // ws("/opt/jenkins-slave/workspace/profile-site-build")
     // }
+    environment {
+        registry_front = ''
+
+        registry_back = ''
+        registryCredentials = ''
+        
+        frontend = ''
+        backend = ''
+        k8 = ''
+        
+        front = ''
+        back = ''
+        
+        SONARPROJECT_KEY = ''
+        scannerHome = ''
+        
+        frontgit = ''
+        backgit = ''
+        defgit = ''
+        
+        back_image_name = ''
+        front_image_name = ''
+        kubecluster = ''
+        s3bucket = ''
+        config = ''
+        
+        awsregion = ''
+        awszones = ''
+        api_maps_key = ''
+        api_chat_key = ''
+        
+        docker_config_json = ''
+        
+        ssl_tls_crt = ''
+        ssl_tls_key = ''
+
+    }
     options { skipDefaultCheckout() }
     // parameters {
     //     file(name: './envvar', description: 'Key-Value Pair File')
@@ -54,106 +91,41 @@ pipeline {
                         }
                     }
                     echo "PARAM1: ${parameters['registry.front']}"
-                    // registry_front="${parameters['registry.front']}"
-                    // echo ${registry_front}
-                    // registry_back="${parameters['registry.back']}"
-                    // echo ${registry_back}
-                    // registryCredentials="${parameters['registry.creds']}"
-                    // echo ${registryCredentials}
+                    registry_front = parameters['registry.front']
+                    registry_back = parameters['registry.back']
+                    registryCredentials = parameters['registry.creds']
                     
-                    // frontend="${parameters['app.frontend']}"
-                    // echo ${frontend}
-                    // backend="${parameters['app.backend']}"
-                    // echo ${backend}
-                    // k8="${parameters['kube.k8']}"
-                    // echo ${k8}
+                    frontend = parameters['app.frontend']
+                    backend = parameters['app.backend']
+                    k8 = parameters['kube.k8']
                     
-                    // front="${parameters['service.front']}"
-                    // echo ${front}
-                    // back="${parameters['service.back']}"
-                    // echo ${back}
+                    front = parameters['service.front']
+                    back = parameters['service.back']
                     
-                    // SONARPROJECT_KEY="${parameters['sonar.projectkey']}"
-                    // echo ${SONARPROJECT_KEY}
-                    // scannerHome="${parameters['sonar.scannerhome']}"
-                    // echo ${scannerHome}
+                    SONARPROJECT_KEY = parameters['sonar.projectkey']
+                    scannerHome = parameters['sonar.scannerhome']
                     
-                    // frontgit="${parameters['git.front']}"
-                    // echo ${frontgit}
-                    // backgit="${parameters['git.back']}"
-                    // echo ${backgit}
-                    // defgit="${parameters['git.definition']}"
-                    // echo ${defgit}
+                    frontgit = parameters['git.front']
+                    backgit = parameters['git.back']
+                    defgit = parameters['git.definition']
                     
-                    // back_image_name="${parameters['image.back']}"
-                    // echo ${back_image_name}
-                    // front_image_name="${parameters['image.front']}"
-                    // echo ${front_image_name}
+                    back_image_name = parameters['image.back']
+                    front_image_name = parameters['image.front']
                     
-                    // kubecluster="${parameters['kube.url']}"
-                    // echo ${kubecluster}
-                    // s3bucket="${parameters['s3.bucket']}"
-                    // echo ${s3bucket}
-                    // config="${parameters['kube.config']}"
-                    // echo ${config}
+                    kubecluster = parameters['kube.url']
+                    s3bucket = parameters['s3.bucket']
+                    config = parameters['kube.config']
                     
-                    // awsregion="${parameters['aws.region']}"
-                    // echo ${awsregion}
-                    // awszones="${parameters['aws.zones']}"
-                    // echo ${awszones}
+                    awsregion = parameters['aws.region']
+                    awszones = parameters['aws.zones']
 
-                    // api_maps_key="${parameters['api.maps_key']}"
-                    // echo ${api_maps_key}
-                    // api_chat_key="${parameters['api.chat_key']}"
-                    // echo ${api_chat_key}
+                    api_maps_key = parameters['api.maps_key']
+                    api_chat_key = parameters['api.chat_key']
                     
-                    // docker_config_json="${parameters['docker.configjson']}"
-                    // echo ${docker_config_json}
+                    docker_config_json = parameters['docker.configjson']
                     
-                    // ssl_tls_crt="${parameters['tls.crt']}"
-                    // echo ${ssl_tls_crt}
-                    // ssl_tls_key="${parameters['tls.key']}"
-                    // echo ${ssl_tls_key}
-
-
-
-
-                    // registry_front = (configFileContent =~ /^registry\.front=(.*)$/).size() > 0 ? (configFileContent =~ /^registry\.front=(.*)$/)[0][1] : null
-
-                    // registry_back = (configFileContent =~ /^registry\.back=(.*)$/).size() > 0 ? (configFileContent =~ /^registry\.back=(.*)$/)[0][1] : null
-                    // registryCredentials = (configFileContent =~ /^registry\.creds=(.*)$/).size() > 0 ? (configFileContent =~ /^registry\.creds=(.*)$/)[0][1] : null
-                    
-                    // frontend = (configFileContent =~ /^app\.frontend=(.*)$/).size() > 0 ? (configFileContent =~ /^app\.frontend=(.*)$/)[0][1] : null
-                    // backend = (configFileContent =~ /^app\.backend=(.*)$/).size() > 0 ? (configFileContent =~ /^app\.backend=(.*)$/)[0][1] : null
-                    // k8 = (configFileContent =~ /^kube\.k8=(.*)$/).size() > 0 ? (configFileContent =~ /^kube\.k8=(.*)$/)[0][1] : null
-                    
-                    // front = (configFileContent =~ /^service\.front=(.*)$/).size() > 0 ? (configFileContent =~ /^service\.front=(.*)$/)[0][1] : null
-                    // back = (configFileContent =~ /^service\.back=(.*)$/).size() > 0 ? (configFileContent =~ /^service\.back=(.*)$/)[0][1] : null
-                    
-                    // SONARPROJECT_KEY = (configFileContent =~ /^sonar\.projectkey=(.*)$/).size() > 0 ? (configFileContent =~ /^sonar\.projectkey=(.*)$/)[0][1] : null
-                    // scannerHome = (configFileContent =~ /^sonar\.scannerhome=(.*)$/).size() > 0 ? (configFileContent =~ /^sonar\.scannerhome=(.*)$/)[0][1] : null
-                    
-                    // frontgit = (configFileContent =~ /^git\.front=(.*)$/).size() > 0 ? (configFileContent =~ /^git\.front=(.*)$/)[0][1] : null
-                    // backgit = (configFileContent =~ /^git\.back=(.*)$/).size() > 0 ? (configFileContent =~ /^git\.back=(.*)$/)[0][1] : null
-                    // defgit = (configFileContent =~ /^git\.def=(.*)$/).size() > 0 ? (configFileContent =~ /^git\.def=(.*)$/)[0][1] : null
-                    
-                    // back_image_name = (configFileContent =~ /^image\.back=(.*)$/).size() > 0 ? (configFileContent =~ /^image\.back=(.*)$/)[0][1] : null
-                    // front_image_name = (configFileContent =~ /^image\.front=(.*)$/).size() > 0 ? (configFileContent =~ /^image\.front=(.*)$/)[0][1] : null
-                    
-                    // kubecluster = (configFileContent =~ /^kube\.url=(.*)$/).size() > 0 ? (configFileContent =~ /^kube\.url=(.*)$/)[0][1] : null
-                    // s3bucket = (configFileContent =~ /^s3\.bucket=(.*)$/).size() > 0 ? (configFileContent =~ /^s3\.bucket=(.*)$/)[0][1] : null
-                    // config = (configFileContent =~ /^kube\.config=(.*)$/).size() > 0 ? (configFileContent =~ /^kube\.config=(.*)$/)[0][1] : null
-                    
-                    // awsregion = (configFileContent =~ /^aws\.region=(.*)$/).size() > 0 ? (configFileContent =~ /^aws\.region=(.*)$/)[0][1] : null
-                    // awszones = (configFileContent =~ /^aws\.zones=(.*)$/).size() > 0 ? (configFileContent =~ /^aws\.zones=(.*)$/)[0][1] : null
-                    
-                    // api_maps_key = (configFileContent =~ /^api\.maps_key=(.*)$/).size() > 0 ? (configFileContent =~ /^api\.maps_key=(.*)$/)[0][1] : null
-                    // api_chat_key = (configFileContent =~ /^api\.chat_key=(.*)$/).size() > 0 ? (configFileContent =~ /^api\.chat_key=(.*)$/)[0][1] : null
-                    
-                    // docker_config_json = (configFileContent =~ /^docker\.configjson=(.*)$/).size() > 0 ? (configFileContent =~ /^docker\.configjson=(.*)$/)[0][1] : null
-                    
-                    // ssl_tls_crt = (configFileContent =~ /^tls\.crt=(.*)$/).size() > 0 ? (configFileContent =~ /^tls\.crt=(.*)$/)[0][1] : null
-                    // ssl_tls_key = (configFileContent =~ /^tls\.key=(.*)$/).size() > 0 ? (configFileContent =~ /^tls\.key=(.*)$/)[0][1] : null
+                    ssl_tls_crt = parameters['tls.crt']
+                    ssl_tls_key = parameters['tls.key']
                 }
 
             }
@@ -186,7 +158,7 @@ pipeline {
                             withCredentials([sshUserPrivateKey(credentialsId: 'gitsshkey', keyFileVariable: 'SSH_KEY')]) {
                                 dir("${frontend}") {
                                     sshagent(['gitsshkey']) {
-                                        sh "git clone ${parameters['registry.front']} ."
+                                        sh "git clone ${frontgit} ."
                                     }
                                 }
                             }
