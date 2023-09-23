@@ -214,13 +214,13 @@ pipeline {
             steps {
                 dir("${frontend}") {
                     script {
-                        dockerImage = docker.build("$registry_front" + ":v$BUILD_NUMBER", "--build-arg maps_key=${api_maps_key} --build-arg ENVIRONMENT=dev  .")
+                        dockerImage = docker.build("${registry_front}" + ":v$BUILD_NUMBER", "--build-arg maps_key=${api_maps_key} --build-arg ENVIRONMENT=dev  .")
                         sh 'sleep 1'
                     }
                 }
                 dir("${backend}") {
                     script {
-                        dockerImage = docker.build("$registry_back" + ":v$BUILD_NUMBER", "--build-arg chat_key=${api_chat_key} --build-arg ENVIRONMENT=dev .")
+                        dockerImage = docker.build("${registry_back}" + ":v$BUILD_NUMBER", "--build-arg chat_key=${api_chat_key} --build-arg ENVIRONMENT=dev .")
                         sh 'sleep 1'
                     }
                 }    
@@ -308,7 +308,7 @@ pipeline {
                     //     echo "| |_) || |__| | _| |_ | |____ | |_/  /    ___)  |  | |   | |____ | |      "
                     //     echo "|____/ |_____/ |_____||______||_____/    |_____/   |_|   |______||_|      "
                     script {
-                        dockerImage = docker.build("$registry_front" + ":v$BUILD_NUMBER", "--build-arg maps_key=${api_maps_key} .")
+                        dockerImage = docker.build("${registry_front}" + ":v$BUILD_NUMBER", "--build-arg maps_key=${api_maps_key} .")
                         sh 'sleep 1'
                         docker.withRegistry('', registryCredentials) {dockerImage.push("v$BUILD_NUMBER")
                         }
@@ -317,7 +317,7 @@ pipeline {
                 }
                 dir("${backend}") {
                     script {
-                        dockerImage = docker.build("$registry_back" + ":v$BUILD_NUMBER", "--build-arg chat_key=${api_chat_key} .")
+                        dockerImage = docker.build("${registry_back}" + ":v$BUILD_NUMBER", "--build-arg chat_key=${api_chat_key} .")
                         sh 'sleep 1'
 
                         docker.withRegistry('', registryCredentials) {
