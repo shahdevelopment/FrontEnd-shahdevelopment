@@ -92,7 +92,7 @@ pipeline {
                     }
                     echo "PARAM1: ${parameters['registry.front']}"
 
-                    registry_front = "${parameters['registry.front']}"
+                    registry_front = parameters['registry.front']
 
                     echo "${registry_front}"
                     registry_back = parameters['registry.back']
