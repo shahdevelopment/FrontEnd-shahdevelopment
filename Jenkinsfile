@@ -26,7 +26,7 @@ pipeline {
         // back = ""
 
         // Sonarqube
-        SONARPROJECT_KEY = ""
+        SONAR_PROJECT_KEY = ""
         scannerHome = ""
 
         // GitHub Repos
