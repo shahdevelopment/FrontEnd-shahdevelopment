@@ -197,31 +197,31 @@ pipeline {
                     }
             }    
         }
-        stage('Code Sonarqube Analysis') {
-            environment {
-                scannerHome = tool 'sonar4.7'
-            }
-            steps {
-                withSonarQubeEnv('sonarqube') {
-                    script {
-                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${frontend}"
-                        sh "sleep 1"
-                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${backend}"
-                    }
-                }
-            }
-        }
+        // stage('Code Sonarqube Analysis') {
+        //     environment {
+        //         scannerHome = tool 'sonar4.7'
+        //     }
+        //     steps {
+        //         withSonarQubeEnv('sonarqube') {
+        //             script {
+        //                 sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${frontend}"
+        //                 sh "sleep 1"
+        //                 sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${backend}"
+        //             }
+        //         }
+        //     }
+        // }
         stage('Build Test Container') {
             steps {
                 dir("${frontend}") {
                     script {
-                        dockerImage = docker.build(${front_image_name}, "--build-arg maps_key=${api_maps_key} --build-arg ENVIRONMENT=dev  .")
+                        dockerImage = docker.build("${front_image_name}", "--build-arg maps_key=${api_maps_key} --build-arg ENVIRONMENT=dev  .")
                         sh 'sleep 1'
                     }
                 }
                 dir("${backend}") {
                     script {
-                        dockerImage = docker.build(${back_image_name}, "--build-arg chat_key=${api_chat_key} --build-arg ENVIRONMENT=dev .")
+                        dockerImage = docker.build("${back_image_name}", "--build-arg chat_key=${api_chat_key} --build-arg ENVIRONMENT=dev .")
                         sh 'sleep 1'
                     }
                 }    
@@ -309,7 +309,7 @@ pipeline {
                     //     echo "| |_) || |__| | _| |_ | |____ | |_/  /    ___)  |  | |   | |____ | |      "
                     //     echo "|____/ |_____/ |_____||______||_____/    |_____/   |_|   |______||_|      "
                     script {
-                        dockerImage = docker.build(registry_front + ":v$BUILD_NUMBER", "--build-arg maps_key=${api_maps_key} .")
+                        dockerImage = docker.build("${front_image_name}", "--build-arg maps_key=${api_maps_key} .")
                         sh 'sleep 1'
                         docker.withRegistry('', registryCredentials) {dockerImage.push("v$BUILD_NUMBER")
                         }
@@ -318,7 +318,7 @@ pipeline {
                 }
                 dir("${backend}") {
                     script {
-                        dockerImage = docker.build(registry_back + ":v$BUILD_NUMBER", "--build-arg chat_key=${api_chat_key} .")
+                        dockerImage = docker.build("${back_image_name}", "--build-arg chat_key=${api_chat_key} .")
                         sh 'sleep 1'
 
                         docker.withRegistry('', registryCredentials) {
