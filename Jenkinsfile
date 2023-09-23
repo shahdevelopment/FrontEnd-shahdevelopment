@@ -32,7 +32,7 @@ pipeline {
         // Docker Images
         back_image_name = ''
         front_image_name = ''
-        // K8s
+        // Kops
         kubecluster = ''
         s3bucket = ''
         config = ''
@@ -95,6 +95,7 @@ pipeline {
 
                     registry_front = parameters['registry.front']
                     echo registry_front
+
                     registry_back = parameters['registry.back']
                     registryCredentials = parameters['registry.creds']
                     
@@ -109,8 +110,8 @@ pipeline {
                     scannerHome = parameters['sonar.scannerhome']
                     
                     frontgit = parameters['git.front']
+                    echo parameters['git.front']
                     echo frontgit
-
                     backgit = parameters['git.back']
                     defgit = parameters['git.definition']
                     
