@@ -121,8 +121,8 @@ pipeline {
                     front = parameters['service.front']
                     back = parameters['service.back']
                     
-                    SONARPROJECT_KEY = parameters['sonar.projectkey']
-                    echo SONARPROJECT_KEY
+                    SONAR_PROJECT_KEY = parameters['sonar.projectkey']
+                    echo SONAR_PROJECT_KEY
                     scannerHome = parameters['sonar.scannerhome']
                     echo scannerHome
                     
