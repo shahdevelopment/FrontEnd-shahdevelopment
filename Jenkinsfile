@@ -12,41 +12,41 @@ pipeline {
     // }
     environment {
         // Docker Registry Info
-        registry_front = ''
-        registry_back = ''
-        registryCredentials = ''
+        registry_front = ""
+        registry_back = ""
+        registryCredentials = ""
         // Workspace Subdirectories
-        frontend = ''
-        backend = ''
-        k8 = ''
+        frontend = ""
+        backend = ""
+        k8 = ""
         // Unknown
-        // front = ''
-        // back = ''
+        // front = ""
+        // back = ""
         // Sonarqube
-        SONARPROJECT_KEY = ''
+        SONARPROJECT_KEY = ""
         scannerHome = tool 'sonar4.7'
         // GitHub Repos
-        frontgit = ''
-        backgit = ''
-        defgit = ''
+        frontgit = ""
+        backgit = ""
+        defgit = ""
         // Docker Images
-        back_image_name = ''
-        front_image_name = ''
+        back_image_name = ""
+        front_image_name = ""
         // Kops
-        kubecluster = ''
-        s3bucket = ''
-        config = ''
+        kubecluster = ""
+        s3bucket = ""
+        config = ""
         // AWS
-        awsregion = ''
-        awszones = ''
+        awsregion = ""
+        awszones = ""
         // API Keys
-        api_maps_key = ''
-        api_chat_key = ''
+        api_maps_key = ""
+        api_chat_key = ""
         // K8s Docker Creds 
-        docker_config_json = ''
+        docker_config_json = ""
         // SSL
-        ssl_tls_crt = ''
-        ssl_tls_key = ''
+        ssl_tls_crt = ""
+        ssl_tls_key = ""
     }
     options { skipDefaultCheckout() }
     // parameters {
@@ -91,17 +91,15 @@ pipeline {
                             parameters[paramName] = paramValue
                         }
                     }
-                    echo "Registry Front: ${parameters['registry.front']}"
-                    echo "Registry Back: ${parameters['registry.back']}"
-
-
-                    echo "PARAM1: ${parameters['registry.front']}"
+                    // echo "Registry Front: ${parameters['registry.front']}"
+                    // echo "Registry Back: ${parameters['registry.back']}"
 
                     registry_front = parameters['registry.front']
-                    echo registry_front
-
                     registry_back = parameters['registry.back']
-                    echo registry_back
+
+                    echo "Registry Front: ${registry_front}"
+                    echo "Registry Back: ${registry_back}"
+
                     registryCredentials = parameters['registry.creds']
                     
                     frontend = parameters['app.frontend']
