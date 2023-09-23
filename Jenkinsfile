@@ -84,7 +84,6 @@ pipeline {
                 script {
                     // writeFile file: 'env_vars.txt', text: params.environment
                     // configFile = 'env_vars.txt'
-                    // configFileContent = params.environment
                     // configFileContent = readFile configFile
                     @NonCPS
                     def paramsFile = params.env_vars
@@ -97,39 +96,29 @@ pipeline {
                         // echo "------------------------------------"
                         parameters["${line.split('=')[0].trim()}"] = "${line.split('=')[1].trim()}"
                     }
-
                     registry_front = parameters['registry.front']
                     registry_back = parameters['registry.back']
                     registryCredentials = parameters['registry.creds']
-                    
                     frontend = parameters['app.frontend']
                     backend = parameters['app.backend']
                     k8 = parameters['kube.k8']
-                    
                     front = parameters['service.front']
                     back = parameters['service.back']
-                    
                     SONAR_PROJECT_KEY = parameters['sonar.projectkey']
-                    
                     frontgit = parameters['git.front']
                     // echo parameters['git.front']
                     // echo frontgit
                     backgit = parameters['git.back']
                     defgit = parameters['git.definition']
-                    
                     // back_image_name = parameters['image.back']
                     // front_image_name = parameters['image.front']
-                    
                     kubecluster = parameters['kube.url']
                     s3bucket = parameters['s3.bucket']
                     config = parameters['kube.config']
-                    
                     awsregion = parameters['aws.region']
                     awszones = parameters['aws.zones']
-
                     api_maps_key = parameters['api.maps_key']
                     api_chat_key = parameters['api.chat_key']
-
                     // docker_config_json = parameters['docker.configjson']
                     // ssl_tls_crt = parameters['tls.crt']
                     ssl_tls_key = parameters['tls.key']
@@ -191,20 +180,20 @@ pipeline {
                     }
             }    
         }
-        stage('Code Sonarqube Analysis') {
-            environment {
-                scannerHome = tool 'sonar4.7'
-            }
-            steps {
-                withSonarQubeEnv('sonarqube') {
-                    script {
-                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${frontend}"
-                        sh "sleep 1"
-                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${backend}"
-                    }
-                }
-            }
-        }
+        // stage('Code Sonarqube Analysis') {
+        //     environment {
+        //         scannerHome = tool 'sonar4.7'
+        //     }
+        //     steps {
+        //         withSonarQubeEnv('sonarqube') {
+        //             script {
+        //                 sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${frontend}"
+        //                 sh "sleep 1"
+        //                 sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${backend}"
+        //             }
+        //         }
+        //     }
+        // }
         stage('Build Test Container') {
             steps {
                 dir("${frontend}") {
@@ -370,7 +359,7 @@ pipeline {
         stage('Application-Deployment') {
             steps {
                 dir("${k8}") {
-                    sh "/home/ansible/kube/./default-scale"
+                    // sh "/home/ansible/kube/./default-scale"
                     sh "/bin/bash move.sh"
                     sh "helm upgrade my-app ./helm/profilecharts --set backimage=${registry_back}:v${BUILD_NUMBER} --set frontimage=${registry_front}:v${BUILD_NUMBER} --set docker_configjson=${docker_config_json} --set tls_crt=${ssl_tls_crt} --set tls_key=${ssl_tls_key}"
                     // sh "helm upgrade --install --force --kubeconfig=${config} my-app ./helm/profilecharts --set backimage=${registry_back}:v${BUILD_NUMBER} --set frontimage=${registry_front}:v${BUILD_NUMBER}"
@@ -379,7 +368,7 @@ pipeline {
                     sleep 240
                     if [ $? -eq 0 ]; then
                         echo "Cluster is now up and running!"
-                        echo "Please add DNS entry for:"
+                        echo "Please add DNS entry if applicable for:"
                         aws elbv2 describe-load-balancers | grep DNSName
                     else
                         echo Cluster not running after 15m!

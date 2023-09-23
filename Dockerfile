@@ -1,7 +1,7 @@
 FROM node
 
 # Set environment variables
-ENV api_key_new=$maps_key
+ENV api_key_new="$maps_key"
 # Set the working directory
 WORKDIR /usr/src/app
 ARG ENVIRONMENT
