@@ -85,12 +85,12 @@ pipeline {
         stage('File Param WA') {
             steps {
                 cleanWs()
-
                 script {
-                    writeFile file: 'envvar.sh', text: params.environment
-                    sh 'chmod +x envvar.sh'
-                    sh 'cp envvar.sh /tmp/envvar.sh'
-                    sh 'cd /tmp && . ./envvar.sh'
+                    writeFile file: 'env_vars.txt', text: params.environment
+                    sh 'cat env_vars.txt | xargs -I {} export {}'
+                    // sh 'chmod +x envvar.sh'
+                    // sh 'cp envvar.sh /tmp/envvar.sh'
+                    // sh 'cd /tmp && . ./envvar.sh'
                     sh 'echo $registry_back'
                     sh 'echo $registry_front'
 
