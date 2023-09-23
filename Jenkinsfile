@@ -3,6 +3,7 @@ def COLOR_MAP = [
     'FAILURE': 'danger',
 ]
 
+
 pipeline {
     agent {label 'ansible'}
     // options {
@@ -34,8 +35,8 @@ pipeline {
         // Docker Images
         // back_image_name = ""
         // front_image_name = ""
-        back_image_name = ""
-        front_image_name = ""
+        back_image_name="$registry_back" + ":v$BUILD_NUMBER"
+        front_image_name="$registry_front" + ":v$BUILD_NUMBER"
 
         // Kops
         kubecluster = ""
@@ -58,6 +59,9 @@ pipeline {
         ssl_tls_key = ""
     }
     options { skipDefaultCheckout() }
+    // parameters {
+    //     file(name: './envvar', description: 'Key-Value Pair File')
+    // }
     stages {
         // stage('Cluster-Delete') {
         //     steps {
@@ -100,7 +104,7 @@ pipeline {
                     registry_front = parameters['registry.front']
                     registry_back = parameters['registry.back']
 
-                    registryCredentials = parameters['registry.creds']
+                    // registryCredentials = parameters['registry.creds']
                     
                     frontend = parameters['app.frontend']
                     backend = parameters['app.backend']
@@ -110,15 +114,17 @@ pipeline {
                     back = parameters['service.back']
                     
                     SONAR_PROJECT_KEY = parameters['sonar.projectkey']
+                    // scannerHome = parameters['sonar.scannerhome']
                     
                     frontgit = parameters['git.front']
-
+                    // echo parameters['git.front']
+                    // echo frontgit
                     backgit = parameters['git.back']
                     defgit = parameters['git.definition']
                     
-                    back_image_name = "${registry_front}:v${BUILD_NUMBER}"
-                    front_image_name = "${registry_back}:v${BUILD_NUMBER}"
-
+                    // back_image_name = parameters['image.back']
+                    // front_image_name = parameters['image.front']
+                    
                     kubecluster = parameters['kube.url']
                     s3bucket = parameters['s3.bucket']
                     config = parameters['kube.config']
@@ -190,31 +196,31 @@ pipeline {
                     }
             }    
         }
-        // stage('Code Sonarqube Analysis') {
-        //     environment {
-        //         scannerHome = tool 'sonar4.7'
-        //     }
-        //     steps {
-        //         withSonarQubeEnv('sonarqube') {
-        //             script {
-        //                 sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${frontend}"
-        //                 sh "sleep 1"
-        //                 sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${backend}"
-        //             }
-        //         }
-        //     }
-        // }
+        stage('Code Sonarqube Analysis') {
+            environment {
+                scannerHome = tool 'sonar4.7'
+            }
+            steps {
+                withSonarQubeEnv('sonarqube') {
+                    script {
+                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${frontend}"
+                        sh "sleep 1"
+                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${backend}"
+                    }
+                }
+            }
+        }
         stage('Build Test Container') {
             steps {
                 dir("${frontend}") {
                     script {
-                        dockerImage = docker.build("${front_image_name}", "--build-arg maps_key=${api_maps_key} --build-arg ENVIRONMENT=dev  .")
+                        dockerImage = docker.build("$registry_front" + ":v$BUILD_NUMBER", "--build-arg maps_key=${api_maps_key} --build-arg ENVIRONMENT=dev  .")
                         sh 'sleep 1'
                     }
                 }
                 dir("${backend}") {
                     script {
-                        dockerImage = docker.build("${back_image_name}", "--build-arg chat_key=${api_chat_key} --build-arg ENVIRONMENT=dev .")
+                        dockerImage = docker.build("$registry_back" + ":v$BUILD_NUMBER", "--build-arg chat_key=${api_chat_key} --build-arg ENVIRONMENT=dev .")
                         sh 'sleep 1'
                     }
                 }    
@@ -223,10 +229,10 @@ pipeline {
         stage('Run Test Containers') {
             steps{
                 script {
-                    sh "docker run -dt --name ${backend} -p 9000:9000 ${back_image_name}"
+                    sh "docker run -dt --name ${backend} -p 9000:9000 ${registry_back}:v${BUILD_NUMBER}"
                     sh 'sleep 5'
                     sh "docker logs ${backend}"
-                    sh "docker run -dt --name ${frontend} -p 3000:3000 ${front_image_name}"
+                    sh "docker run -dt --name ${frontend} -p 3000:3000 ${registry_front}:v${BUILD_NUMBER}"
                     sh 'sleep 5'
                     sh "docker logs ${frontend}"
                     sh 'sleep 5'
@@ -302,7 +308,7 @@ pipeline {
                     //     echo "| |_) || |__| | _| |_ | |____ | |_/  /    ___)  |  | |   | |____ | |      "
                     //     echo "|____/ |_____/ |_____||______||_____/    |_____/   |_|   |______||_|      "
                     script {
-                        dockerImage = docker.build("${front_image_name}", "--build-arg maps_key=${api_maps_key} .")
+                        dockerImage = docker.build("$registry_front" + ":v$BUILD_NUMBER", "--build-arg maps_key=${api_maps_key} .")
                         sh 'sleep 1'
                         docker.withRegistry('', registryCredentials) {dockerImage.push("v$BUILD_NUMBER")
                         }
@@ -311,7 +317,7 @@ pipeline {
                 }
                 dir("${backend}") {
                     script {
-                        dockerImage = docker.build("${back_image_name}", "--build-arg chat_key=${api_chat_key} .")
+                        dockerImage = docker.build("$registry_back" + ":v$BUILD_NUMBER", "--build-arg chat_key=${api_chat_key} .")
                         sh 'sleep 1'
 
                         docker.withRegistry('', registryCredentials) {
