@@ -27,7 +27,7 @@ pipeline {
 
         // Sonarqube
         SONARPROJECT_KEY = ""
-        scannerHome = tool 'sonar4.7'
+        scannerHome = ""
 
         // GitHub Repos
         frontgit = ""
@@ -121,7 +121,7 @@ pipeline {
                     back = parameters['service.back']
                     
                     SONARPROJECT_KEY = parameters['sonar.projectkey']
-                    // scannerHome = parameters['sonar.scannerhome']
+                    scannerHome = parameters['sonar.scannerhome']
                     
                     frontgit = parameters['git.front']
                     // echo parameters['git.front']
