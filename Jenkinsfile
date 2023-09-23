@@ -101,11 +101,10 @@ pipeline {
                     registry_front = parameters['registry.front']
                     registry_back = parameters['registry.back']
 
-                    // registryCredentials = parameters['registry.creds']
+                    registryCredentials = parameters['registry.creds']
                     
                     frontend = parameters['app.frontend']
                     backend = parameters['app.backend']
-                    echo backend
                     k8 = parameters['kube.k8']
                     
                     front = parameters['service.front']
@@ -118,8 +117,10 @@ pipeline {
                     backgit = parameters['git.back']
                     defgit = parameters['git.definition']
                     
-                    back_image_name = "${registry_front}:v${BUILD_NUMBER}"
-                    front_image_name = "${registry_back}:v${BUILD_NUMBER}"
+                    back_image_name = registry_front + ":v${BUILD_NUMBER}"
+                    front_image_name = registry_back + ":v${BUILD_NUMBER}"
+                    echo back_image_name
+                    echo front_image_name
 
                     kubecluster = parameters['kube.url']
                     s3bucket = parameters['s3.bucket']
