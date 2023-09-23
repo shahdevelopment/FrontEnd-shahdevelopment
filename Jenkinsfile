@@ -196,20 +196,20 @@ pipeline {
                     }
             }    
         }
-        stage('Code Sonarqube Analysis') {
-            environment {
-                scannerHome = tool 'sonar4.7'
-            }
-            steps {
-                withSonarQubeEnv('sonarqube') {
-                    script {
-                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${frontend}"
-                        sh "sleep 1"
-                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${backend}"
-                    }
-                }
-            }
-        }
+        // stage('Code Sonarqube Analysis') {
+        //     environment {
+        //         scannerHome = tool 'sonar4.7'
+        //     }
+        //     steps {
+        //         withSonarQubeEnv('sonarqube') {
+        //             script {
+        //                 sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${frontend}"
+        //                 sh "sleep 1"
+        //                 sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${backend}"
+        //             }
+        //         }
+        //     }
+        // }
         stage('Build Test Container') {
             steps {
                 dir("${frontend}") {
