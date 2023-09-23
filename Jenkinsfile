@@ -96,9 +96,6 @@ pipeline {
                     // configFile = 'env_vars.txt'
                     // configFileContent = params.environment
                     // configFileContent = readFile configFile
-                    echo params.environment
-
-                    echo params.environment.registry.front
 
                     def paramsFile = readFile(params.environment)
                     def parameters = [:]
