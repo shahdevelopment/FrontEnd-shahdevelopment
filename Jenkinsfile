@@ -98,7 +98,7 @@ pipeline {
                     // configFileContent = readFile configFile
                     def paramsFile = params.env_vars
                     paramsFile.eachLine { String line ->
-                        def "${line.split('=')[0].trim()}" = "${line.split('=')[1].trim()}"
+                        ["${line.split('=')[0].trim()}"] = "${line.split('=')[1].trim()}"
                     }
                     echo "Registry Front: ${parameters['registry.front']}"
                     echo "Registry Back: ${parameters['registry.back']}"
