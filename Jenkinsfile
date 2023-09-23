@@ -90,8 +90,8 @@ pipeline {
                     writeFile file: 'envvar.sh', text: params.environment
                     sh 'chmod +x envvar.sh'
                     sh '. ./envvar.sh'
-                    sh 'echo $registry_back'
-                    sh 'echo $registry_front'
+                    sh "echo ${registry_back}"
+                    sh "echo ${registry_front}"
 
                     // configFile = 'envvar'
                     // configFileContent = params.environment
@@ -155,7 +155,7 @@ pipeline {
 
             }
         }
-        stage('Clean Workspace & System Check') {
+        stage('System Check') {
             steps {
                 // cleanWs()
                 sh '''
