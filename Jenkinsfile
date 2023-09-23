@@ -99,7 +99,7 @@ pipeline {
                     @NonCPS
                     def paramsFile = params.env_vars
                     def parameters = [:]
-                    paramsFile.each { String line ->
+                    paramsFile.eachLine { String line ->
                         parameters["${line.split('=')[0].trim()}"] = "${line.split('=')[1].trim()}"
                     }
                     echo "Registry Front: ${parameters['registry.front']}"
