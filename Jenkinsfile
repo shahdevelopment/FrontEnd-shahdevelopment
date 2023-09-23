@@ -11,6 +11,9 @@ pipeline {
         // ws("/opt/jenkins-slave/workspace/profile-site-build")
     // }
     options { skipDefaultCheckout() }
+    parameters {
+        file(name: 'env-var', description: 'Key-Value Pair File')
+    }
     stages {
         // stage('Cluster-Delete') {
         //     steps {
@@ -38,10 +41,9 @@ pipeline {
                     configFileContent = params.environment
                     // configFileContent = readFile configFile
 
+                    def paramsFile = readFile(params.env-var)
                     def parameters = [:]
-                    
-                    
-                    configFileContent.eachLine { line ->
+                    paramsFile.eachLine { line ->
                         def parts = line.split('=')
                         if (parts.size() == 2) {
                             def paramName = parts[0].trim()
@@ -49,7 +51,7 @@ pipeline {
                             parameters[paramName] = paramValue
                         }
                     }
-                    
+                    echo "PARAM1: ${parameters['registry.front']}"
                     // registry_front="${parameters['registry.front']}"
                     // echo ${registry_front}
                     // registry_back="${parameters['registry.back']}"
