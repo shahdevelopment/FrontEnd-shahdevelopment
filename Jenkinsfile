@@ -98,14 +98,15 @@ pipeline {
                     // configFileContent = readFile configFile
                     @NonCPS
                     def paramsFile = params.env_vars
+                    def parameters = [:]
                     paramsFile.split('\n').each { String line ->
                         echo "${line.split('=')[0].trim()}"
                         echo "${line.split('=')[1].trim()}"
                         echo "------------------------------------"
-                        [:]["${line.split('=')[0].trim()}"] = "${line.split('=')[1].trim()}"
+                        parameters["${line.split('=')[0].trim()}"] = "${line.split('=')[1].trim()}"
                     }
-                    echo "Registry Front: ${registry_front}"
-                    echo "Registry Back: ${registry_back}"
+                    echo "Registry Front: ${parameters['registry_front']}"
+                    echo "Registry Back: ${parameters['registry_back']}"
 
                     registry_front = parameters['registry.front']
                     registry_back = parameters['registry.back']
