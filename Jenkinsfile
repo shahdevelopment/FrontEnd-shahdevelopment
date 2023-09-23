@@ -97,7 +97,7 @@ pipeline {
                     // configFileContent = params.environment
                     // configFileContent = readFile configFile
 
-                    def paramsFile = params.environment
+                    def paramsFile = params.env_vars
                     def parameters = [:]
                     paramsFile.eachLine { line ->
                         def parts = line.split('=')
