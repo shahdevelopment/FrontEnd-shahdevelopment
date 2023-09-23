@@ -97,7 +97,7 @@ pipeline {
                     // configFileContent = params.environment
                     // configFileContent = readFile configFile
                     @NonCPS
-                    params.env_vars[each] { String line ->
+                    params.env_vars["${each}"] { String line ->
                         parameters["${line.split('=')[0].trim()}"] = "${line.split('=')[1].trim()}"
                     }
                     echo "Registry Front: ${parameters['registry.front']}"
