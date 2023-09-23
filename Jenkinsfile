@@ -96,10 +96,9 @@ pipeline {
                     // configFile = 'env_vars.txt'
                     // configFileContent = params.environment
                     // configFileContent = readFile configFile
-
+                    @NonCPS
                     def paramsFile = params.env_vars
                     def parameters = [:]
-                    @NonCPS
                     paramsFile.eachLine { line ->
                         def parts = line.split('=')
                         if (parts.size() == 2) {
