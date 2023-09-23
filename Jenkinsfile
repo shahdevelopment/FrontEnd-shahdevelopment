@@ -215,13 +215,13 @@ pipeline {
             steps {
                 dir("${frontend}") {
                     script {
-                        dockerImage = docker.build("${registry_front}" + ":v$BUILD_NUMBER", "--build-arg maps_key=${api_maps_key} --build-arg ENVIRONMENT=dev  .")
+                        dockerImage = docker.build(front_image_name, "--build-arg maps_key=${api_maps_key} --build-arg ENVIRONMENT=dev  .")
                         sh 'sleep 1'
                     }
                 }
                 dir("${backend}") {
                     script {
-                        dockerImage = docker.build("${registry_back}" + ":v$BUILD_NUMBER", "--build-arg chat_key=${api_chat_key} --build-arg ENVIRONMENT=dev .")
+                        dockerImage = docker.build(back_image_name, "--build-arg chat_key=${api_chat_key} --build-arg ENVIRONMENT=dev .")
                         sh 'sleep 1'
                     }
                 }    
@@ -230,10 +230,10 @@ pipeline {
         stage('Run Test Containers') {
             steps{
                 script {
-                    sh "docker run -dt --name ${backend} -p 9000:9000 ${registry_back}:v${BUILD_NUMBER}"
+                    sh "docker run -dt --name ${backend} -p 9000:9000 ${back_image_name}"
                     sh 'sleep 5'
                     sh "docker logs ${backend}"
-                    sh "docker run -dt --name ${frontend} -p 3000:3000 ${registry_front}:v${BUILD_NUMBER}"
+                    sh "docker run -dt --name ${frontend} -p 3000:3000 ${front_image_name}"
                     sh 'sleep 5'
                     sh "docker logs ${frontend}"
                     sh 'sleep 5'
