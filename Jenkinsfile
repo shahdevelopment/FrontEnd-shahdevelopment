@@ -6,7 +6,7 @@ def COLOR_MAP = [
 pipeline {
     agent {label 'ansible'}
     // options {
-        // // Reuse the workspace from previous builds
+        // Reuse the workspace from previous builds
         // ws("/opt/jenkins-slave/workspace/profile-site-build")
     // }
     environment {
