@@ -87,7 +87,8 @@ pipeline {
 
                 script {
                     writeFile file: 'envvar.sh', text: params.environment
-                    sh 'source envvar.sh'
+                    sh 'chmod +x envvar.sh'
+                    sh '. ./envvar.sh'
                     sh 'echo $registry_back'
                     sh 'echo $registry_front'
 
