@@ -93,8 +93,8 @@ pipeline {
                     echo "PARAM1: ${parameters['registry.front']}"
 
                     registry_front = parameters['registry.front']
-
                     echo registry_front
+                    // Everything above is working
                     registry_back = parameters['registry.back']
                     registryCredentials = parameters['registry.creds']
                     
@@ -161,7 +161,9 @@ pipeline {
                             withCredentials([sshUserPrivateKey(credentialsId: 'gitsshkey', keyFileVariable: 'SSH_KEY')]) {
                                 dir("${frontend}") {
                                     sshagent(['gitsshkey']) {
-                                        sh "git clone ${frontgit} ."
+                                        script{
+                                            sh "git clone ${frontgit} ."
+                                        }
                                     }
                                 }
                             }
@@ -170,7 +172,9 @@ pipeline {
                             withCredentials([sshUserPrivateKey(credentialsId: 'gitsshkey', keyFileVariable: 'SSH_KEY')]) {
                                 dir("${backend}") {
                                     sshagent(['gitsshkey']) {
-                                        sh "git clone ${backgit} ."
+                                        script{
+                                            sh "git clone ${backgit} ."
+                                        }
                                     }
                                 }
                             }
@@ -179,7 +183,9 @@ pipeline {
                             withCredentials([sshUserPrivateKey(credentialsId: 'gitsshkey', keyFileVariable: 'SSH_KEY')]) {
                                 dir("${k8}") {
                                     sshagent(['gitsshkey']) {
-                                        sh "git clone ${defgit} ."
+                                        script{
+                                            sh "git clone ${defgit} ."
+                                        }
                                     }
                                 }
                             }
