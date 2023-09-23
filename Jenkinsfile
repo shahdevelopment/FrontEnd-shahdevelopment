@@ -100,7 +100,7 @@ pipeline {
                     def parameters = [:]
                     paramsFile.eachLine { String line ->
                         def parts = line.split('=')
-                        parameters[${parts[0].trim()}] = ${parts[1].trim()}
+                        parameters["${parts[0].trim()}"] = "${parts[1].trim()}"
                     }
                     echo "Registry Front: ${parameters['registry.front']}"
                     echo "Registry Back: ${parameters['registry.back']}"
