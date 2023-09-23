@@ -249,7 +249,7 @@ pipeline {
                             error("front-Path operation health check failed!")
                         }
                         // sh 'docker exec -it ${frontend} npm test'
-                        sh 'docker cp ${frontend}:/usr/src/app/npm-tests/report.json .'
+                        sh "docker cp ${frontend}:/usr/src/app/npm-tests/report.json ."
                     }
                 }
                 dir("${backend}") {
@@ -260,7 +260,7 @@ pipeline {
                             error("front-Path operation health check failed!")
                         }
                         // sh 'docker exec -it ${frontend} npm test'
-                        sh 'docker cp ${frontend}:/usr/src/app/npm-tests/report.json .'
+                        sh "docker cp ${frontend}:/usr/src/app/npm-tests/report.json ."
                     }
                 }
             }
@@ -333,16 +333,7 @@ pipeline {
                             set +e
                             /home/ansible/jenkins/./docker-rmi.sh
                             set -e
-                        '''                        // sh "image=('${back_image_name}' '${front_image_name}')"
-                        // sh '''
-                        //     echo #########################################################################################################
-                        //     echo Cleaning local prod images.
-                        //     echo #########################################################################################################
-                        //     for i in "${image[@]}"
-                        //     do
-                        //         docker rmi $i
-                        //     done
-                        // '''
+                        '''                        
                     }
                 }
             }
