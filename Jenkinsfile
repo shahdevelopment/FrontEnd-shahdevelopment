@@ -35,8 +35,8 @@ pipeline {
         // Docker Images
         // back_image_name = ""
         // front_image_name = ""
-        back_image_name="${registry_back}" + ":v$BUILD_NUMBER"
-        front_image_name="${registry_front}" + ":v$BUILD_NUMBER"
+        back_image_name = ""
+        front_image_name = ""
 
         // Kops
         kubecluster = ""
@@ -59,9 +59,6 @@ pipeline {
         ssl_tls_key = ""
     }
     options { skipDefaultCheckout() }
-    // parameters {
-    //     file(name: './envvar', description: 'Key-Value Pair File')
-    // }
     stages {
         // stage('Cluster-Delete') {
         //     steps {
@@ -115,17 +112,15 @@ pipeline {
                     back = parameters['service.back']
                     
                     SONAR_PROJECT_KEY = parameters['sonar.projectkey']
-                    // scannerHome = parameters['sonar.scannerhome']
                     
                     frontgit = parameters['git.front']
-                    // echo parameters['git.front']
-                    // echo frontgit
+
                     backgit = parameters['git.back']
                     defgit = parameters['git.definition']
                     
-                    // back_image_name = parameters['image.back']
-                    // front_image_name = parameters['image.front']
-                    
+                    back_image_name = "${registry_front}:v${BUILD_NUMBER}"
+                    front_image_name = "${registry_back}:v${BUILD_NUMBER}"
+
                     kubecluster = parameters['kube.url']
                     s3bucket = parameters['s3.bucket']
                     config = parameters['kube.config']
