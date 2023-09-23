@@ -35,8 +35,8 @@ pipeline {
         // Docker Images
         // back_image_name = ""
         // front_image_name = ""
-        back_image_name="$registry_back" + ":v$BUILD_NUMBER"
-        front_image_name="$registry_front" + ":v$BUILD_NUMBER"
+        back_image_name="${registry_back}" + ":v$BUILD_NUMBER"
+        front_image_name="${registry_front}" + ":v$BUILD_NUMBER"
 
         // Kops
         kubecluster = ""
@@ -108,6 +108,7 @@ pipeline {
                     
                     frontend = parameters['app.frontend']
                     backend = parameters['app.backend']
+                    echo backend
                     k8 = parameters['kube.k8']
                     
                     front = parameters['service.front']
@@ -308,7 +309,7 @@ pipeline {
                     //     echo "| |_) || |__| | _| |_ | |____ | |_/  /    ___)  |  | |   | |____ | |      "
                     //     echo "|____/ |_____/ |_____||______||_____/    |_____/   |_|   |______||_|      "
                     script {
-                        dockerImage = docker.build("${registry_front}" + ":v$BUILD_NUMBER", "--build-arg maps_key=${api_maps_key} .")
+                        dockerImage = docker.build(registry_front + ":v$BUILD_NUMBER", "--build-arg maps_key=${api_maps_key} .")
                         sh 'sleep 1'
                         docker.withRegistry('', registryCredentials) {dockerImage.push("v$BUILD_NUMBER")
                         }
@@ -317,7 +318,7 @@ pipeline {
                 }
                 dir("${backend}") {
                     script {
-                        dockerImage = docker.build("${registry_back}" + ":v$BUILD_NUMBER", "--build-arg chat_key=${api_chat_key} .")
+                        dockerImage = docker.build(registry_back + ":v$BUILD_NUMBER", "--build-arg chat_key=${api_chat_key} .")
                         sh 'sleep 1'
 
                         docker.withRegistry('', registryCredentials) {
