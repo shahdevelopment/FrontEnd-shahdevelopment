@@ -97,6 +97,7 @@ pipeline {
                     echo registry_front
 
                     registry_back = parameters['registry.back']
+                    echo registry_back
                     registryCredentials = parameters['registry.creds']
                     
                     frontend = parameters['app.frontend']
@@ -107,7 +108,7 @@ pipeline {
                     back = parameters['service.back']
                     
                     SONARPROJECT_KEY = parameters['sonar.projectkey']
-                    scannerHome = parameters['sonar.scannerhome']
+                    // scannerHome = parameters['sonar.scannerhome']
                     
                     frontgit = parameters['git.front']
                     echo parameters['git.front']
