@@ -33,7 +33,8 @@ pipeline {
         // frontgit = ""
         // backgit = ""
         // defgit = ""
-
+        back_image_name="$registry_back" + ":v$BUILD_NUMBER"
+        front_image_name="$registry_front" + ":v$BUILD_NUMBER"
         // // Docker Images
         // back_image_name = ""
         // front_image_name = ""
