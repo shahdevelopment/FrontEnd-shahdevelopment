@@ -10,55 +10,55 @@ pipeline {
         // // Reuse the workspace from previous builds
         // ws("/opt/jenkins-slave/workspace/profile-site-build")
     // }
-    environment {
-        // Docker Registry Info
-        registry_front = ""
-        registry_back = ""
-        registryCredentials = ""
+    // environment {
+    //     // Docker Registry Info
+    //     registry_front = ""
+    //     registry_back = ""
+    //     registryCredentials = ""
 
-        // Workspace Subdirectories
-        frontend = ""
-        backend = ""
-        k8 = ""
+    //     // Workspace Subdirectories
+    //     frontend = ""
+    //     backend = ""
+    //     k8 = ""
         
-        // Unknown
-        // front = ""
-        // back = ""
+    //     // Unknown
+    //     // front = ""
+    //     // back = ""
 
-        // Sonarqube
-        SONARPROJECT_KEY = ""
-        scannerHome = tool 'sonar4.7'
+    //     // Sonarqube
+    //     SONARPROJECT_KEY = ""
+    //     scannerHome = tool 'sonar4.7'
 
-        // GitHub Repos
-        frontgit = ""
-        backgit = ""
-        defgit = ""
-        // Docker Images
-        // back_image_name = ""
-        // front_image_name = ""
-        back_image_name="$registry_back" + ":v$BUILD_NUMBER"
-        front_image_name="$registry_front" + ":v$BUILD_NUMBER"
+    //     // GitHub Repos
+    //     frontgit = ""
+    //     backgit = ""
+    //     defgit = ""
+    //     // Docker Images
+    //     // back_image_name = ""
+    //     // front_image_name = ""
+    //     back_image_name="$registry_back" + ":v$BUILD_NUMBER"
+    //     front_image_name="$registry_front" + ":v$BUILD_NUMBER"
 
-        // Kops
-        kubecluster = ""
-        s3bucket = ""
-        config = ""
+    //     // Kops
+    //     kubecluster = ""
+    //     s3bucket = ""
+    //     config = ""
 
-        // AWS
-        awsregion = ""
-        awszones = ""
+    //     // AWS
+    //     awsregion = ""
+    //     awszones = ""
 
-        // API Keys
-        api_maps_key = ""
-        api_chat_key = ""
+    //     // API Keys
+    //     api_maps_key = ""
+    //     api_chat_key = ""
 
-        // K8s Docker Creds 
-        docker_config_json = ""
+    //     // K8s Docker Creds 
+    //     docker_config_json = ""
 
-        // SSL
-        ssl_tls_crt = ""
-        ssl_tls_key = ""
-    }
+    //     // SSL
+    //     ssl_tls_crt = ""
+    //     ssl_tls_key = ""
+    // }
     options { skipDefaultCheckout() }
     // parameters {
     //     file(name: './envvar', description: 'Key-Value Pair File')
@@ -86,35 +86,36 @@ pipeline {
             steps {
                 cleanWs()
                 script {
-                    writeFile file: 'env_vars.txt', text: params.environment
+                    sh "echo ${registry.front}"
+                    // writeFile file: 'env_vars.txt', text: params.environment
                     // sh '''
                     //     chmod +x env_vars.sh
                     //     . ./env_vars.sh
                     //     echo $registry_back
                     //     echo $registry_front
                     // '''
-                    configFile = 'env_vars.txt'
+                    // configFile = 'env_vars.txt'
                     // configFileContent = params.environment
                     // configFileContent = readFile configFile
 
-                    def paramsFile = readFile(configFile)
-                    def parameters = [:]
-                    paramsFile.eachLine { line ->
-                        def parts = line.split('=')
-                        if (parts.size() == 2) {
-                            def paramName = parts[0].trim()
-                            def paramValue = parts[1].trim()
-                            parameters[paramName] = paramValue
-                        }
-                    }
-                    echo "Registry Front: ${parameters['registry.front']}"
-                    echo "Registry Back: ${parameters['registry.back']}"
+                    // def paramsFile = readFile(configFile)
+                    // def parameters = [:]
+                    // paramsFile.eachLine { line ->
+                    //     def parts = line.split('=')
+                    //     if (parts.size() == 2) {
+                    //         def paramName = parts[0].trim()
+                    //         def paramValue = parts[1].trim()
+                    //         parameters[paramName] = paramValue
+                    //     }
+                    // }
+                    // echo "Registry Front: ${parameters['registry.front']}"
+                    // echo "Registry Back: ${parameters['registry.back']}"
 
-                    registry_front = parameters['registry.front']
-                    registry_back = parameters['registry.back']
+                    // registry_front = parameters['registry.front']
+                    // registry_back = parameters['registry.back']
 
-                    echo "Registry Front: ${registry_front}"
-                    echo "Registry Back: ${registry_back}"
+                    // echo "Registry Front: ${registry_front}"
+                    // echo "Registry Back: ${registry_back}"
 
                     // registryCredentials = parameters['registry.creds']
                     
