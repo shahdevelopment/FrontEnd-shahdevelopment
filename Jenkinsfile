@@ -101,21 +101,16 @@ pipeline {
                     def parameters = [:]
                     paramsFile.eachLine { line ->
                         def parts = line.split('=')
-                        if (parts.size() == 2) {
-                            def paramName = parts[0].trim()
-                            def paramValue = parts[1].trim()
-                            parameters[paramName] = paramValue
-                            echo parameters[paramName]
-                        }
+                        def parts[0].trim() = parts[1].trim()
                     }
-                    echo "Registry Front: ${parameters['registry.front']}"
-                    echo "Registry Back: ${parameters['registry.back']}"
+                    echo registry.front
+                    echo registry.back
 
-                    registry_front = parameters['registry.front']
-                    registry_back = parameters['registry.back']
+                    // registry_front = parameters['registry.front']
+                    // registry_back = parameters['registry.back']
 
-                    echo "Registry Front: ${registry_front}"
-                    echo "Registry Back: ${registry_back}"
+                    // echo "Registry Front: ${registry_front}"
+                    // echo "Registry Back: ${registry_back}"
 
                     // registryCredentials = parameters['registry.creds']
                     
