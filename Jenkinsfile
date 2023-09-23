@@ -34,7 +34,7 @@ pipeline {
             steps {
                 script {
                     writeFile file: 'env-var', text: params.environment
-                    configFile = './env-var'
+                    configFile = 'env-var'
                     configFileContent = params.environment
                     // configFileContent = readFile configFile
 
@@ -156,7 +156,7 @@ pipeline {
         }
         stage('Clean Workspace & System Check') {
             steps {
-                cleanWs()
+                // cleanWs()
                 sh '''
                     echo "Gathering resource info on ansible control plane........."
                     echo --------------------------------------------------------------------
