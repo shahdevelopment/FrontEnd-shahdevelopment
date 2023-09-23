@@ -99,14 +99,13 @@ pipeline {
 
                     def paramsFile = params.env_vars
                     def parameters = [:]
+                    @NonCPS
                     paramsFile.eachLine { line ->
                         def parts = line.split('=')
                         if (parts.size() == 2) {
                             def paramName = parts[0].trim()
                             def paramValue = parts[1].trim()
-                            def keyName = parameters[paramName]
-                            def valueName = paramValue
-                            keyName = valueName
+                            parameters[paramName] = paramValue
                         }
                     }
                     echo "Registry Front: ${parameters['registry.front']}"
