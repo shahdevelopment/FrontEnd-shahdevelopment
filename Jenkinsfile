@@ -102,7 +102,7 @@ pipeline {
                         echo "${line.split('=')[0].trim()}"
                         echo "${line.split('=')[1].trim()}"
                         echo "------------------------------------"
-                        [:]["${line.split('=')[0].trim()}"] = "${line.split('=')[1].trim()}"
+                        // [:]["${line.split('=')[0].trim()}"] = "${line.split('=')[1].trim()}"
                     }
                     echo "Registry Front: ${registry_front}"
                     echo "Registry Back: ${registry_back}"
