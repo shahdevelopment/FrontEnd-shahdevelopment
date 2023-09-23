@@ -86,18 +86,21 @@ pipeline {
             steps {
                 cleanWs()
                 script {
-                    writeFile file: 'env_vars.txt', text: params.environment
+                    // writeFile file: 'env_vars.txt', text: params.environment
                     // sh '''
                     //     chmod +x env_vars.sh
                     //     . ./env_vars.sh
                     //     echo $registry_back
                     //     echo $registry_front
                     // '''
-                    configFile = 'env_vars.txt'
+                    // configFile = 'env_vars.txt'
                     // configFileContent = params.environment
                     // configFileContent = readFile configFile
+                    echo params.environment
 
-                    def paramsFile = readFile(configFile)
+                    echo params.environment.registry.front
+
+                    def paramsFile = readFile(params.environment)
                     def parameters = [:]
                     paramsFile.eachLine { line ->
                         def parts = line.split('=')
