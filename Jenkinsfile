@@ -12,7 +12,7 @@ pipeline {
     // }
     options { skipDefaultCheckout() }
     parameters {
-        file(name: 'envvar', description: 'Key-Value Pair File')
+        file(name: './envvar', description: 'Key-Value Pair File')
     }
     stages {
         // stage('Cluster-Delete') {
@@ -37,7 +37,7 @@ pipeline {
             steps {
                 script {
                     writeFile file: 'envvar', text: params.environment
-                    configFile = 'envvar'
+                    // configFile = 'envvar'
                     // configFileContent = params.environment
                     // configFileContent = readFile configFile
 
