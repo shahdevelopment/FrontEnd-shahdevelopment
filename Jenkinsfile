@@ -11,8 +11,8 @@ pipeline {
         // ws("/opt/jenkins-slave/workspace/profile-site-build")
     // }
     options { skipDefaultCheckout() }
-    parameters {
-        file(name: './envvar', description: 'Key-Value Pair File')
+    // parameters {
+    //     file(name: './envvar', description: 'Key-Value Pair File')
     }
     stages {
         // stage('Cluster-Delete') {
@@ -35,13 +35,15 @@ pipeline {
         // }
         stage('File Param WA') {
             steps {
+                cleanWs()
+
                 script {
                     writeFile file: 'envvar', text: params.environment
                     // configFile = 'envvar'
                     // configFileContent = params.environment
                     // configFileContent = readFile configFile
 
-                    def paramsFile = readFile(params.envvar)
+                    def paramsFile = readFile('envvar')
                     def parameters = [:]
                     paramsFile.eachLine { line ->
                         def parts = line.split('=')
