@@ -97,8 +97,8 @@ pipeline {
                     // configFileContent = params.environment
                     // configFileContent = readFile configFile
                     @NonCPS
-                    paramsFile = params.env_vars
-                    parameters = [:]
+                    def paramsFile = params.env_vars
+                    def parameters = [:]
                     paramsFile.each { String line ->
                         parameters["${line.split('=')[0].trim()}"] = "${line.split('=')[1].trim()}"
                     }
