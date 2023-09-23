@@ -99,12 +99,13 @@ pipeline {
                     @NonCPS
                     def paramsFile = params.env_vars
                     def parameters = [:]
+                    echo "Parameters List......."
                     paramsFile.split('\n').each { String line ->
-                        echo "Parameters List......."
-                        echo "------------------------------------"
-                        echo "${line.split('=')[0].trim()}"
-                        echo "${line.split('=')[1].trim()}"
-                        echo "------------------------------------"
+                        
+                        // echo "------------------------------------"
+                        // echo "${line.split('=')[0].trim()}"
+                        // echo "${line.split('=')[1].trim()}"
+                        // echo "------------------------------------"
                         parameters["${line.split('=')[0].trim()}"] = "${line.split('=')[1].trim()}"
                     }
 
@@ -121,7 +122,9 @@ pipeline {
                     back = parameters['service.back']
                     
                     SONARPROJECT_KEY = parameters['sonar.projectkey']
+                    echo SONARPROJECT_KEY
                     scannerHome = parameters['sonar.scannerhome']
+                    echo scannerHome
                     
                     frontgit = parameters['git.front']
                     // echo parameters['git.front']
