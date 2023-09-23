@@ -68,7 +68,7 @@ app.get('/geolocate', (req, res) => {
             <a class="name" href="/">
                 <p>Shahjehan (Shah) Solehria</p>
             </a>
-            <h2 class="title">Dev-Ops | AWS/Azure Cloud | Security | Software</h2>
+            <h2 class="title">Cloud | DevOps | Data</h2>
         </div>
         <div>
             <div id="menu-bar">
@@ -193,7 +193,7 @@ app.get('/contactpage', (req, res) => {
     <div class="topnav">
         <div>
             <a class="name" href="/"><p>Shahjehan (Shah) Solehria</p></a>
-            <h2 class="title">Dev-Ops | AWS/Azure Cloud | Security | Software</h2>
+            <h2 class="title">Cloud | DevOps | Data</h2>
         </div>
         <div>
             <div id="menu-bar">
@@ -323,7 +323,7 @@ app.get('/education', (req, res) => {
     <div class="topnav">
         <div>
             <a class="name" href="/"><p>Shahjehan (Shah) Solehria</p></a>
-            <h2 class="title">Dev-Ops | AWS/Azure Cloud | Security | Software</h2>
+            <h2 class="title">Cloud | DevOps | Data</h2>
         </div>
         <div>
             <div id="menu-bar">
@@ -444,7 +444,7 @@ app.get('/fastapi', (req, res) => {
     <div class="topnav">
         <div>
             <a class="name" href="/"><p>Shahjehan (Shah) Solehria</p></a>
-            <h2 class="title">Dev-Ops | AWS/Azure Cloud | Security | Software</h2>
+            <h2 class="title">Cloud | DevOps | Data</h2>
         </div>
         <div>
             <div id="menu-bar">
@@ -569,7 +569,7 @@ app.get('/i-sightII', (req, res) => {
     <div class="topnav">
         <div>
             <a class="name" href="/"><p>Shahjehan (Shah) Solehria</p></a>
-            <h2 class="title">Dev-Ops | AWS/Azure Cloud | Security | Software</h2>
+            <h2 class="title">Cloud | DevOps | Data</h2>
         </div>
         <div>
             <div id="menu-bar">
@@ -690,7 +690,7 @@ app.get('/i-sight', (req, res) => {
     <div class="topnav">
         <div>
             <a class="name" href="/"><p>Shahjehan (Shah) Solehria</p></a>
-            <h2 class="title">Dev-Ops | AWS/Azure Cloud | Security | Software</h2>
+            <h2 class="title">Cloud | DevOps | Data</h2>
         </div>
         <div>
             <div id="menu-bar">
@@ -811,7 +811,9 @@ app.get('/', (req, res) => {
         <link rel="stylesheet" href="style/style.css">
     </head>
     <div class="topnav">
-        <div><a class="name" href="/"><p>Shah Solehria's Web Portfolio</p></a></div>
+        <div>
+            <a class="name" href="/"><p>Shah Solehria's Web Portfolio</p></a>
+        </div>
         <div>
             <div id="menu-bar">
                 <div id="menu-buttons">
@@ -850,7 +852,7 @@ app.get('/', (req, res) => {
     </div>
     <body>
     <div class="bodymain">
-        <div class="pictcont"><div class="shahcont"><h2>Dev-Ops | AWS/Azure Cloud | Security | Software</h2></div></div>
+        <div class="pictcont"><div class="shahcont"><h2>Cloud | DevOps | Data</h2></div></div>
         <div class="secdiv">
             <h1>Abstract</h1>
             <p>
@@ -1117,7 +1119,7 @@ app.get('/seniorsystemsadmin', (req, res) => {
     <div class="topnav">
         <div>
             <a class="name" href="/"><p>Shahjehan (Shah) Solehria</p></a>
-            <h2 class="title">Dev-Ops | AWS/Azure Cloud | Security | Software</h2>
+            <h2 class="title">Cloud | DevOps | Data</h2>
         </div>
         <div>
             <div id="menu-bar">
@@ -1233,7 +1235,7 @@ app.get('/skills', (req, res) => {
     <div class="topnav">
         <div>
             <a class="name" href="/"><p>Shahjehan (Shah) Solehria</p></a>
-            <h2 class="title">Dev-Ops | AWS/Azure Cloud | Security | Software</h2>
+            <h2 class="title">Cloud | DevOps | Data</h2>
         </div>
         <div>
             <div id="menu-bar">
@@ -1424,7 +1426,7 @@ app.get('/data', (req, res) => {
     <div class="topnav">
         <div>
             <a class="name" href="/"><p>Shahjehan (Shah) Solehria</p></a>
-            <h2 class="title">Dev-Ops | AWS/Azure Cloud | Security | Software</h2>
+            <h2 class="title">Cloud | DevOps | Data</h2>
         </div>
         <div>
             <div id="menu-bar">
