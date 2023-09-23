@@ -96,16 +96,19 @@ pipeline {
                     // configFile = 'env_vars.txt'
                     // configFileContent = params.environment
                     // configFileContent = readFile configFile
-                    @NonCPS
                     def paramsFile = params.env_vars
                     def parameters = [:]
-                    paramsFile.eachLine { line ->
+                    paramsFile.eachLine { String line ->
                         def parts = line.split('=')
                         if (parts.size() == 2) {
                             def paramName = parts[0].trim()
                             def paramValue = parts[1].trim()
                             parameters[paramName] = paramValue
+                            paramName = null
+                            paramValue = null
+                            parameters[paramName] = null
                         }
+                        parts = null
                     }
                     echo "Registry Front: ${parameters['registry.front']}"
                     echo "Registry Back: ${parameters['registry.back']}"
