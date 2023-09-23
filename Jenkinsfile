@@ -100,55 +100,52 @@ pipeline {
                     def paramsFile = params.env_vars
                     def parameters = [:]
                     paramsFile.split('\n').each { String line ->
+                        echo "Parameters List......."
+                        echo "------------------------------------"
                         echo "${line.split('=')[0].trim()}"
                         echo "${line.split('=')[1].trim()}"
                         echo "------------------------------------"
                         parameters["${line.split('=')[0].trim()}"] = "${line.split('=')[1].trim()}"
                     }
-                    echo "Registry Front: ${parameters['registry_front']}"
-                    echo "Registry Back: ${parameters['registry_back']}"
 
                     registry_front = parameters['registry.front']
                     registry_back = parameters['registry.back']
 
-                    echo "Registry Front: ${registry_front}"
-                    echo "Registry Back: ${registry_back}"
-
                     // registryCredentials = parameters['registry.creds']
                     
-                    // frontend = parameters['app.frontend']
-                    // backend = parameters['app.backend']
-                    // k8 = parameters['kube.k8']
+                    frontend = parameters['app.frontend']
+                    backend = parameters['app.backend']
+                    k8 = parameters['kube.k8']
                     
-                    // front = parameters['service.front']
-                    // back = parameters['service.back']
+                    front = parameters['service.front']
+                    back = parameters['service.back']
                     
-                    // SONARPROJECT_KEY = parameters['sonar.projectkey']
-                    // // scannerHome = parameters['sonar.scannerhome']
+                    SONARPROJECT_KEY = parameters['sonar.projectkey']
+                    // scannerHome = parameters['sonar.scannerhome']
                     
-                    // frontgit = parameters['git.front']
+                    frontgit = parameters['git.front']
                     // echo parameters['git.front']
                     // echo frontgit
-                    // backgit = parameters['git.back']
-                    // defgit = parameters['git.definition']
+                    backgit = parameters['git.back']
+                    defgit = parameters['git.definition']
                     
                     // back_image_name = parameters['image.back']
                     // front_image_name = parameters['image.front']
                     
-                    // kubecluster = parameters['kube.url']
-                    // s3bucket = parameters['s3.bucket']
-                    // config = parameters['kube.config']
+                    kubecluster = parameters['kube.url']
+                    s3bucket = parameters['s3.bucket']
+                    config = parameters['kube.config']
                     
-                    // awsregion = parameters['aws.region']
-                    // awszones = parameters['aws.zones']
+                    awsregion = parameters['aws.region']
+                    awszones = parameters['aws.zones']
 
-                    // api_maps_key = parameters['api.maps_key']
-                    // api_chat_key = parameters['api.chat_key']
+                    api_maps_key = parameters['api.maps_key']
+                    api_chat_key = parameters['api.chat_key']
                     
                     // docker_config_json = parameters['docker.configjson']
                     
                     // ssl_tls_crt = parameters['tls.crt']
-                    // ssl_tls_key = parameters['tls.key']
+                    ssl_tls_key = parameters['tls.key']
                 }
 
             }
