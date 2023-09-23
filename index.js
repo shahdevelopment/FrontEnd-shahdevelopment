@@ -606,46 +606,21 @@ app.get('/i-sightII', (req, res) => {
         <div class="workexpc">
             <h1>Systems Administrator (i-Sight)</h1>
             <ul>
-                <li>Dealt with various issues, change management, and development of Dev-Ops environment</li>
-                <ul>
-                    <li>Administration of Jenkins platform and deployments</li>
-                    <li>Working with Azure GUI & Azure CLI</li>
-                    <li>Ansible/Python scripts & API</li>
-                    <li>Bash Scripting</li>
-                    <li>Docker Swarm & Docker Compose file deployments</li>
-                    <li>SCCM</li>
-                    <li>Docker images/artifacts</li>
-                    <li>Makefiles</li>
-                </ul>
-                <li>Successfully dealt with a major outage:</li>
-                <ul>
-                    <li>Rebuilt Yellowfin JAVA servers paired with either MySQL or PostgreSQL</li>
-                    <li>Rebuilt read only replica Postgres DB using pgcluster streaming replication</li>
-                    <li>Backed up, migrate, and Restored virtual machines with VEAM</li>
-                    <li>Perform disk checks/repairs on Linux and Windows Virtual Machines hosted in VMWARE</li>
-                    <li>Revived NodeJS multi-tier Docker applications along with their respective database systems</li>
-                    <li>Repaired Redis indexes when faced AOF corruption</li>
-                </ul>
                 <li>
-                    Ensured availability of the i-Sight multi-tier application stack in the cloud including the
-                    following technologies: Nodes.js, Quartz Redis, Nginx, Samba, Docker Swarm, Ubuntu,
-                    RHEL, mounts (cifs, blob, file shares, and EBS), Linux Kernel, & Elasticsearch
+                    ❖ Successfully revived & rebuilt many failed VMWARE datacenters containing Yellowfin BI Servers & the i-Sight SAAS application servers & databases.
                 </li>
                 <li>
-                    Maintained security of SAAS application and supporting services with Palo Alto Firewalls,
-                    Azure Networking, AWS Networking, Checkpoint VPN, DNS, Mail Gateway, NGINX
-                    reverse proxy, Key Management Systems (KMS, Java Keytool/keystores, ssh keys), SSL
-                    Certificates, and SFTP Server (GoAnywhereMFT)
+                    ❖ Excelled with Java servers, went from knowing nothing to the in-house expert in less then four months!
                 </li>
                 <li>
-                    Deployed multi-tiered i-Sight application with Ansible scripts and Jenkins in Azure Cloud
-                    and on customer premises
+                    ❖ Managed/fixed/automated many aspects of DevOps environment: Jenkins, Ansible, Jenkins, build failures, & scripting. Went from know nothing about builds to one of the leading experts for developer issue escalations!
                 </li>
                 <li>
-                    Bridged the gap between developers and IT to resolve escalations, ensure efficient
-                    communications, and resolve major issues at every level
+                    ❖ Deployed & maintained i-Sight Linux OS JavaScript application on Azure, AWS, & VMWARE.
                 </li>
-                <li>Supported the IBM Domino server and resolved major infrastructure issues</li>
+                <li>
+                    ❖ Successfully worked with: Teleport, Kubernetes, OpenShift, NodeJS, NPM, Quartz, RabbitMQ, Redis, Nginx, Elasticsearch, Samba, Docker Swarm, make, SQL, JSON, XML, JAVA, ODBC, & Docker Compose.
+                </li>
             </ul>
         </div>
     </div>
@@ -755,72 +730,19 @@ app.get('/i-sight', (req, res) => {
             <h1>Junior Systems Administrator (i-Sight)</h1>
             <ul>
                 <li>
-                    Systems administrator, support, upgrade, & change management for:
-                    Linux (Ubuntu & Redhat), MacOS (Intel & Apple Silicon), Windows Pro,
-                    Windows Server (ADDS), Checkpoint Firewall, Rogers DNS, Palo Alto
-                    Firewall, VPN, Go Anywhere MFT, JIRA software, Confluence, & JIRA
-                    Service Management, Google Search Console, Office 365 Admin
-                    Center including: Azure AD, Exchange Admin Center, & SharePoint
+                    ❖ Spearheaded the containerized deployment of Yellowfin with Docker, Java, & PostgreSQL.
                 </li>
                 <li>
-                    Platform support & change management for: Nginx, MYSQL, Postgres
-                    SQL, Teleport, Docker (Desktop, Docker Swarm, Dockerfile, Docker
-                    Compose), Azure Cloud, Jenkins, GitHub, Ansible, Yellowfin, & VMWARE
-                    ESXI
-                </li>
-                <li>Aided migration from ADDS to Azure AD via PowerShell scripts</li>
-                <li>
-                    Setup custom deployments by initializing SSL certificates & custom
-                    domain names for Nginx reverse proxy configuration
+                    ❖ Quickly excelled at SQL extract, transform, & load operations for MySQL & PostgreSQL.
                 </li>
                 <li>
-                    Managed security with SSH keys, PGP keys, password protected zip files,
-                    strong password policies, firewall rules, OpenSSL, encryption at rest,
-                    DKIM, SPF, application specific permissions, Two factor authentication,
-                    GDPR complaint storage, protected client PI, & password-based
-                    authentication
-                </li>
-                <li>Setup connections for IBM Lotus Notes to MYSQL for ODBC connections</li>
+                    ❖ Designed secure backup & storage for global customer base with Azure, & cloud storage mounts.
+                </li>        
                 <li>
-                    Pioneered the deploy of Yellowfin in containerized form using Docker
-                    with JDBC connector to PostgreSQL Database
-                </li>
+                    ❖ Improved & maintained Mail/security with Nginx Reverse Proxy & DNS.
+                </li>                
                 <li>
-                    Deployed Prod, PAT, and UAT environments for i-Sight app (VM in Azure)
-                    with integrated Yellowfin analytics using Ansible, Jenkins, and Python
-                </li>
-                <li>
-                    Provided excellent support for remote client change management/
-                    support
-                </li>
-                <li>
-                    Conducted user terminations, internal moves, access requests, & new
-                    hire setup
-                </li>
-                <li>Worked with Google Admin to issue API keys & Recrawl URL’s</li>
-                <li>Expanded space for VM’s using mountable Azure Blob Storage shares</li>
-                <li>
-                    Migrated data using PowerShell scripts, automated SFTP data transfers
-                    using MFT, & Cron jobs in Linux (Bash scripting
-                </li>
-                <li>Pioneered deployment of Teams phone system to landline calling</li>
-                <li>Provided support to developers for deployment issues i-Sight application</li>
-                <li>
-                    Effectively used internal resources along with self research to get myself
-                    up to speed with company technologies
-                </li>
-                <li>
-                    Built a NodeJS server hosting my resume website app with a
-                    geolocation API & persistent storage
-                </li>
-                <li>
-                    Built a Python API & SQL Alchemy database draft to eventually
-                    automate Azure AD user creation upon a user being added to
-                    BambooHR
-                </li>
-                <li>
-                    Created Jira workflows, filters, views, automation to facilitate my
-                    processes while also providing support for Jira
+                    ❖Audited & provisioned Checkpoint Firewall, Checkpoint VPN, Mail Gateway, & PaloAlto firewall.
                 </li>
             </ul>
         </div>
@@ -1225,27 +1147,15 @@ app.get('/seniorsystemsadmin', (req, res) => {
         <div class="workexpc">
             <h1>Senior IS Network Administrator (Electrameccanica)</h1>
             <ul>
-                <li>Migrated on premise Hyper-V systems to Azure cloud</li>
-                <ul>
-                    <li>Backed up, migrate, and Restored virtual machines with VEAM</li>
-                    <li>Used remote management tool PSEXEC to fix RDP issues post migration
-                    <li>Utilized Azure replication tools to test failover and ultimately migrate systems
-                    <li>Configuration and management of Windows Server to support migration changes
-                </ul>
-                <li>Setup and configuration of Fortigate Fortinet firewalls</li>
-                <ul>
-                    <li>Site-to-Site VPN</li>
-                    <li>ADVPN fully meshed topology
-                    <li>Configuration of interfaces
-                    <li>SDWAN deployment plan
-                </ul>
-                <li>Exported disks from Hyper-V and then created images</li>
-                <li>Provisioning and management of Linux based appliance for Zscaler VPN</li>
-                <li>Worked extensively with PLM/CAD manufacturing license servers</li>
-                <li>Wired Meraki switches to support systems on-premise</li>
-                <li>Configured Veeam software backups and worked with NAS to ensure backup</li>
-                <li>Administrated Office 365 and Intune</li>
-                <li>Setup server racks and fixed cabling issues</li>
+                <li>
+                    ❖ Engineered windows migrations by: preparing landing zone infrastructure (Azure), configuring Hyper-V disks with PowerShell, handled Windows Server DNS, performed dependency analysis with Azure migrate, performed failover testing, & secured the entire process with Veeam backups.
+                </li>
+                <li>
+                    ❖ Quickly learned physical setup, CLI configuration, & console management of Fortinet FortiGate firewalls, & designed a plan for SDWAN built on top of existing ADVPN Dynamic VPN tunneling.
+                </li>
+                <li>
+                    ❖ Assumed responsibility over Linux based Zscaler application including updating, patching, & troubleshooting issues (successfully resolved a site wide outage).
+                </li>
             </ul>
         </div>
     </div>
