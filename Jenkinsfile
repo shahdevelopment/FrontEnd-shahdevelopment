@@ -11,42 +11,52 @@ pipeline {
         // ws("/opt/jenkins-slave/workspace/profile-site-build")
     // }
     environment {
-        // Docker Registry Info
-        registry_front = ""
-        registry_back = ""
-        registryCredentials = ""
-        // Workspace Subdirectories
-        frontend = ""
-        backend = ""
-        k8 = ""
-        // Unknown
-        // front = ""
-        // back = ""
-        // Sonarqube
-        SONARPROJECT_KEY = ""
+        // // Docker Registry Info
+        // registry_front = ""
+        // registry_back = ""
+        // registryCredentials = ""
+
+        // // Workspace Subdirectories
+        // frontend = ""
+        // backend = ""
+        // k8 = ""
+        
+        // // Unknown
+        // // front = ""
+        // // back = ""
+
+        // // Sonarqube
+        // SONARPROJECT_KEY = ""
         scannerHome = tool 'sonar4.7'
-        // GitHub Repos
-        frontgit = ""
-        backgit = ""
-        defgit = ""
-        // Docker Images
-        back_image_name = ""
-        front_image_name = ""
-        // Kops
-        kubecluster = ""
-        s3bucket = ""
-        config = ""
-        // AWS
-        awsregion = ""
-        awszones = ""
-        // API Keys
-        api_maps_key = ""
-        api_chat_key = ""
-        // K8s Docker Creds 
-        docker_config_json = ""
-        // SSL
-        ssl_tls_crt = ""
-        ssl_tls_key = ""
+
+        // // GitHub Repos
+        // frontgit = ""
+        // backgit = ""
+        // defgit = ""
+
+        // // Docker Images
+        // back_image_name = ""
+        // front_image_name = ""
+
+        // // Kops
+        // kubecluster = ""
+        // s3bucket = ""
+        // config = ""
+
+        // // AWS
+        // awsregion = ""
+        // awszones = ""
+
+        // // API Keys
+        // api_maps_key = ""
+        // api_chat_key = ""
+
+        // // K8s Docker Creds 
+        // docker_config_json = ""
+
+        // // SSL
+        // ssl_tls_crt = ""
+        // ssl_tls_key = ""
     }
     options { skipDefaultCheckout() }
     // parameters {
@@ -76,65 +86,69 @@ pipeline {
                 cleanWs()
 
                 script {
-                    writeFile file: 'envvar', text: params.environment
+                    writeFile file: 'envvar.sh', text: params.environment
+                    sh 'source envvar.sh'
+                    sh 'echo $registry_back'
+                    sh 'echo $registry_front'
+
                     // configFile = 'envvar'
                     // configFileContent = params.environment
                     // configFileContent = readFile configFile
 
-                    def paramsFile = readFile('envvar')
-                    def parameters = [:]
-                    paramsFile.eachLine { line ->
-                        def parts = line.split('=')
-                        if (parts.size() == 2) {
-                            def paramName = parts[0].trim()
-                            def paramValue = parts[1].trim()
-                            parameters[paramName] = paramValue
-                        }
-                    }
-                    // echo "Registry Front: ${parameters['registry.front']}"
-                    // echo "Registry Back: ${parameters['registry.back']}"
+                    // def paramsFile = readFile('envvar')
+                    // def parameters = [:]
+                    // paramsFile.eachLine { line ->
+                    //     def parts = line.split('=')
+                    //     if (parts.size() == 2) {
+                    //         def paramName = parts[0].trim()
+                    //         def paramValue = parts[1].trim()
+                    //         parameters[paramName] = paramValue
+                    //     }
+                    // }
+                    // // echo "Registry Front: ${parameters['registry.front']}"
+                    // // echo "Registry Back: ${parameters['registry.back']}"
 
-                    registry_front = parameters['registry.front']
-                    registry_back = parameters['registry.back']
+                    // registry_front = parameters['registry.front']
+                    // registry_back = parameters['registry.back']
 
-                    echo "Registry Front: ${registry_front}"
-                    echo "Registry Back: ${registry_back}"
+                    // echo "Registry Front: ${registry_front}"
+                    // echo "Registry Back: ${registry_back}"
 
-                    registryCredentials = parameters['registry.creds']
+                    // registryCredentials = parameters['registry.creds']
                     
-                    frontend = parameters['app.frontend']
-                    backend = parameters['app.backend']
-                    k8 = parameters['kube.k8']
+                    // frontend = parameters['app.frontend']
+                    // backend = parameters['app.backend']
+                    // k8 = parameters['kube.k8']
                     
-                    front = parameters['service.front']
-                    back = parameters['service.back']
+                    // front = parameters['service.front']
+                    // back = parameters['service.back']
                     
-                    SONARPROJECT_KEY = parameters['sonar.projectkey']
-                    // scannerHome = parameters['sonar.scannerhome']
+                    // SONARPROJECT_KEY = parameters['sonar.projectkey']
+                    // // scannerHome = parameters['sonar.scannerhome']
                     
-                    frontgit = parameters['git.front']
-                    echo parameters['git.front']
-                    echo frontgit
-                    backgit = parameters['git.back']
-                    defgit = parameters['git.definition']
+                    // frontgit = parameters['git.front']
+                    // echo parameters['git.front']
+                    // echo frontgit
+                    // backgit = parameters['git.back']
+                    // defgit = parameters['git.definition']
                     
-                    back_image_name = parameters['image.back']
-                    front_image_name = parameters['image.front']
+                    // back_image_name = parameters['image.back']
+                    // front_image_name = parameters['image.front']
                     
-                    kubecluster = parameters['kube.url']
-                    s3bucket = parameters['s3.bucket']
-                    config = parameters['kube.config']
+                    // kubecluster = parameters['kube.url']
+                    // s3bucket = parameters['s3.bucket']
+                    // config = parameters['kube.config']
                     
-                    awsregion = parameters['aws.region']
-                    awszones = parameters['aws.zones']
+                    // awsregion = parameters['aws.region']
+                    // awszones = parameters['aws.zones']
 
-                    api_maps_key = parameters['api.maps_key']
-                    api_chat_key = parameters['api.chat_key']
+                    // api_maps_key = parameters['api.maps_key']
+                    // api_chat_key = parameters['api.chat_key']
                     
-                    docker_config_json = parameters['docker.configjson']
+                    // docker_config_json = parameters['docker.configjson']
                     
-                    ssl_tls_crt = parameters['tls.crt']
-                    ssl_tls_key = parameters['tls.key']
+                    // ssl_tls_crt = parameters['tls.crt']
+                    // ssl_tls_key = parameters['tls.key']
                 }
 
             }
@@ -168,7 +182,7 @@ pipeline {
                             withCredentials([sshUserPrivateKey(credentialsId: 'gitsshkey', keyFileVariable: 'SSH_KEY')]) {
                                 dir("${frontend}") {
                                     sshagent(['gitsshkey']) {
-                                        sh "git clone ${frontgit} ."
+                                        sh "git clone $frontgit ."
                                     }
                                 }
                             }
@@ -177,7 +191,7 @@ pipeline {
                             withCredentials([sshUserPrivateKey(credentialsId: 'gitsshkey', keyFileVariable: 'SSH_KEY')]) {
                                 dir("${backend}") {
                                     sshagent(['gitsshkey']) {
-                                        sh "git clone ${backgit} ."
+                                        sh "git clone $backgit ."
                                     }
                                 }
                             }
@@ -186,7 +200,7 @@ pipeline {
                             withCredentials([sshUserPrivateKey(credentialsId: 'gitsshkey', keyFileVariable: 'SSH_KEY')]) {
                                 dir("${k8}") {
                                     sshagent(['gitsshkey']) {
-                                        sh "git clone ${defgit} ."
+                                        sh "git clone $defgit ."
                                     }
                                 }
                             }
