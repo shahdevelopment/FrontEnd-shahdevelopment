@@ -11,41 +11,42 @@ pipeline {
         // ws("/opt/jenkins-slave/workspace/profile-site-build")
     // }
     environment {
+        // Docker Registry Info
         registry_front = ''
-
         registry_back = ''
         registryCredentials = ''
-        
+        // Workspace Subdirectories
         frontend = ''
         backend = ''
         k8 = ''
-        
-        front = ''
-        back = ''
-        
+        // Unknown
+        // front = ''
+        // back = ''
+        // Sonarqube
         SONARPROJECT_KEY = ''
-        scannerHome = ''
-        
+        scannerHome = tool 'sonar4.7'
+        // GitHub Repos
         frontgit = ''
         backgit = ''
         defgit = ''
-        
+        // Docker Images
         back_image_name = ''
         front_image_name = ''
+        // K8s
         kubecluster = ''
         s3bucket = ''
         config = ''
-        
+        // AWS
         awsregion = ''
         awszones = ''
+        // API Keys
         api_maps_key = ''
         api_chat_key = ''
-        
+        // Docker Creds 
         docker_config_json = ''
-        
+        // SSL
         ssl_tls_crt = ''
         ssl_tls_key = ''
-
     }
     options { skipDefaultCheckout() }
     // parameters {
@@ -94,7 +95,6 @@ pipeline {
 
                     registry_front = parameters['registry.front']
                     echo registry_front
-                    // Everything above is working
                     registry_back = parameters['registry.back']
                     registryCredentials = parameters['registry.creds']
                     
