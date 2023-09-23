@@ -53,10 +53,10 @@ pipeline {
         api_chat_key = ""
 
         // K8s Docker Creds 
-        docker_config_json = ""
+        // docker_config_json = ""
 
         // SSL
-        ssl_tls_crt = ""
+        // ssl_tls_crt = ""
         ssl_tls_key = ""
     }
     options { skipDefaultCheckout() }
