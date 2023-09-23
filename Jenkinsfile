@@ -3,7 +3,6 @@ def COLOR_MAP = [
     'FAILURE': 'danger',
 ]
 
-
 pipeline {
     agent {label 'ansible'}
     // options {
@@ -32,11 +31,12 @@ pipeline {
         frontgit = ""
         backgit = ""
         defgit = ""
+
         // Docker Images
         // back_image_name = ""
         // front_image_name = ""
-        back_image_name="$registry_back" + ":v$BUILD_NUMBER"
-        front_image_name="$registry_front" + ":v$BUILD_NUMBER"
+        // back_image_name="$registry_back" + ":v$BUILD_NUMBER"
+        // front_image_name="$registry_front" + ":v$BUILD_NUMBER"
 
         // Kops
         kubecluster = ""
@@ -59,9 +59,6 @@ pipeline {
         ssl_tls_key = ""
     }
     options { skipDefaultCheckout() }
-    // parameters {
-    //     file(name: './envvar', description: 'Key-Value Pair File')
-    // }
     stages {
         // stage('Cluster-Delete') {
         //     steps {
@@ -103,8 +100,7 @@ pipeline {
 
                     registry_front = parameters['registry.front']
                     registry_back = parameters['registry.back']
-
-                    // registryCredentials = parameters['registry.creds']
+                    registryCredentials = parameters['registry.creds']
                     
                     frontend = parameters['app.frontend']
                     backend = parameters['app.backend']
@@ -114,7 +110,6 @@ pipeline {
                     back = parameters['service.back']
                     
                     SONAR_PROJECT_KEY = parameters['sonar.projectkey']
-                    // scannerHome = parameters['sonar.scannerhome']
                     
                     frontgit = parameters['git.front']
                     // echo parameters['git.front']
@@ -196,20 +191,20 @@ pipeline {
                     }
             }    
         }
-        // stage('Code Sonarqube Analysis') {
-        //     environment {
-        //         scannerHome = tool 'sonar4.7'
-        //     }
-        //     steps {
-        //         withSonarQubeEnv('sonarqube') {
-        //             script {
-        //                 sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${frontend}"
-        //                 sh "sleep 1"
-        //                 sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${backend}"
-        //             }
-        //         }
-        //     }
-        // }
+        stage('Code Sonarqube Analysis') {
+            environment {
+                scannerHome = tool 'sonar4.7'
+            }
+            steps {
+                withSonarQubeEnv('sonarqube') {
+                    script {
+                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${frontend}"
+                        sh "sleep 1"
+                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${backend}"
+                    }
+                }
+            }
+        }
         stage('Build Test Container') {
             steps {
                 dir("${frontend}") {
