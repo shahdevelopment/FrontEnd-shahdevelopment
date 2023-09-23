@@ -96,9 +96,9 @@ pipeline {
                     // configFile = 'env_vars.txt'
                     // configFileContent = params.environment
                     // configFileContent = readFile configFile
-                    def paramsFile = params.env_vars
-                    paramsFile.eachLine { String line ->
-                        ["${line.split('=')[0].trim()}"] = "${line.split('=')[1].trim()}"
+                    @NonCPS
+                    params.env_vars.each { String line ->
+                        parameters["${line.split('=')[0].trim()}"] = "${line.split('=')[1].trim()}"
                     }
                     echo "Registry Front: ${parameters['registry.front']}"
                     echo "Registry Back: ${parameters['registry.back']}"
