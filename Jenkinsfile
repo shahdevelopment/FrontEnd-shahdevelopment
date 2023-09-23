@@ -86,7 +86,7 @@ pipeline {
             steps {
                 cleanWs()
                 script {
-                    writeFile file: 'env_vars', text: params.environment
+                    writeFile file: 'env_vars.txt', text: params.environment
                     // sh '''
                     //     chmod +x env_vars.sh
                     //     . ./env_vars.sh
