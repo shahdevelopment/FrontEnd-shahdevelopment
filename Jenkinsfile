@@ -27,7 +27,6 @@ pipeline {
 
         // Sonarqube
         SONAR_PROJECT_KEY = ""
-        scannerHome = ""
 
         // GitHub Repos
         frontgit = ""
@@ -87,12 +86,6 @@ pipeline {
                 cleanWs()
                 script {
                     // writeFile file: 'env_vars.txt', text: params.environment
-                    // sh '''
-                    //     chmod +x env_vars.sh
-                    //     . ./env_vars.sh
-                    //     echo $registry_back
-                    //     echo $registry_front
-                    // '''
                     // configFile = 'env_vars.txt'
                     // configFileContent = params.environment
                     // configFileContent = readFile configFile
@@ -101,7 +94,6 @@ pipeline {
                     def parameters = [:]
                     echo "Parameters List......."
                     paramsFile.split('\n').each { String line ->
-                        
                         // echo "------------------------------------"
                         // echo "${line.split('=')[0].trim()}"
                         // echo "${line.split('=')[1].trim()}"
@@ -122,9 +114,7 @@ pipeline {
                     back = parameters['service.back']
                     
                     SONAR_PROJECT_KEY = parameters['sonar.projectkey']
-                    echo SONAR_PROJECT_KEY
-                    scannerHome = parameters['sonar.scannerhome']
-                    echo scannerHome
+                    // scannerHome = parameters['sonar.scannerhome']
                     
                     frontgit = parameters['git.front']
                     // echo parameters['git.front']
@@ -144,13 +134,11 @@ pipeline {
 
                     api_maps_key = parameters['api.maps_key']
                     api_chat_key = parameters['api.chat_key']
-                    
+
                     // docker_config_json = parameters['docker.configjson']
-                    
                     // ssl_tls_crt = parameters['tls.crt']
                     ssl_tls_key = parameters['tls.key']
                 }
-
             }
         }
         stage('System Check') {
@@ -209,9 +197,9 @@ pipeline {
             }    
         }
         stage('Code Sonarqube Analysis') {
-            // environment {
-            //     scannerHome = tool 'sonar4.7'
-            // }
+            environment {
+                scannerHome = tool 'sonar4.7'
+            }
             steps {
                 withSonarQubeEnv('sonarqube') {
                     script {
