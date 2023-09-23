@@ -364,19 +364,19 @@ app.get('/education', (req, res) => {
     <div class="workexp">
         <div class="workexpc">
             <h1>EDUCATION</h1>
-            <h3>Decoding DevOps (Certificate) - 40% Completed</h3>
+            <h3>❖ Decoding DevOps (Certificate) - 40% Completed</h3>
             <h4>- Udemy</h4>
-            <h3>Cisco CCNA 200-301 (Certificate) - 40% Completed</h3>
+            <h3>❖ Cisco CCNA 200-301 (Certificate) - 40% Completed</h3>
             <h4>- Udemy</h4>
-            <h3>AZ-303 Azure Architecture Technologies (Certificate) - Dec 2021</h3>
+            <h3>❖ AZ-303 Azure Architecture Technologies (Certificate) - Dec 2021</h3>
             <h4>- Udemy</h4>
-            <h3>AZ-104 Microsoft Azure Administrator (Certificate) - Aug 2021</h3>
+            <h3>❖ AZ-104 Microsoft Azure Administrator (Certificate) - Aug 2021</h3>
             <h4>- Udemy</h4>
-            <h3>AWS Certified Solutions Architect Associate (Certificate) - Aug 2021</h3>
+            <h3>❖ AWS Certified Solutions Architect Associate (Certificate) - Aug 2021</h3>
             <h4>- Udemy</h4>
-            <h3>Bachelor of Business Administration (Degree) - Jun 2018–Jan 2020</h3>
+            <h3>❖ Bachelor of Business Administration (Degree) - Jun 2018–Jan 2020</h3>
             <h4>- British Columbia Institute of Technology</h4>
-            <h3>Business IT Management (Diploma) - Sept 2016–May 2018</h3>
+            <h3>❖ Business IT Management (Diploma) - Sept 2016–May 2018</h3>
             <h4>- British Columbia Institute of Technology</h4>
         </div>
     </div>
@@ -488,17 +488,22 @@ app.get('/fastapi', (req, res) => {
             <h2>API Endpoint ==> https://fastapi-shah.herokuapp.com/docs</h2>
             <ul>
                 <li>
-                    Based on the FastAPI framework this is an app that supports uer creation, authentication, privacy,
-                    password hashing, &
-                    best practices in variable managemnt
+                    ❖ Redefined existing understanding of Python: designed authenticated (OAuth2) social-media backend API on AWS.
                 </li>
                 <li>
-                    Built with a robust catalogue of database managment tools from SQLAlchemy ORM, Alembic Database
-                    Migration tool, and SQL insert statements
+                    ❖ Validated & parameterized i/o for path operations achieving desired data states in PostgreSQL.
                 </li>
                 <li>
-                    Visit the docs page for an easy to understand tutorial on how the site is organized and how you can get
-                    started shown above! ^ 
+                    ❖ Secured code in GitHub using variables & online with access-controlled Nginx Reverse Proxy.
+                </li>
+                <li>
+                    ❖ Defined front-end, back-end, & Nginx with Docker Compose: services & API calls to test i/o.
+                </li>
+                <li>
+                    ❖ Alembic used for Postgres DB deploy.
+                </li>
+                <li>
+                    ❖ Postman for test, authentication, & environment variables.
                 </li>
             </ul>
         </div>
@@ -869,17 +874,25 @@ app.get('/', (req, res) => {
     <br></br>
     <div class="latnew">
         <h2>Site Overview & Note</h2>
+        <li>
+            ❖ Transformed static site into a CI/CD microservices Kubernetes (K8s) deployment in AWS.
+        </li>
+        <li>
+            ❖ Setup Kops K8s prerequisites: DNS, AWS S3, & installed necessary software.
+        </li>
+        <li>
+            ❖ Defined K8s definition files: endpoints, secrets, services, & Nginx Ingress Controller (with SSL)
+        </li>
+        <li>
+            ❖ Developed parameterized Jenkins pipeline (groovy): polling of SCCM (build trigger), code pull, build, test, code analysis (SonarQube), image archive, & deploy.
+        </li>
+        <li>
+            ❖ Integrated Helm into the Jenkins pipeline for deployment of app to K8s.
+        </li>
+        <li>
+            ❖ Deployed site to the web with a Nginx Ingress Controller Deployment definition, DNS, & wildcard SSL.
+        </li>
         <p>
-            This website/web apps runtime is nodeJS and it was 
-            deployed with NPM running in AWS EC2 instances managed by a Kubernetes Control Plane.
-            For monitoring there is a Lens dashboard using a Prometheus integration.
-            The entire cluster can be deployed easily with artifacts in GitHub Repo & DockerHub Repo.
-            The Images for this site were created with Dockerfile which also conveniently runs in a
-            Docker Swarm configuration as well.
-            </br>
-            The site makes use of various best practices including env variables, 
-            server side & client side distinction and security benefits. Overall 
-            the site uses the following languages: HTML, CSS, JavaScript, YAML, & Bash.
             </br>
             </br>
             On the top right of the page is a hamburger menu that if you click 
