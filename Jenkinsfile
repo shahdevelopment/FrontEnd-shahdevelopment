@@ -13,7 +13,7 @@ pipeline {
     options { skipDefaultCheckout() }
     // parameters {
     //     file(name: './envvar', description: 'Key-Value Pair File')
-    }
+    // }
     stages {
         // stage('Cluster-Delete') {
         //     steps {
