@@ -101,8 +101,8 @@ pipeline {
                     paramsFile.eachLine { String line ->
                         [:]["${line.split('=')[0].trim()}"] = "${line.split('=')[1].trim()}"
                     }
-                    echo "Registry Front: ${registry.front}"
-                    echo "Registry Back: ${registry.back}"
+                    echo "Registry Front: ${registry_front}"
+                    echo "Registry Back: ${registry_back}"
 
                     registry_front = parameters['registry.front']
                     registry_back = parameters['registry.back']
