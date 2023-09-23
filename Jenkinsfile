@@ -12,7 +12,7 @@ pipeline {
     // }
     options { skipDefaultCheckout() }
     parameters {
-        file(name: 'env-var', description: 'Key-Value Pair File')
+        file(name: 'envvar', description: 'Key-Value Pair File')
     }
     stages {
         // stage('Cluster-Delete') {
@@ -36,12 +36,12 @@ pipeline {
         stage('File Param WA') {
             steps {
                 script {
-                    writeFile file: 'env-var', text: params.environment
-                    configFile = 'env-var'
-                    configFileContent = params.environment
+                    writeFile file: 'envvar', text: params.environment
+                    configFile = 'envvar'
+                    // configFileContent = params.environment
                     // configFileContent = readFile configFile
 
-                    def paramsFile = readFile(params.env-var)
+                    def paramsFile = readFile(params.envvar)
                     def parameters = [:]
                     paramsFile.eachLine { line ->
                         def parts = line.split('=')
