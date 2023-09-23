@@ -3,7 +3,6 @@ def COLOR_MAP = [
     'FAILURE': 'danger',
 ]
 
-
 pipeline {
     agent {label 'ansible'}
     // options {
@@ -101,9 +100,6 @@ pipeline {
                     registry_front = parameters['registry.front']
                     registry_back = parameters['registry.back']
 
-                    echo registry_front
-                    echo registry_back
-
                     registryCredentials = parameters['registry.creds']
                     
                     frontend = parameters['app.frontend']
@@ -120,10 +116,8 @@ pipeline {
                     backgit = parameters['git.back']
                     defgit = parameters['git.definition']
                     
-                    back_image_name = registry_front + ":v${BUILD_NUMBER}"
-                    front_image_name = registry_back + ":v${BUILD_NUMBER}"
-                    echo back_image_name
-                    echo front_image_name
+                    back_image_name = "${registry_front}:v${BUILD_NUMBER}"
+                    front_image_name = "${registry_back}:v${BUILD_NUMBER}"
 
                     kubecluster = parameters['kube.url']
                     s3bucket = parameters['s3.bucket']
