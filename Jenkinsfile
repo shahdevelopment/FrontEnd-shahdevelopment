@@ -20,10 +20,6 @@ pipeline {
         backend = ""
         k8 = ""
         
-        // Unknown
-        // front = ""
-        // back = ""
-
         // Sonarqube
         SONAR_PROJECT_KEY = ""
 
@@ -54,6 +50,7 @@ pipeline {
 
         // SSL
         // ssl_tls_crt = ""
+
         ssl_tls_key = ""
 
         // Node 1
@@ -358,7 +355,7 @@ pipeline {
                                         echo #######################################################
                                         echo Cleaning local test containers..........
                                         echo #######################################################
-                                        for i in "${dockerId[@]}"
+                                        for i in ${dockerId}[@]
                                         do
                                             docker stop $i
                                             docker rm $i
@@ -366,7 +363,7 @@ pipeline {
                                         echo #######################################################
                                         echo Cleaning local test images..........
                                         echo #######################################################
-                                        for i in "${dockerImg[@]}"
+                                        for i in ${dockerImg}[@]
                                         do
                                             docker rmi $i
                                         done
@@ -424,7 +421,7 @@ pipeline {
                                         echo #######################################################
                                         echo Cleaning local test images..........
                                         echo #######################################################
-                                        for i in "${dockerImgProd[@]}"
+                                        for i in ${dockerImgProd}[@]
                                         do
                                             docker rmi $i
                                         done
