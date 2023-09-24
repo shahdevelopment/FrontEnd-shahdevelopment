@@ -45,11 +45,11 @@ pipeline {
         api_maps_key = ""
         api_chat_key = ""
 
-        // K8s Docker Creds 
-        docker_config_json = ""
+        // // K8s Docker Creds 
+        // docker_config_json = ""
 
-        // SSL
-        ssl_tls_crt = ""
+        // // SSL
+        // ssl_tls_crt = ""
 
         ssl_tls_key = ""
 
@@ -188,8 +188,8 @@ pipeline {
                     slack_cluster = parameters['slack.cluster']
 
                     // ---------- Moved to Pipeline Console Config
-                    docker_config_json = params.ssl_tls_crt
-                    ssl_tls_crt = params.docker_config_json
+                    // ssl_tls_crt = params.ssl_tls_crt
+                    // docker_config_json = params.docker_config_json
                     echo "------------------------------------"
                     echo "------------------------------------"
                     echo "------------------------------------"
@@ -432,7 +432,7 @@ pipeline {
                             # kops rolling-update cluster --config=${config} --name=${kubecluster} --state=${s3bucket}
                             echo "------------------------------------"
 
-                            kops validate cluster --config=${config} --name=${kubecluster} --state=${s3bucket} --wait 15m --count 4
+                            kops validate cluster --config=${config} --name=${kubecluster} --state=${s3bucket} --wait 20m --count 4
                         """
                     }
                 }
