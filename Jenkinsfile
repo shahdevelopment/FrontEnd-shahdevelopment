@@ -161,8 +161,8 @@ pipeline {
                     ssl_tls_key = parameters['tls.key']
 
                     // ---------- Docker Images
-                    back_image = "$registry_back:v$BUILD_NUMBER"
-                    front_image = "$registry_front:v$BUILD_NUMBER"
+                    back_image = ${registry_back}:v${BUILD_NUMBER}
+                    front_image = ${registry_front}:v${BUILD_NUMBER}
 
                     // ---------- Node 1
                     n1 = parameters['n1.label']
@@ -507,11 +507,11 @@ pipeline {
         stage('Application-Deployment') {
             steps {
                 dir("${k8}") {
-                    sh "echo ------------------------------------"
-                    sh "/bin/bash move.sh"
-                    sh "echo ------------------------------------"
-                    sh "echo ------------------------------------"
-                    sh "helm upgrade --kubeconfig=${config} my-app ./helm/profilecharts --set backimage=${back_image} --set frontimage=${front_image} --set docker_configjson=${docker_config_json} --set tls_crt=${ssl_tls_crt} --set tls_key=${ssl_tls_key} && sleep 30"
+                    sh 'echo ------------------------------------'
+                    sh '/bin/bash move.sh'
+                    sh 'echo ------------------------------------'
+                    sh 'echo ------------------------------------'
+                    sh "helm upgrade my-app ./helm/profilecharts --set backimage=${back_image} --set frontimage=${front_image} --set docker_configjson=${docker_config_json} --set tls_crt=${ssl_tls_crt} --set tls_key=${ssl_tls_key} && sleep 30"
                     // notes
                     sh """
                         sleep 30
