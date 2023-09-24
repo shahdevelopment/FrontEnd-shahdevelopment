@@ -365,29 +365,9 @@ pipeline {
             }
             post {
                 always {
-                    matrix {
-                        axes {
-                            axis {
-                                name 'dockerImgProd'
-                                values "${back_image}", "${front_image}"
-                            }
-                        }
-                        stage {
-                            steps {
-                                script{
-                                    sh """
-                                        echo #######################################################
-                                        echo Cleaning local test images..........
-                                        echo #######################################################
-                                        for i in ${dockerImgProd}[@]
-                                        do
-                                            docker rmi $i
-                                        done
-                                    """
-                                }
-                            }
-                        }
-                    }    
+                    script {
+                        sh "docker rmi ${back_image} ${front_image}"
+                    }
                 }
             }
         }
