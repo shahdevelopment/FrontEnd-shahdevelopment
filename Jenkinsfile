@@ -46,10 +46,10 @@ pipeline {
         api_chat_key = ""
 
         // K8s Docker Creds 
-        // docker_config_json = ""
+        docker_config_json = ""
 
         // SSL
-        // ssl_tls_crt = ""
+        ssl_tls_crt = ""
 
         ssl_tls_key = ""
 
@@ -188,8 +188,8 @@ pipeline {
                     slack_cluster = parameters['slack.cluster']
 
                     // ---------- Moved to Pipeline Console Config
-                    // docker_config_json = parameters['docker.configjson']
-                    // ssl_tls_crt = parameters['tls.crt']
+                    docker_config_json = params.ssl_tls_crt
+                    ssl_tls_crt = params.docker_config_json
                     echo "------------------------------------"
                     echo "------------------------------------"
                     echo "------------------------------------"
