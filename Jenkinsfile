@@ -2,7 +2,7 @@ def COLOR_MAP = [
     'SUCCESS': 'good', 
     'FAILURE': 'danger',
 ]
-$// ------------------------ Good for PI
+// ------------------------ Good for PI
 pipeline {
     agent {label 'ansible'}
     // options {
@@ -76,7 +76,7 @@ pipeline {
         slack_devops = ""
         slack_cluster = ""
     }
-    $// ------------------------ Good for PI
+    // ------------------------ Good for PI
     options { skipDefaultCheckout() }
     stages {
         // stage('Cluster-Delete') {
@@ -197,7 +197,6 @@ pipeline {
             }
         }
         // ------------------------ Good for PI
-
         stage('System Check') {
             steps {
                 sh '''
@@ -219,7 +218,6 @@ pipeline {
             }
         }
         // ------------------------ Good for PI
-
         stage('Clone Github Repos') {
             steps {
                     script {
@@ -255,7 +253,6 @@ pipeline {
             }    
         }
         // ------------------------ Good for PI
-
         stage('Code Sonarqube Analysis') {
             environment {
                 scannerHome = tool 'sonar4.7'
@@ -271,7 +268,6 @@ pipeline {
             }
         }
         // ------------------------ Good for PI
-
         stage('Build Test Container') {
             steps {
                 dir("${frontend}") {
@@ -376,7 +372,6 @@ pipeline {
             }
         }
         // ------------------------ Good for PI
-
         stage('Docker-Build') {
             steps {
                 dir("${frontend}") {
@@ -592,5 +587,5 @@ pipeline {
             }
         }
         // ------------------------ Good for PI
-    }  
+    }
 }
