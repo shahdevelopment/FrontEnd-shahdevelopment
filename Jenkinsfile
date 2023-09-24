@@ -161,8 +161,8 @@ pipeline {
                     ssl_tls_key = parameters['tls.key']
 
                     // ---------- Docker Images
-                    back_image = ${registry_back}:v${BUILD_NUMBER}
-                    front_image = ${registry_front}:v${BUILD_NUMBER}
+                    back_image = "${registry_back}:v${BUILD_NUMBER}"
+                    front_image = "${registry_front}:v${BUILD_NUMBER}"
 
                     // ---------- Node 1
                     n1 = parameters['n1.label']
