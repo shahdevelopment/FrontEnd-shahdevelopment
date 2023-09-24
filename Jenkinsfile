@@ -429,7 +429,7 @@ pipeline {
                             kops edit ig ${m1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set="spec.minSize=${m1_minS}"
                             echo "------------------------------------"
 
-                            kops rolling-update cluster --config=${config} --name=${kubecluster} --state=${s3bucket}
+                            # kops rolling-update cluster --config=${config} --name=${kubecluster} --state=${s3bucket}
                             echo "------------------------------------"
 
                             kops validate cluster --config=${config} --name=${kubecluster} --state=${s3bucket} --wait 15m --count 4
