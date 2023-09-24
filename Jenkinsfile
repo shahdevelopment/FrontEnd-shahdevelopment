@@ -512,6 +512,7 @@ pipeline {
                         /bin/bash move.sh
                         echo "------------------------------------"
                         helm upgrade --kubeconfig=${config} my-app ./helm/profilecharts --set backimage=${back_image} --set frontimage=${front_image} --set docker_configjson=${docker_config_json} --set tls_crt=${ssl_tls_crt} --set tls_key=${ssl_tls_key}
+                        echo "------------------------------------"
                         if [ $? -eq 0 ]; then
                             echo "Cluster is now up and running!"
                             echo "Please add DNS entry if applicable for:"
