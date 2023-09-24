@@ -324,53 +324,13 @@ pipeline {
             }
             post {
                 always {
-                    def dockerContainer = ["${backend}", "${frontend}"]
-                    for (int i = 0; i < dockerContainer.size(); ++i) {
-                        sh "docker stop ${dockerContainer[i]}"
-                        sh "docker rm ${dockerContainer[i]}"
-                        echo "Removed ${dockerContainer[i]} container locally!"
+                    script {
+                        sh "docker stop ${backend} ${frontend}"
+                        sh "docker rm ${backend} ${frontend} && sleep 10"
+
+
+                        sh "docker rmi ${back_image} ${front_image}"
                     }
-
-                    def dockerImage = ["${back_image}", "${front_image}"]
-                    for (int i = 0; i < dockerImage.size(); ++i) {
-                        sh "docker rmi ${dockerImage[i]}"
-                        echo "Removed ${dockerImage[i]} image locally!"
-                    }
-
-                    // matrix {
-                    //     axes {
-                    //         axis {
-                    //             name 'dockerId'
-                    //             values "${backend}", "${frontend}"
-
-                    //             name 'dockerImg'
-                    //             values "${back_image}", "${front_image}"
-                    //         }
-                    //     }
-                    //     stage {
-                    //         steps {
-                    //             script {
-                    //                 sh """
-                    //                     echo #######################################################
-                    //                     echo Cleaning local test containers..........
-                    //                     echo #######################################################
-                    //                     for i in ${dockerId}[@]
-                    //                     do
-                    //                         docker stop $i
-                    //                         docker rm $i
-                    //                     done
-                    //                     echo #######################################################
-                    //                     echo Cleaning local test images..........
-                    //                     echo #######################################################
-                    //                     for i in ${dockerImg}[@]
-                    //                     do
-                    //                         docker rmi $i
-                    //                     done
-                    //                 """
-                    //             }
-                    //         }
-                    //     }
-                    // }
                 }
             }
         }
