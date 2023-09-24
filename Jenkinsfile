@@ -2,12 +2,12 @@ def COLOR_MAP = [
     'SUCCESS': 'good', 
     'FAILURE': 'danger',
 ]
-
+$// ------------------------ Good for PI
 pipeline {
     agent {label 'ansible'}
     // options {
-        // Reuse the workspace from previous builds
-        // ws("/opt/jenkins-slave/workspace/profile-site-build")
+    //     Reuse the workspace from previous builds
+    //     ws("/opt/jenkins-slave/workspace/profile-site-build")
     // }
     environment {
         // Docker Registry Info
@@ -33,10 +33,8 @@ pipeline {
         defgit = ""
 
         // Docker Images
-        // back_image_name = ""
-        // front_image_name = ""
-        // back_image_name="$registry_back" + ":v$BUILD_NUMBER"
-        // front_image_name="$registry_front" + ":v$BUILD_NUMBER"
+        back_image = ""
+        front_image = ""
 
         // Kops
         kubecluster = ""
@@ -57,7 +55,31 @@ pipeline {
         // SSL
         // ssl_tls_crt = ""
         ssl_tls_key = ""
+
+        // Node 1
+        n1 = ""
+        n1_maxS = ""
+        n1_minS = ""
+
+        // Node 2
+        n2 = ""
+        n2_maxS = ""
+        n2_minS = ""
+
+        // Master
+        m1 = ""
+        m1_maxS = ""
+        m1_minS = ""
+
+        // Tests
+        test_file = ""
+        test_result = ""
+
+        // Slack Notifications
+        slack_devops = ""
+        slack_cluster = ""
     }
+    $// ------------------------ Good for PI
     options { skipDefaultCheckout() }
     stages {
         // stage('Cluster-Delete') {
@@ -78,56 +100,109 @@ pipeline {
         //         }
         //     }
         // }
+        // ------------------------ Good for PI
         stage('File Param WA') {
             steps {
                 cleanWs()
                 script {
+                    echo "------------------------------------"
+                    echo "------------------------------------"
+                    echo "------------------------------------"
                     // writeFile file: 'env_vars.txt', text: params.environment
                     // configFile = 'env_vars.txt'
                     // configFileContent = readFile configFile
-                    @NonCPS
+                    // @NonCPS
                     def paramsFile = params.env_vars
                     def parameters = [:]
                     echo "Parameters List......."
                     paramsFile.split('\n').each { String line ->
-                        // echo "------------------------------------"
-                        // echo "${line.split('=')[0].trim()}"
-                        // echo "${line.split('=')[1].trim()}"
-                        // echo "------------------------------------"
+                        echo "------------------------------------"
+                        echo "${line.split('=')[0].trim()}"
+                        echo "${line.split('=')[1].trim()}"
+                        echo "------------------------------------"
                         parameters["${line.split('=')[0].trim()}"] = "${line.split('=')[1].trim()}"
                     }
+                    echo "------------------------------------"
+                    // ---------- Docker Configuration
                     registry_front = parameters['registry.front']
                     registry_back = parameters['registry.back']
                     registryCredentials = parameters['registry.creds']
+
+                    // ---------- Dir Names
                     frontend = parameters['app.frontend']
                     backend = parameters['app.backend']
                     k8 = parameters['kube.k8']
-                    front = parameters['service.front']
-                    back = parameters['service.back']
+
+                    // ---------- Uknown
+                    // front = parameters['service.front']
+                    // back = parameters['service.back']
+
+                    // ---------- SonarQube Project Key
                     SONAR_PROJECT_KEY = parameters['sonar.projectkey']
+
+                    // ---------- GitHub Repos
                     frontgit = parameters['git.front']
-                    // echo parameters['git.front']
-                    // echo frontgit
                     backgit = parameters['git.back']
                     defgit = parameters['git.definition']
-                    // back_image_name = parameters['image.back']
-                    // front_image_name = parameters['image.front']
+                    // echo parameters['git.front']
+                    // echo frontgit
+
+                    // ---------- Cluster State Management
                     kubecluster = parameters['kube.url']
                     s3bucket = parameters['s3.bucket']
                     config = parameters['kube.config']
+
+                    // ---------- AWS
                     awsregion = parameters['aws.region']
                     awszones = parameters['aws.zones']
+
+                    // ---------- API Keys
                     api_maps_key = parameters['api.maps_key']
                     api_chat_key = parameters['api.chat_key']
+                    
+                    // ---------- SSL
+                    ssl_tls_key = parameters['tls.key']
+
+                    // ---------- Docker Images
+                    back_image = "$registry_back:v$BUILD_NUMBER"
+                    front_image = "$registry_front:v$BUILD_NUMBER"
+
+                    // ---------- Node 1
+                    n1 = parameters['n1.label']
+                    n1_maxS = parameters['n1.maxS']
+                    n1_minS = parameters['n1.minS']
+
+                    // ---------- Node 2
+                    n2 = parameters['n2.label']
+                    n2_maxS = parameters['n2.maxS']
+                    n2_minS = parameters['n2.minS']
+
+                    // ---------- Master
+                    m1 = parameters['m1.label']
+                    m1_maxS = parameters['m1.maxS']
+                    m1_minS = parameters['m1.minS']
+
+                    // ---------- Path Operation Testing
+                    test_result = parameters['testPath.result']
+                    test_file = parameters['testPath.file']
+
+                    // ---------- Slack Notification
+                    slack_devops = parameters['slack.devops']
+                    slack_cluster = parameters['slack.cluster']
+
+                    // ---------- Moved to Pipeline Console Config
                     // docker_config_json = parameters['docker.configjson']
                     // ssl_tls_crt = parameters['tls.crt']
-                    ssl_tls_key = parameters['tls.key']
+                    echo "------------------------------------"
+                    echo "------------------------------------"
+                    echo "------------------------------------"
                 }
             }
         }
+        // ------------------------ Good for PI
+
         stage('System Check') {
             steps {
-                // cleanWs()
                 sh '''
                     echo "Gathering resource info on ansible control plane........."
                     echo --------------------------------------------------------------------
@@ -146,6 +221,8 @@ pipeline {
                 '''
             }
         }
+        // ------------------------ Good for PI
+
         stage('Clone Github Repos') {
             steps {
                     script {
@@ -180,108 +257,129 @@ pipeline {
                     }
             }    
         }
-        // stage('Code Sonarqube Analysis') {
-        //     environment {
-        //         scannerHome = tool 'sonar4.7'
-        //     }
-        //     steps {
-        //         withSonarQubeEnv('sonarqube') {
-        //             script {
-        //                 sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${frontend}"
-        //                 sh "sleep 1"
-        //                 sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${backend}"
-        //             }
-        //         }
-        //     }
-        // }
+        // ------------------------ Good for PI
+
+        stage('Code Sonarqube Analysis') {
+            environment {
+                scannerHome = tool 'sonar4.7'
+            }
+            steps {
+                withSonarQubeEnv('sonarqube') {
+                    script {
+                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${frontend}"
+                        sh "sleep 1"
+                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${backend}"
+                    }
+                }
+            }
+        }
+        // ------------------------ Good for PI
+
         stage('Build Test Container') {
             steps {
                 dir("${frontend}") {
                     script {
-                        dockerImage = docker.build("$registry_front" + ":v$BUILD_NUMBER", "--build-arg maps_key=${api_maps_key} --build-arg ENVIRONMENT=dev  .")
+                        dockerImage = docker.build("${front_image}", "--build-arg maps_key=${api_maps_key} --build-arg ENVIRONMENT=dev  .")
                         sh 'sleep 1'
                     }
                 }
                 dir("${backend}") {
                     script {
-                        dockerImage = docker.build("$registry_back" + ":v$BUILD_NUMBER", "--build-arg chat_key=${api_chat_key} --build-arg ENVIRONMENT=dev .")
+                        dockerImage = docker.build("${back_image}", "--build-arg chat_key=${api_chat_key} --build-arg ENVIRONMENT=dev .")
                         sh 'sleep 1'
                     }
                 }    
             }
         }
+        // ------------------------ Good for PI
         stage('Run Test Containers') {
             steps{
                 script {
-                    sh "docker run -dt --name ${backend} -p 9000:9000 ${registry_back}:v${BUILD_NUMBER}"
+                    sh "docker run -dt --name ${backend} -p 9000:9000 ${back_image}"
                     sh 'sleep 5'
                     sh "docker logs ${backend}"
-                    sh "docker run -dt --name ${frontend} -p 3000:3000 ${registry_front}:v${BUILD_NUMBER}"
+                    sh "docker run -dt --name ${frontend} -p 3000:3000 ${front_image}"
                     sh 'sleep 5'
                     sh "docker logs ${frontend}"
                     sh 'sleep 5'
                 }
             }
         }
+        // ------------------------ PI Found ***************************************
         stage('Run Path Check on Test Containers') {
             steps {
                 dir("${frontend}") {
                     script {
-                        def healthCheckResult = sh(returnStatus: true, script: "docker exec ${frontend} node dev/tests/path-check.js")
+                        def healthCheckResult = sh(returnStatus: true, script: "docker exec ${frontend} node ${test_file}")
                         if (healthCheckResult != 0) {
                             currentBuild.result = 'UNSTABLE'
                             error("front-Path operation health check failed!")
                         }
-                        // sh 'docker exec -it ${frontend} npm test'
-                        sh "docker cp ${frontend}:/usr/src/app/npm-tests/report.json ."
+                        sh "docker cp ${frontend}:${test_result} ."
                     }
                 }
                 dir("${backend}") {
                     script {
-                        def healthCheckResult = sh(returnStatus: true, script: "docker exec ${backend} node dev/tests/path-check.js")
+                        def healthCheckResult = sh(returnStatus: true, script: "docker exec ${backend} node ${test_file}")
                         if (healthCheckResult != 0) {
                             currentBuild.result = 'UNSTABLE'
                             error("front-Path operation health check failed!")
                         }
-                        // sh 'docker exec -it ${frontend} npm test'
-                        sh "docker cp ${frontend}:/usr/src/app/npm-tests/report.json ."
+                        sh "docker cp ${frontend}:${test_result} ."
                     }
                 }
             }
             post {
                 always {
-                    script {
-                        sh '/home/ansible/jenkins/./docker-rm-vm.sh'
-                        sh '''
-                            set +e
-                            /home/ansible/jenkins/./docker-rmi.sh
-                            set -e
-                        '''
-                        // sh "vm=('${backend}' '${frontend}')" 
-                        // sh "image=('${back_image_name}' '${front_image_name}')"
-                        // sh '''
-                        //     echo #########################################################################################################
-                        //     echo Cleaning local test containers..........
-                        //     echo #########################################################################################################                            
-                        //     for i in "${vm[@]}"
-                        //     do
-                        //         docker kill $i
-                        //         docker rm $i
-                        //     done
-                        // '''
-                        // sh '''
-                        //     echo #########################################################################################################
-                        //     echo Cleaning local test images..........
-                        //     echo #########################################################################################################
-                        //     for i in "${image[@]}"
-                        //     do
-                        //         docker rmi $i
-                        //     done
-                        // '''  
+                    // def dockerContainer = ["${backend}", "${frontend}"]
+                    // for (int i = 0; i < dockerContainer.size(); ++i) {
+                    //     echo "Removed ${dockerContainer[i]} container locally!"
+                    // }
+
+                    // def dockerImage = ["${back_image}", "${front_image}"]
+                    // for (int i = 0; i < dockerImage.size(); ++i) {
+                    //     echo "Removed ${dockerImage[i]} image locally!"
+                    // }
+
+                    matrix {
+                        axes {
+                            axis {
+                                name 'dockerId'
+                                values "${backend}", "${frontend}"
+
+                                name 'dockerImg'
+                                values "${back_image}", "${front_image}"
+                            }
+                        }
+                        stage {
+                            steps {
+                                script {
+                                    sh """
+                                        echo #######################################################
+                                        echo Cleaning local test containers..........
+                                        echo #######################################################
+                                        for i in "${dockerId[@]}"
+                                        do
+                                            docker stop $i
+                                            docker rm $i
+                                        done
+                                        echo #######################################################
+                                        echo Cleaning local test images..........
+                                        echo #######################################################
+                                        for i in "${dockerImg[@]}"
+                                        do
+                                            docker rmi $i
+                                        done
+                                    """
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
+        // ------------------------ Good for PI
+
         stage('Docker-Build') {
             steps {
                 dir("${frontend}") {
@@ -292,7 +390,7 @@ pipeline {
                     //     echo "| |_) || |__| | _| |_ | |____ | |_/  /    ___)  |  | |   | |____ | |      "
                     //     echo "|____/ |_____/ |_____||______||_____/    |_____/   |_|   |______||_|      "
                     script {
-                        dockerImage = docker.build("$registry_front" + ":v$BUILD_NUMBER", "--build-arg map_key=${api_maps_key} .")
+                        dockerImage = docker.build("${front_image}", "--build-arg map_key=${api_maps_key} .")
                         sh 'sleep 1'
                         docker.withRegistry('', registryCredentials) {dockerImage.push("v$BUILD_NUMBER")
                         }
@@ -301,7 +399,7 @@ pipeline {
                 }
                 dir("${backend}") {
                     script {
-                        dockerImage = docker.build("$registry_back" + ":v$BUILD_NUMBER", "--build-arg chat_key=${api_chat_key} .")
+                        dockerImage = docker.build("${back_image}", "--build-arg chat_key=${api_chat_key} .")
                         sh 'sleep 1'
 
                         docker.withRegistry('', registryCredentials) {
@@ -312,16 +410,33 @@ pipeline {
             }
             post {
                 always {
-                    script {
-                        sh '''
-                            set +e
-                            /home/ansible/jenkins/./docker-rmi.sh
-                            set -e
-                        '''                        
-                    }
+                    matrix {
+                        axes {
+                            axis {
+                                name 'dockerImgProd'
+                                values "${back_image}", "${front_image}"
+                            }
+                        }
+                        stage {
+                            steps {
+                                script{
+                                    sh """
+                                        echo #######################################################
+                                        echo Cleaning local test images..........
+                                        echo #######################################################
+                                        for i in "${dockerImgProd[@]}"
+                                        do
+                                            docker rmi $i
+                                        done
+                                    """
+                                }
+                            }
+                        }
+                    }    
                 }
             }
         }
+        // ------------------------ Good for PI
         // stage('Cluster-Deployment') {
         //     steps {
         //         dir("${k8}") {
@@ -350,32 +465,70 @@ pipeline {
         //     post {
         //         always {
         //             echo '########## Cluster Health Notification ##########'
-        //             slackSend channel: '#kube-cluster-health',
+        //             slackSend channel: "${slack_cluster}",
         //             color: COLOR_MAP[currentBuild.currentResult],
         //             message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
         //         }
         //     }
         // }
+        // ------------------------ PI Found ***************************************
+        stage('Cluster Scale/Connect') {
+            steps {
+                dir("${k8}") {
+                    script {
+                        sh """
+                            echo "------------------------------------"
+                            echo "------------------------------------"
+                            kops update cluster --config=${config} --name=${kubecluster} --state=${s3bucket} --yes --admin
+                            echo "------------------------------------"
+
+                            kops edit ig ${n1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set="spec.maxSize=${n1_maxS}"
+                            kops edit ig ${n1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set="spec.minSize=${n1_minS}"
+                            echo "------------------------------------"
+
+                            kops edit ig ${n2} --config=${config} --name=${kubecluster} --state=${s3bucket} --set="spec.maxSize=${n2_maxS}"
+                            kops edit ig ${n2} --config=${config} --name=${kubecluster} --state=${s3bucket} --set="spec.minSize=${n2_minS}"
+                            echo "------------------------------------"
+
+                            kops edit ig ${m1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set="spec.maxSize=${m1_maxS}"
+                            kops edit ig ${m1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set="spec.minSize=${m1_minS}"
+                            echo "------------------------------------"
+
+                            kops rolling-update cluster --config=${config} --name=${kubecluster} --state=${s3bucket}
+                            echo "------------------------------------"
+
+                            kops validate cluster --config=${config} --name=${kubecluster} --state=${s3bucket} --wait 15m --count 4
+                        """
+                    }
+                }
+            }
+            post {
+                always {
+                    echo '########## Cluster Health Notification ##########'
+                    slackSend channel: "${slack_cluster}",
+                    color: COLOR_MAP[currentBuild.currentResult],
+                    message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
+                }
+            }
+        }
+        // ------------------------ Good for PI
         stage('Application-Deployment') {
             steps {
                 dir("${k8}") {
-                    // sh "/home/ansible/kube/./default-scale"
-                    sh "/bin/bash move.sh"
-                    sh "helm upgrade my-app ./helm/profilecharts --set backimage=${registry_back}:v${BUILD_NUMBER} --set frontimage=${registry_front}:v${BUILD_NUMBER} --set docker_configjson=${docker_config_json} --set tls_crt=${ssl_tls_crt} --set tls_key=${ssl_tls_key}"
-                    // sh "helm upgrade --install --force --kubeconfig=${config} my-app ./helm/profilecharts --set backimage=${registry_back}:v${BUILD_NUMBER} --set frontimage=${registry_front}:v${BUILD_NUMBER}"
-
-                    sh '''
-                    sleep 240
-                    if [ $? -eq 0 ]; then
-                        echo "Cluster is now up and running!"
-                        echo "Please add DNS entry if applicable for:"
-                        aws elbv2 describe-load-balancers | grep DNSName
-                    else
-                        echo Cluster not running after 15m!
-                    fi
-                    '''
-
-                    sh '''
+                    sh """
+                        echo "------------------------------------"
+                        /bin/bash move.sh
+                        echo "------------------------------------"
+                        helm upgrade --kubeconfig=${config} my-app ./helm/profilecharts --set backimage=${back_image} --set frontimage=${front_image} --set docker_configjson=${docker_config_json} --set tls_crt=${ssl_tls_crt} --set tls_key=${ssl_tls_key}
+                        if [ $? -eq 0 ]; then
+                            echo "Cluster is now up and running!"
+                            echo "Please add DNS entry if applicable for:"
+                            aws elbv2 describe-load-balancers | grep DNSName
+                        else
+                            echo Cluster not running after 15m!
+                        fi
+                        echo "------------------------------------------------------------------"
+                        echo "------------------------------------------------------------------"
                         set +x
                         echo B                  
                         echo B "                               ▓▓▓▓▒▒▒▒▒▒                      "
@@ -427,17 +580,20 @@ pipeline {
                         echo B "                                 ░░░░░░                        "
                         echo B "                           ▒▒░░░░░░░░░░░░        "
                         set -x
-                    ''' //
+                        echo "------------------------------------------------------------------"
+                        echo "------------------------------------------------------------------"
+                    """
                 }
             }
             post {
                 always {
                     echo 'Slack Notifications.'
-                    slackSend channel: '#devopsbuilds',
+                    slackSend channel: "${slack_devops}",
                     color: COLOR_MAP[currentBuild.currentResult],
                     message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
                 }
             }
         }
+        // ------------------------ Good for PI
     }  
 }
