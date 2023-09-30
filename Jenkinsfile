@@ -497,7 +497,7 @@ pipeline {
             post {
                 always {
                     script {
-                        sh "docker rmi ${back_image} ${front_image} ${rab_image} ${rab_image}"
+                        sh "docker rmi ${back_image} ${front_image} ${rab_image}"
                     }
                 }
             }
