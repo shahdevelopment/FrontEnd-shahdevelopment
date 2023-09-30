@@ -388,9 +388,9 @@ pipeline {
                     sh 'sleep 5'
                     sh "docker logs ${frontend}"
 
-                    sh "docker run -dt --name ${memcache} -p 11211:11211 ${mem_image}"
-                    sh 'sleep 5'
-                    sh "docker logs ${memcache}"
+                    // sh "docker run -dt --name ${memcache} -p 11211:11211 ${mem_image}"
+                    // sh 'sleep 5'
+                    // sh "docker logs ${memcache}"
 
                     sh "docker run -dt --name ${postgres} -p 5432:5432 ${post_image}"
                     sh 'sleep 5'
