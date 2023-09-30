@@ -361,19 +361,19 @@ pipeline {
                         dockerImage = docker.build("${rab_image}", "--build-arg rabbitmqUser=${rabbitmq_user} --build-arg rabbitmqPass=${rabbitmq_pass} --build-arg rabbitmq_host=${rabbitmq_host} .")
                         sh 'sleep 1'
                     }
-                }   
-                dir("${memcache}") {
-                    script {
-                        dockerImage = docker.build("${mem_image} .")
-                        sh 'sleep 1'
-                    }
-                }   
+                }
+                // dir("${memcache}") {
+                //     script {
+                //         dockerImage = docker.build("${mem_image} .")
+                //         sh 'sleep 1'
+                //     }
+                // }   
                 dir("${postgres}") {
                     script {
                         dockerImage = docker.build("${post_image}", "--build-arg postgresPass=${postgres_pass} --build-arg postgresUser=${postgres_user} --build-arg postgresDb=${postgres_db} .")
                         sh 'sleep 1'
                     }
-                }   
+                }
             }
         }
         // ------------------------ Good for PI
@@ -458,7 +458,7 @@ pipeline {
                 }
                 dir("${backend}") {
                     script {
-                        dockerImage = docker.build("${back_image}", "--build-arg chat_key=${api_chat_key} .")
+                        dockerImage = docker.build("${back_image}", "--build-arg chat_key=${api_chat_key} --build-arg ENVIRONMENT=dev --build-arg rabbitmqUser=${rabbitmq_user} --build-arg rabbitmqPass=${rabbitmq_pass} --build-arg rabbitmq_host=${rabbitmq_host} --build-arg postgresPass=${postgres_pass} --build-arg postgresUser=${postgres_user} --build-arg postgresDb=${postgres_db} .")
                         sh 'sleep 1'
 
                         docker.withRegistry('', registryCredentials) {
@@ -466,21 +466,33 @@ pipeline {
                         }
                     }
                 }
-                dir("${}") {
+                dir("${rabbit}") {
                     script {
-                        dockerImage = docker.build("${back_image}", "--build-arg chat_key=${api_chat_key} .")
+                        dockerImage = docker.build("${rab_image}", "--build-arg rabbitmqUser=${rabbitmq_user} --build-arg rabbitmqPass=${rabbitmq_pass} --build-arg rabbitmq_host=${rabbitmq_host} .")
                         sh 'sleep 1'
-
                         docker.withRegistry('', registryCredentials) {
                             dockerImage.push("v$BUILD_NUMBER")
-                        }
+                        }                        
                     }
-                } 
-
-
-
-
-
+                }  
+                // dir("${memcache}") {
+                //     script {
+                //         dockerImage = docker.build("${mem_image} .")
+                //         sh 'sleep 1'
+                //         docker.withRegistry('', registryCredentials) {
+                //             dockerImage.push("v$BUILD_NUMBER")
+                //         }                          
+                //     }
+                // }   
+                dir("${postgres}") {
+                    script {
+                        dockerImage = docker.build("${post_image}", "--build-arg postgresPass=${postgres_pass} --build-arg postgresUser=${postgres_user} --build-arg postgresDb=${postgres_db} .")
+                        sh 'sleep 1'
+                        docker.withRegistry('', registryCredentials) {
+                            dockerImage.push("v$BUILD_NUMBER")
+                        }                          
+                    }
+                }
             }
             post {
                 always {
