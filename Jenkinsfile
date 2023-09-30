@@ -429,11 +429,11 @@ pipeline {
             post {
                 always {
                     script {
-                        sh "docker stop ${backend} ${frontend} ${rabbit} ${memcache} ${postgres}"
-                        sh "docker rm ${backend} ${frontend} ${rabbit} ${memcache} ${postgres} && sleep 10"
+                        sh "docker stop ${backend} ${frontend} ${rabbit} ${postgres}"
+                        sh "docker rm ${backend} ${frontend} ${rabbit} ${postgres} && sleep 10"
+                        // ${memcache} ${mem_image} 
 
-
-                        sh "docker rmi ${back_image} ${front_image} ${mem_image} ${post_image} ${rab_image}"
+                        sh "docker rmi ${back_image} ${front_image} ${post_image} ${rab_image}"
                     }
                 }
             }
@@ -486,7 +486,7 @@ pipeline {
                 // }   
                 dir("${postgres}") {
                     script {
-                        dockerImage = docker.build("${post_image}", "--build-arg postgresPass=${postgres_pass} --build-arg postgresUser=${postgres_user} --build-arg postgresDb=${postgres_db} .")
+                        dockerImage = docker.build("${rab_image}", "--build-arg postgresPass=${postgres_pass} --build-arg postgresUser=${postgres_user} --build-arg postgresDb=${postgres_db} .")
                         sh 'sleep 1'
                         docker.withRegistry('', registryCredentials) {
                             dockerImage.push("v$BUILD_NUMBER")
@@ -497,7 +497,7 @@ pipeline {
             post {
                 always {
                     script {
-                        sh "docker rmi ${back_image} ${front_image}"
+                        sh "docker rmi ${back_image} ${front_image} ${rab_image} ${rab_image}"
                     }
                 }
             }
