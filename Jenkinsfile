@@ -13,12 +13,20 @@ pipeline {
         // Docker Registry Info
         registry_front = ""
         registry_back = ""
+        registry_postgres = ""
+        registry_mem = ""
+        registry_rab = ""
+
         registryCredentials = ""
 
         // Workspace Subdirectories
         frontend = ""
         backend = ""
         k8 = ""
+        postgres = ""
+        memcache = ""
+        rabbit = ""
+
         
         // Sonarqube
         SONAR_PROJECT_KEY = ""
@@ -27,10 +35,16 @@ pipeline {
         frontgit = ""
         backgit = ""
         defgit = ""
+        rabgit = ""
+        memgit = ""
+        postgit = ""
 
         // Docker Images
         back_image = ""
         front_image = ""
+        post_image = ""
+        mem_image = ""
+        rab_image = ""
 
         // Kops
         kubecluster = ""
@@ -75,6 +89,16 @@ pipeline {
         // Slack Notifications
         slack_devops = ""
         slack_cluster = ""
+
+        // PostgreSQL
+        postgres_db = ""
+        postgres_user = ""
+        postgres_pass = ""
+
+        // RabbitMQ
+        rabbitmq_user = ""
+        rabbitmq_host = ""
+        rabbitmq_pass = ""
     }
     // ------------------------ Good for PI
     options { skipDefaultCheckout() }
@@ -123,24 +147,40 @@ pipeline {
                     // ---------- Docker Configuration
                     registry_front = parameters['registry.front']
                     registry_back = parameters['registry.back']
-                    registryCredentials = parameters['registry.creds']
+                    registry_postgres = parameters['registry.postgres']
+                    registry_mem = parameters['registry.mem']
+                    registry_rab = parameters['registry.rab']
+
+                    // Good
 
                     // ---------- Dir Names
                     frontend = parameters['app.frontend']
                     backend = parameters['app.backend']
-                    k8 = parameters['kube.k8']
+                    k8 = parameters['app.k8']
+                    memcache = parameters['app.mem']
+                    postgres = parameters['app.postgres']
+                    rabbit = parameters['app.rab']
 
-                    // ---------- Uknown
-                    // front = parameters['service.front']
-                    // back = parameters['service.back']
-
-                    // ---------- SonarQube Project Key
-                    SONAR_PROJECT_KEY = parameters['sonar.projectkey']
+                    // ---------- Docker Images
+                    back_image = "${registry_back}:v${BUILD_NUMBER}"
+                    front_image = "${registry_front}:v${BUILD_NUMBER}"
+                    post_image = "${registry_postgres}:v${BUILD_NUMBER}"
+                    mem_image = "${registry_mem}:v${BUILD_NUMBER}"
+                    rab_image = "${registry_rab}:v${BUILD_NUMBER}"
 
                     // ---------- GitHub Repos
                     frontgit = parameters['git.front']
                     backgit = parameters['git.back']
                     defgit = parameters['git.definition']
+                    rabgit = parameters['git.rabbit']
+                    memgit = parameters['git.mem']
+                    postgit = parameters['git.postgres']
+
+                    // ---------- SonarQube Project Key
+                    SONAR_PROJECT_KEY = parameters['sonar.projectkey']
+                    registryCredentials = parameters['registry.creds']
+
+
                     // echo parameters['git.front']
                     // echo frontgit
 
@@ -160,9 +200,6 @@ pipeline {
                     // ---------- SSL
                     ssl_tls_key = parameters['tls.key']
 
-                    // ---------- Docker Images
-                    back_image = "${registry_back}:v${BUILD_NUMBER}"
-                    front_image = "${registry_front}:v${BUILD_NUMBER}"
 
                     // ---------- Node 1
                     n1 = parameters['n1.label']
@@ -186,6 +223,16 @@ pipeline {
                     // ---------- Slack Notification
                     slack_devops = parameters['slack.devops']
                     slack_cluster = parameters['slack.cluster']
+
+                    // ---------- PostgreSQL
+                    postgres_db = parameters['postgres.db']
+                    postgres_user = parameters['postgres.user']
+                    postgres_pass = parameters['postgres.pass']
+
+                    // ---------- RabbitMQ
+                    rabbitmq_user = parameters['rabbitmq.user']
+                    rabbitmq_host = parameters['rabbitmq.host']
+                    rabbitmq_pass = parameters['rabbitmq.pass']
 
                     // ---------- Moved to Pipeline Console Config
                     // ssl_tls_crt = params.ssl_tls_crt
@@ -249,6 +296,33 @@ pipeline {
                                 }
                             }
                         }
+                        retry(4) {
+                            withCredentials([sshUserPrivateKey(credentialsId: 'gitsshkey', keyFileVariable: 'SSH_KEY')]) {
+                                dir("${rabbit}") {
+                                    sshagent(['gitsshkey']) {
+                                        sh "git clone $rabgit ."
+                                    }
+                                }
+                            }
+                        }
+                        retry(4) {
+                            withCredentials([sshUserPrivateKey(credentialsId: 'gitsshkey', keyFileVariable: 'SSH_KEY')]) {
+                                dir("${memcache}") {
+                                    sshagent(['gitsshkey']) {
+                                        sh "git clone $memgit ."
+                                    }
+                                }
+                            }
+                        }
+                        retry(4) {
+                            withCredentials([sshUserPrivateKey(credentialsId: 'gitsshkey', keyFileVariable: 'SSH_KEY')]) {
+                                dir("${postgres}") {
+                                    sshagent(['gitsshkey']) {
+                                        sh "git clone $postgit ."
+                                    }
+                                }
+                            }
+                        }
                     }
             }    
         }
@@ -272,16 +346,34 @@ pipeline {
             steps {
                 dir("${frontend}") {
                     script {
-                        dockerImage = docker.build("${front_image}", "--build-arg maps_key=${api_maps_key} --build-arg ENVIRONMENT=dev  .")
+                        dockerImage = docker.build("${front_image}", "--build-arg map_key=${api_maps_key} --build-arg ENVIRONMENT=dev  .")
                         sh 'sleep 1'
                     }
                 }
                 dir("${backend}") {
                     script {
-                        dockerImage = docker.build("${back_image}", "--build-arg chat_key=${api_chat_key} --build-arg ENVIRONMENT=dev .")
+                        dockerImage = docker.build("${back_image}", "--build-arg chat_key=${api_chat_key} --build-arg ENVIRONMENT=dev --build-arg rabbitmqUser=${rabbitmq_user} --build-arg rabbitmqPass=${rabbitmq_pass} --build-arg rabbitmq_host=${rabbitmq_host} --build-arg postgresPass=${postgres_pass} --build-arg postgresUser=${postgres_user} --build-arg postgresDb=${postgres_db} .")
                         sh 'sleep 1'
                     }
-                }    
+                }
+                dir("${rabbit}") {
+                    script {
+                        dockerImage = docker.build("${rab_image}", "--build-arg rabbitmqUser=${rabbitmq_user} --build-arg rabbitmqPass=${rabbitmq_pass} --build-arg rabbitmq_host=${rabbitmq_host} .")
+                        sh 'sleep 1'
+                    }
+                }   
+                dir("${memcache}") {
+                    script {
+                        dockerImage = docker.build("${mem_image} .")
+                        sh 'sleep 1'
+                    }
+                }   
+                dir("${postgres}") {
+                    script {
+                        dockerImage = docker.build("${post_image}", "--build-arg postgresPass=${postgres_pass} --build-arg postgresUser=${postgres_user} --build-arg postgresDb=${postgres_db} .")
+                        sh 'sleep 1'
+                    }
+                }   
             }
         }
         // ------------------------ Good for PI
@@ -291,11 +383,22 @@ pipeline {
                     sh "docker run -dt --name ${backend} -p 9000:9000 ${back_image}"
                     sh 'sleep 5'
                     sh "docker logs ${backend}"
+
                     sh "docker run -dt --name ${frontend} -p 3000:3000 ${front_image}"
                     sh 'sleep 5'
                     sh "docker logs ${frontend}"
+
+                    sh "docker run -dt --name ${memcache} -p 11211:11211 ${mem_image}"
                     sh 'sleep 5'
-                }
+                    sh "docker logs ${memcache}"
+
+                    sh "docker run -dt --name ${postgres} -p 5432:5432 ${post_image}"
+                    sh 'sleep 5'
+                    sh "docker logs ${postgres}"
+
+                    sh "docker run -dt --name ${rabbit} -p 5672:5672 ${rab_image}"
+                    sh 'sleep 5'
+                    sh "docker logs ${rabbit}"
             }
         }
         // ------------------------ PI Found ***************************************
@@ -325,11 +428,11 @@ pipeline {
             post {
                 always {
                     script {
-                        sh "docker stop ${backend} ${frontend}"
-                        sh "docker rm ${backend} ${frontend} && sleep 10"
+                        sh "docker stop ${backend} ${frontend} ${rabbit} ${memcache} ${postgres}"
+                        sh "docker rm ${backend} ${frontend} ${rabbit} ${memcache} ${postgres} && sleep 10"
 
 
-                        sh "docker rmi ${back_image} ${front_image}"
+                        sh "docker rmi ${back_image} ${front_image} ${mem_image} ${post_image} ${rab_image}"
                     }
                 }
             }
@@ -361,7 +464,22 @@ pipeline {
                             dockerImage.push("v$BUILD_NUMBER")
                         }
                     }
-                }    
+                }
+                dir("${}") {
+                    script {
+                        dockerImage = docker.build("${back_image}", "--build-arg chat_key=${api_chat_key} .")
+                        sh 'sleep 1'
+
+                        docker.withRegistry('', registryCredentials) {
+                            dockerImage.push("v$BUILD_NUMBER")
+                        }
+                    }
+                } 
+
+
+
+
+
             }
             post {
                 always {
@@ -406,7 +524,7 @@ pipeline {
         //         }
         //     }
         // }
-        // ------------------------ PI Found ***************************************
+        // ------------------------ Good for PI
         stage('Cluster Scale/Connect') {
             steps {
                 dir("${k8}") {
@@ -450,12 +568,12 @@ pipeline {
         stage('Application-Deployment') {
             steps {
                 dir("${k8}") {
-                    echo "helm upgrade my-app ./helm/profilecharts --set backimage=${back_image} --set frontimage=${front_image} --set docker_configjson=${docker_config_json} --set tls_crt=${ssl_tls_crt} --set tls_key=${ssl_tls_key} && sleep 30"
+                    // echo "helm upgrade my-app ./helm/profilecharts --set backimage=${back_image} --set frontimage=${front_image} --set docker_configjson=${docker_config_json} --set tls_crt=${ssl_tls_crt} --set tls_key=${ssl_tls_key} && sleep 30"
                     sh 'echo ------------------------------------'
                     sh '/bin/bash move.sh'
                     sh 'echo ------------------------------------'
                     sh 'echo ------------------------------------'
-                    sh "helm upgrade my-app ./helm/profilecharts --set backimage=${back_image} --set frontimage=${front_image} --set docker_configjson=${docker_config_json} --set tls_crt=${ssl_tls_crt} --set tls_key=${ssl_tls_key} && sleep 30"
+                    sh "helm upgrade my-app ./helm/profilecharts --set backimage=${back_image} --set frontimage=${front_image} --set docker_configjson=${docker_config_json} --set memimage=${mem_image} --set rabimage=${rab_image} --set postimage=${post_image} --set tls_crt=${ssl_tls_crt} --set tls_key=${ssl_tls_key} && sleep 30"
                     // notes
                     sh '''
                         sleep 30
