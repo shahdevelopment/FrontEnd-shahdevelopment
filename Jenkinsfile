@@ -399,6 +399,7 @@ pipeline {
                     sh "docker run -dt --name ${rabbit} -p 5672:5672 ${rab_image}"
                     sh 'sleep 5'
                     sh "docker logs ${rabbit}"
+                }
             }
         }
         // ------------------------ PI Found ***************************************
