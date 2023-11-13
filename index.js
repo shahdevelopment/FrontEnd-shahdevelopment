@@ -875,24 +875,26 @@ app.get('/', (req, res) => {
     <br></br>
     <div class="latnew">
         <h2>Site Overview & Note</h2>
-        <li>
-            ❖ Transformed static site into a CI/CD microservices Kubernetes (K8s) deployment in AWS.
-        </li>
-        <li>
-            ❖ Setup Kops K8s prerequisites: DNS, AWS S3, & installed necessary software.
-        </li>
-        <li>
-            ❖ Defined K8s definition files: endpoints, secrets, services, & Nginx Ingress Controller (with SSL)
-        </li>
-        <li>
-            ❖ Developed parameterized Jenkins pipeline (groovy): polling of SCCM (build trigger), code pull, build, test, code analysis (SonarQube), image archive, & deploy.
-        </li>
-        <li>
-            ❖ Integrated Helm into the Jenkins pipeline for deployment of app to K8s.
-        </li>
-        <li>
-            ❖ Deployed site to the web with a Nginx Ingress Controller Deployment definition, DNS, & wildcard SSL.
-        </li>
+        <ul>
+            <li>
+                ❖ Transformed static site into a CI/CD microservices Kubernetes (K8s) deployment in AWS.
+            </li>
+            <li>
+                ❖ Setup Kops K8s prerequisites: DNS, AWS S3, & installed necessary software.
+            </li>
+            <li>
+                ❖ Defined K8s definition files: endpoints, secrets, services, & Nginx Ingress Controller (with SSL)
+            </li>
+            <li>
+                ❖ Developed parameterized Jenkins pipeline (groovy): polling of SCCM (build trigger), code pull, build, test, code analysis (SonarQube), image archive, & deploy.
+            </li>
+            <li>
+                ❖ Integrated Helm into the Jenkins pipeline for deployment of app to K8s.
+            </li>
+            <li>
+                ❖ Deployed site to the web with a Nginx Ingress Controller Deployment definition, DNS, & wildcard SSL.
+            </li>
+        </ul>
         <p>
             </br>
             </br>
