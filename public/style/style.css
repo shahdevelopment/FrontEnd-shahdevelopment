@@ -386,7 +386,6 @@ body {
 }
 
 .latnew {
-
   font-weight: bold;
   margin: 0 auto;
 }
@@ -405,6 +404,12 @@ body {
 }
 
 .latnew p {
+  margin-left: 25px;
+  margin-right: 25px;
+  color: #000000;
+}
+
+.latnew ul {
   margin-left: 25px;
   margin-right: 25px;
   color: #000000;
