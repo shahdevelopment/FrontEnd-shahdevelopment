@@ -49,8 +49,8 @@ pipeline {
         // docker_config_json = ""
 
         // // SSL
-        // ssl_tls_crt = ""
-        // ssl_tls_key = ""
+        ssl_tls_crt = ""
+        ssl_tls_key = ""
 
         // Node 1
         n1 = ""
@@ -408,45 +408,45 @@ pipeline {
         //     }
         // }
         // ------------------------ PI Found ***************************************
-        stage('Cluster Scale/Connect') {
-            steps {
-                dir("${k8}") {
-                    script {
-                        sh """
-                            echo "------------------------------------"
-                            echo "------------------------------------"
-                            kops update cluster --config=${config} --name=${kubecluster} --state=${s3bucket} --yes --admin
-                            echo "------------------------------------"
+        // stage('Cluster Scale/Connect') {
+        //     steps {
+        //         dir("${k8}") {
+        //             script {
+        //                 sh """
+        //                     echo "------------------------------------"
+        //                     echo "------------------------------------"
+        //                     kops update cluster --config=${config} --name=${kubecluster} --state=${s3bucket} --yes --admin
+        //                     echo "------------------------------------"
 
-                            kops edit ig ${n1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set="spec.maxSize=${n1_maxS}"
-                            kops edit ig ${n1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set="spec.minSize=${n1_minS}"
-                            echo "------------------------------------"
+        //                     kops edit ig ${n1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set="spec.maxSize=${n1_maxS}"
+        //                     kops edit ig ${n1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set="spec.minSize=${n1_minS}"
+        //                     echo "------------------------------------"
 
-                            kops edit ig ${n2} --config=${config} --name=${kubecluster} --state=${s3bucket} --set="spec.maxSize=${n2_maxS}"
-                            kops edit ig ${n2} --config=${config} --name=${kubecluster} --state=${s3bucket} --set="spec.minSize=${n2_minS}"
-                            echo "------------------------------------"
+        //                     kops edit ig ${n2} --config=${config} --name=${kubecluster} --state=${s3bucket} --set="spec.maxSize=${n2_maxS}"
+        //                     kops edit ig ${n2} --config=${config} --name=${kubecluster} --state=${s3bucket} --set="spec.minSize=${n2_minS}"
+        //                     echo "------------------------------------"
 
-                            kops edit ig ${m1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set="spec.maxSize=${m1_maxS}"
-                            kops edit ig ${m1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set="spec.minSize=${m1_minS}"
-                            echo "------------------------------------"
+        //                     kops edit ig ${m1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set="spec.maxSize=${m1_maxS}"
+        //                     kops edit ig ${m1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set="spec.minSize=${m1_minS}"
+        //                     echo "------------------------------------"
 
-                            # kops rolling-update cluster --config=${config} --name=${kubecluster} --state=${s3bucket}
-                            echo "------------------------------------"
+        //                     # kops rolling-update cluster --config=${config} --name=${kubecluster} --state=${s3bucket}
+        //                     echo "------------------------------------"
 
-                            kops validate cluster --config=${config} --name=${kubecluster} --state=${s3bucket} --wait 20m --count 4
-                        """
-                    }
-                }
-            }
-            post {
-                always {
-                    echo '########## Cluster Health Notification ##########'
-                    slackSend channel: "${slack_cluster}",
-                    color: COLOR_MAP[currentBuild.currentResult],
-                    message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
-                }
-            }
-        }
+        //                     kops validate cluster --config=${config} --name=${kubecluster} --state=${s3bucket} --wait 20m --count 4
+        //                 """
+        //             }
+        //         }
+        //     }
+        //     post {
+        //         always {
+        //             echo '########## Cluster Health Notification ##########'
+        //             slackSend channel: "${slack_cluster}",
+        //             color: COLOR_MAP[currentBuild.currentResult],
+        //             message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
+        //         }
+        //     }
+        // }
         // ------------------------ Good for PI
         stage('Application-Deployment') {
             steps {
