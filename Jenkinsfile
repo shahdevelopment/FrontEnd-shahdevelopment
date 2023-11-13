@@ -49,8 +49,8 @@ pipeline {
         // docker_config_json = ""
 
         // // SSL
-        ssl_tls_crt = ""
-        ssl_tls_key = ""
+        // ssl_tls_crt = ""
+        // ssl_tls_key = ""
 
         // Node 1
         n1 = ""
@@ -127,7 +127,7 @@ pipeline {
                     // ---------- Dir Names
                     frontend = parameters['app.frontend']
                     backend = parameters['app.backend']
-                    k8 = parameters['kube.k8']
+                    k8 = parameters['app.k8']
 
                     // ---------- Uknown
                     // front = parameters['service.front']
@@ -157,8 +157,8 @@ pipeline {
                     api_chat_key = parameters['api.chat_key']
                     
                     // ---------- SSL
-                    ssl_tls_key = parameters['tls.key']
-                    ssl_tls_crt = parameters['tls.crt']
+                    // ssl_tls_key = parameters['tls.key']
+                    // ssl_tls_crt = parameters['tls.crt']
 
 
                     // ---------- Docker Images
