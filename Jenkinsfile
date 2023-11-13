@@ -49,8 +49,8 @@ pipeline {
         // docker_config_json = ""
 
         // // SSL
-        ssl_tls_crt = ""
-        ssl_tls_key = ""
+        // ssl_tls_crt = ""
+        // ssl_tls_key = ""
 
         // Node 1
         n1 = ""
