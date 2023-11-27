@@ -933,37 +933,64 @@ app.get('/', (req, res) => {
             <div onclick="plusSlides(1)" class="nextPrevBtn rightArrow"><span class="arrow arrowRight"></span></div>
             <div class="captionTextHolder"><p class="captionText slideTextFromTop"></p></div>
             <div class="imageHolder">
-                <img style='height: 100%; width: 100%; object-fit: contain' src="image/DevOps.jpg">1366X768
+                <img style='height: 100%; width: 100%; object-fit: contain' src="academia/websecurity&bugbounty.jpg">1366X768
+                <p class="captionText">Web Security & Bug Bounty - 2023</p>
+            </div>
+            <div class="imageHolder">
+                <img style='height: 100%; width: 100%; object-fit: contain' src="academia/DevOps.jpg">1366X768
                 <p class="captionText">DevOps Beginners to Advanced with Projects</p>
             </div>
             <div class="imageHolder">
-                <img style='height: 100%; width: 100%; object-fit: contain' src="image/BBA.jpg">1366X768
-                <p class="captionText">Bachelor of Business Administration (BBA)</p>
-            </div>
+                <img style='height: 100%; width: 100%; object-fit: contain' src="academia/Job_Interview_Tips_for_Software_Engineers.png">1366X768
+                <p class="captionText">Job Interview Tips for Software Engineers</p>
+            </div>            
             <div class="imageHolder">
-                <img style='height: 100%; width: 100%; object-fit: contain' src="image/Diploma.jpg">
-                <p class="captionText">Diploma in Business IT Management (BITMAN)</p>
-            </div>
-            <div class="imageHolder">
-                <img style='height: 100%; width: 100%; object-fit: contain' src="image/awsSArc.jpg">1366X768
+                <img style='height: 100%; width: 100%; object-fit: contain' src="academia/awsSArc.jpg">1366X768
                 <p class="captionText">AWS Solutions Architect</p>
             </div>
             <div class="imageHolder">
-                <img style='height: 100%; width: 100%; object-fit: contain' src="image/AzureAZ104.jpg">
+                <img style='height: 100%; width: 100%; object-fit: contain' src="academia/Az303.jpg">
+                <p class="captionText">Azure Architect</p>
+            </div>            
+            <div class="imageHolder">
+                <img style='height: 100%; width: 100%; object-fit: contain' src="academia/AzureAZ104.jpg">
                 <p class="captionText">Azure Administrator</p>
             </div>
             <div class="imageHolder">
-                <img style='height: 100%; width: 100%; object-fit: contain' src="image/Az303.jpg">
-                <p class="captionText">Azure Architect</p>
+                <img style='height: 100%; width: 100%; object-fit: contain' src="academia/internet_security_remote_work.png">1366X768
+                <p class="captionText">Internet Security - Remote</p>
             </div>
             <div class="imageHolder">
-                <img style='height: 100%; width: 100%; object-fit: contain' src="image/Certificate Coding.jpg">
+                <img style='height: 100%; width: 100%; object-fit: contain' src="academia/2020_security_awareness.png">1366X768
+                <p class="captionText">2020 Security Awareness</p>
+            </div>
+            <div class="imageHolder">
+                <img style='height: 100%; width: 100%; object-fit: contain' src="academia/gdpr.png">1366X768
+                <p class="captionText">GDPR</p>
+            </div>
+            <div class="imageHolder">
+                <img style='height: 100%; width: 100%; object-fit: contain' src="academia/hipaa.png">1366X768
+                <p class="captionText">HIPAA for Business Associates</p>
+            </div>            
+            <div class="imageHolder">
+                <img style='height: 100%; width: 100%; object-fit: contain' src="academia/BBA.jpg">1366X768
+                <p class="captionText">Bachelor of Business Administration (BBA)</p>
+            </div>
+            <div class="imageHolder">
+                <img style='height: 100%; width: 100%; object-fit: contain' src="academia/Diploma.jpg">
+                <p class="captionText">Diploma in Business IT Management (BITMAN)</p>
+            </div>            <div class="imageHolder">
+                <img style='height: 100%; width: 100%; object-fit: contain' src="academia/Certificate Coding.jpg">
                 <p class="captionText">JS Coding</p>
             </div>
             <div class="imageHolder">
-                <img style='height: 100%; width: 100%; object-fit: contain' src="image/Certificate Coding 2.jpg">
+                <img style='height: 100%; width: 100%; object-fit: contain' src="academia/Certificate Coding 2.jpg">
                 <p class="captionText">JS Coding II</p>
             </div>
+            <div class="imageHolder">
+                <img style='height: 100%; width: 100%; object-fit: contain' src="academia/InterPrep.jpg">
+                <p class="captionText">Interview Preperation</p>
+            </div>            
         </div>
         <div id="dotsContainer"></div>
     </div>
