@@ -1,12 +1,11 @@
-def COLOR_MAP = [
-    'SUCCESS': 'good', 
-    'FAILURE': 'danger',
-]
 // -------------------------------------------------------------- >>
 // This Script is for Scaling Instances Down to Zero
 // -------------------------------------------------------------- >>
 // -------------------------------------------------------------- >>
-
+def COLOR_MAP = [
+    'SUCCESS': 'good', 
+    'FAILURE': 'danger',
+]
 // ------------------------ Good for PI
 pipeline {
     agent {label 'ansible'}
