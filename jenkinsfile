@@ -1,11 +1,12 @@
-// -------------------------------------------------------------- >>
-// This Script is for Scaling Instances Down to Zero
-// -------------------------------------------------------------- >>
-// -------------------------------------------------------------- >>
 def COLOR_MAP = [
     'SUCCESS': 'good', 
     'FAILURE': 'danger',
 ]
+// -------------------------------------------------------------- >>
+// This Script is for Scaling Instances Down to Zero
+// -------------------------------------------------------------- >>
+// -------------------------------------------------------------- >>
+
 // ------------------------ Good for PI
 pipeline {
     agent {label 'ansible'}
@@ -229,6 +230,9 @@ pipeline {
 
                             kops edit ig ${m1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set="spec.maxSize=0"
                             kops edit ig ${m1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set="spec.minSize=0"
+
+                            kops update cluster --config=${config} --name=${kubecluster} --state=${s3bucket} --yes --admin
+
                             echo "------------------------------------"
                         """
                     }
