@@ -80,7 +80,6 @@ pipeline {
     // ------------------------ Good for PI
     options { skipDefaultCheckout() }
     stages {
-
         // stage('Cluster-Delete') {
         //     steps {
         //         dir("${k8}") {
