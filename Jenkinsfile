@@ -78,6 +78,7 @@ pipeline {
     // ------------------------ Good for PI
     options { skipDefaultCheckout() }
     stages {
+
         // stage('Cluster-Delete') {
         //     steps {
         //         dir("${k8}") {
@@ -196,7 +197,14 @@ pipeline {
                     echo "------------------------------------"
                 }
             }
-        }
+            post {
+                always {
+                    echo '########## Build Status Notification ##########'
+                    slackSend channel: "${slack_devops}",
+                    color: COLOR_MAP[currentBuild.currentResult],
+                    message: "Build Started: *${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
+                }
+            }        }
         // ------------------------ Good for PI
         stage('System Check') {
             steps {
@@ -433,7 +441,7 @@ pipeline {
                             # kops rolling-update cluster --config=${config} --name=${kubecluster} --state=${s3bucket}
                             echo "------------------------------------"
 
-                            kops validate cluster --config=${config} --name=${kubecluster} --state=${s3bucket} --wait 20m --count 4
+                            kops validate cluster --config=${config} --name=${kubecluster} --state=${s3bucket} --wait 40m --count 2
                         """
                     }
                 }
