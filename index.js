@@ -73,14 +73,6 @@ app.get('/geolocate', (req, res) => {
             <div id="menu-bar">
                 <div id="menu-buttons">
                     <div class="dropdown">
-                        <button class="dropbtn">Experience</button>
-                        <div class="dropdown-content">
-                            <a href="/seniorsystemsadmin">Senior IS Network Admin</a>
-                            <a href="/i-sightII">Systems Administrator</a>
-                            <a href="/i-sight">Junior Systems Admin</a>
-                        </div>
-                    </div>
-                    <div class="dropdown">
                         <button class="dropbtn">Projects</button>
                         <div class="dropdown-content">
                         <a href="/fastapi">FastAPI Server</a>
@@ -89,8 +81,6 @@ app.get('/geolocate', (req, res) => {
                         <a href="/shahgpt">ChatGPT Clone</a>
                         </div>
                     </div>
-                    <button onclick="highlightButton(this)" class="menu"><a href="/education">Education</a></button>
-                    <button onclick="highlightButton(this)" class="menu"><a href="/skills">Skills</a></button>
                     <button onclick="highlightButton(this)" class="menu"><a href="/contactpage">Contact</a></button>
                     <button onclick="highlightButton(this)" class="menu"><a href="Shah_Solehria_Resume.pdf"
                             target="_blank">Resume</a></button>
@@ -198,14 +188,6 @@ app.get('/contactpage', (req, res) => {
             <div id="menu-bar">
                 <div id="menu-buttons">
                     <div class="dropdown">
-                        <button class="dropbtn">Experience</button>
-                        <div class="dropdown-content">
-                            <a href="/seniorsystemsadmin">Senior IS Network Admin</a>
-                            <a href="/i-sightII">Systems Administrator</a>
-                            <a href="/i-sight">Junior Systems Admin</a>
-                        </div>
-                    </div>
-                    <div class="dropdown">
                         <button class="dropbtn">Projects</button>
                         <div class="dropdown-content">
                             <a href="/fastapi">FastAPI Server</a>
@@ -214,8 +196,6 @@ app.get('/contactpage', (req, res) => {
                             <a href="/shahgpt">ChatGPT Clone</a>
                         </div>
                     </div>
-                    <button onclick="highlightButton(this)" class="menu"><a href="/education">Education</a></button>
-                    <button onclick="highlightButton(this)" class="menu"><a href="/skills">Skills</a></button>
                     <button onclick="highlightButton(this)" class="menu"><a href="/contactpage">Contact</a></button>
                     <button onclick="highlightButton(this)" class="menu"><a href="Shah_Solehria_Resume.pdf" target="_blank">Resume</a></button>
                 </div>
@@ -310,127 +290,6 @@ app.get('/contactpage', (req, res) => {
     `;
     res.send(modifiedHTML);
 });
-app.get('/education', (req, res) => {
-    const modifiedHTML = `
-    <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Education</title>
-        <link rel="stylesheet" href="style/style.css">
-    </head>
-    <div class="topnav">
-        <div>
-            <a class="name" href="/"><p>Shahjehan (Shah) Solehria</p></a>
-            <h2 class="title">Cloud | DevOps | Data</h2>
-        </div>
-        <div>
-            <div id="menu-bar">
-                <div id="menu-buttons">
-                    <div class="dropdown">
-                        <button class="dropbtn">Experience</button>
-                        <div class="dropdown-content">
-                            <a href="/seniorsystemsadmin">Senior IS Network Admin</a>
-                            <a href="/i-sightII">Systems Administrator</a>
-                            <a href="/i-sight">Junior Systems Admin</a>
-                        </div>
-                    </div>
-                    <div class="dropdown">
-                        <button class="dropbtn">Projects</button>
-                        <div class="dropdown-content">
-                            <a href="/fastapi">FastAPI Server</a>
-                            <a href="/geolocate">Geo Location App</a>
-                            <a href="/selfie">Selfie App</a>
-                            <a href="/shahgpt">ChatGPT Clone</a>
-                        </div>
-                    </div>
-                    <button onclick="highlightButton(this)" class="menu"><a href="/education">Education</a></button>
-                    <button onclick="highlightButton(this)" class="menu"><a href="/skills">Skills</a></button>
-                    <button onclick="highlightButton(this)" class="menu"><a href="/contactpage">Contact</a></button>
-                    <button onclick="highlightButton(this)" class="menu"><a href="Shah_Solehria_Resume.pdf" target="_blank">Resume</a></button>
-                </div>
-            </div>
-        </div>
-        <div class="ham">
-            <button class="hamburger-menu">        
-                <div class="hamburger-line"></div>
-                <div class="hamburger-line"></div>
-                <div class="hamburger-line"></div>
-            </button>
-        </div>
-            <script src="js/hamburger.js"></script>
-    </div>
-    <div class="workexp">
-        <div class="workexpc">
-            <h1>EDUCATION</h1>
-            <h3>❖ Decoding DevOps (Certificate) - 40% Completed</h3>
-            <h4>- Udemy</h4>
-            <h3>❖ Cisco CCNA 200-301 (Certificate) - 40% Completed</h3>
-            <h4>- Udemy</h4>
-            <h3>❖ AZ-303 Azure Architecture Technologies (Certificate) - Dec 2021</h3>
-            <h4>- Udemy</h4>
-            <h3>❖ AZ-104 Microsoft Azure Administrator (Certificate) - Aug 2021</h3>
-            <h4>- Udemy</h4>
-            <h3>❖ AWS Certified Solutions Architect Associate (Certificate) - Aug 2021</h3>
-            <h4>- Udemy</h4>
-            <h3>❖ Bachelor of Business Administration (Degree) - Jun 2018–Jan 2020</h3>
-            <h4>- British Columbia Institute of Technology</h4>
-            <h3>❖ Business IT Management (Diploma) - Sept 2016–May 2018</h3>
-            <h4>- British Columbia Institute of Technology</h4>
-        </div>
-    </div>
-    <br></br>
-    <br></br>
-    <br></br>
-    <br></br>
-    <br></br>
-    <br></br>
-    <br></br>
-    <br></br>
-    <br></br>
-    <div class="latnew"><h1>Quick Links</h1></div>
-    <br></br>
-    <div class="features1">
-        <div class="features-in">
-            <div class="fea-item1">
-                <a href="/i-sightII">
-                    <img style='height: 100%; width: 100%; object-fit: contain' src="image/r.jpg" width="343" height="300"
-                        alt="Skills" />
-                </a>
-                <div class="fea-1"><h3>Exp: Systems Administrator</h3></div>
-            </div>
-            <div class="fea-item2">
-                <a href="/skills">
-                    <img style='height: 100%; width: 100%; object-fit: contain' src="image/det.jpg" width="343" height="300"
-                        alt="Education" />
-                </a>
-                <div class="fea-1"><h3>Skills</h3></div>
-            </div>
-            <div class="fea-item3">
-                <a href="/contactpage">
-                    <img style='height: 100%; width: 100%; object-fit: contain' src="image/contact.png" width="343"
-                        height="300" alt="Contact Me" />
-                </a>
-                <div class="fea-1"><h3>Contact Me</h3></div>
-            </div>
-        </div>
-    </div>
-    <br></br>
-    <br></br>
-    <br></br>
-    <br></br>
-    <div class="footer">
-        <a href="/"><button class="dropbtn">Home</button></a>
-        <div class="footmenu">
-            <a href="/skills"><button class="dropbtn">Skills</button></a>
-            <a href="/education"><button class="dropbtn">Education</button></a>
-            <a href="/contactpage"><button class="dropbtn">Contact Me</button></a>
-        </div>
-    </div>
-    </html>
-    `;
-    res.send(modifiedHTML);
-});
 app.get('/fastapi', (req, res) => {
     const modifiedHTML = `
     <html lang="en">
@@ -449,14 +308,6 @@ app.get('/fastapi', (req, res) => {
             <div id="menu-bar">
                 <div id="menu-buttons">
                     <div class="dropdown">
-                        <button class="dropbtn">Experience</button>
-                        <div class="dropdown-content">
-                            <a href="/seniorsystemsadmin">Senior IS Network Admin</a>
-                            <a href="/i-sightII">Systems Administrator</a>
-                            <a href="/i-sight">Junior Systems Admin</a>
-                        </div>
-                    </div>
-                    <div class="dropdown">
                         <button class="dropbtn">Projects</button>
                         <div class="dropdown-content">
                             <a href="/fastapi">FastAPI Server</a>
@@ -465,8 +316,6 @@ app.get('/fastapi', (req, res) => {
                             <a href="/shahgpt">ChatGPT Clone</a>
                         </div>
                     </div>
-                    <button onclick="highlightButton(this)" class="menu"><a href="/education">Education</a></button>
-                    <button onclick="highlightButton(this)" class="menu"><a href="/skills">Skills</a></button>
                     <button onclick="highlightButton(this)" class="menu"><a href="/contactpage">Contact</a></button>
                     <button onclick="highlightButton(this)" class="menu"><a href="Shah_Solehria_Resume.pdf" target="_blank">Resume</a></button>
                 </div>
@@ -556,250 +405,6 @@ app.get('/fastapi', (req, res) => {
     `;
     res.send(modifiedHTML);
 });
-app.get('/i-sightII', (req, res) => {
-    const modifiedHTML = `
-    <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Systems Administrator</title>
-        <link rel="stylesheet" href="style/style.css">
-    </head>
-    <div class="topnav">
-        <div>
-            <a class="name" href="/"><p>Shahjehan (Shah) Solehria</p></a>
-            <h2 class="title">Cloud | DevOps | Data</h2>
-        </div>
-        <div>
-            <div id="menu-bar">
-                <div id="menu-buttons">
-                    <div class="dropdown">
-                        <button class="dropbtn">Experience</button>
-                        <div class="dropdown-content">
-                            <a href="/seniorsystemsadmin">Senior IS Network Admin</a>
-                            <a href="/i-sightII">Systems Administrator</a>
-                            <a href="/i-sight">Junior Systems Admin</a>
-                        </div>
-                    </div>
-                    <div class="dropdown">
-                        <button class="dropbtn">Projects</button>
-                        <div class="dropdown-content">
-                            <a href="/fastapi">FastAPI Server</a>
-                            <a href="/geolocate">Geo Location App</a>
-                            <a href="/selfie">Selfie App</a>
-                            <a href="/shahgpt">ChatGPT Clone</a>
-                        </div>
-                    </div>
-                    <button onclick="highlightButton(this)" class="menu"><a href="/education">Education</a></button>
-                    <button onclick="highlightButton(this)" class="menu"><a href="/skills">Skills</a></button>
-                    <button onclick="highlightButton(this)" class="menu"><a href="/contactpage">Contact</a></button>
-                    <button onclick="highlightButton(this)" class="menu"><a href="Shah_Solehria_Resume.pdf" target="_blank">Resume</a></button>
-                </div>
-            </div>
-        </div>
-        <div class="ham">
-            <button class="hamburger-menu">        
-                <div class="hamburger-line"></div>
-                <div class="hamburger-line"></div>
-                <div class="hamburger-line"></div>
-            </button>
-        </div>
-            <script src="js/hamburger.js"></script>
-    </div>
-    <div class="workexp">
-        <div class="workexpc">
-            <h1>Systems Administrator (i-Sight)</h1>
-            <ul>
-                <li>
-                    ❖ Successfully revived & rebuilt many failed VMWARE datacenters containing Yellowfin BI Servers & the i-Sight SAAS application servers & databases.
-                </li>
-                <li>
-                    ❖ Excelled with Java servers, went from knowing nothing to the in-house expert in less then four months!
-                </li>
-                <li>
-                    ❖ Managed/fixed/automated many aspects of DevOps environment: Jenkins, Ansible, Jenkins, build failures, & scripting. Went from know nothing about builds to one of the leading experts for developer issue escalations!
-                </li>
-                <li>
-                    ❖ Deployed & maintained i-Sight Linux OS JavaScript application on Azure, AWS, & VMWARE.
-                </li>
-                <li>
-                    ❖ Successfully worked with: Teleport, Kubernetes, OpenShift, NodeJS, NPM, Quartz, RabbitMQ, Redis, Nginx, Elasticsearch, Samba, Docker Swarm, make, SQL, JSON, XML, JAVA, ODBC, & Docker Compose.
-                </li>
-            </ul>
-        </div>
-    </div>
-    <br></br>
-    <br></br>
-    <br></br>
-    <div class="latnew"><h1>Quick Links</h1></div>
-    <br></br>
-    <div class="features1">
-        <div class="features-in">
-            <div class="fea-item1">
-                <a href="/selfie">
-                    <img style='height: 100%; width: 100%; object-fit: contain' src="image/active.jpg" width="343"
-                        height="300" alt="nodeJS and neDB Selfie App" />
-                </a>
-                <div class="fea-1"><h3>nodeJS and neDB Selfie App</h3></div>
-            </div>
-            <div class="fea-item2">
-                <a href="/i-sight">
-                    <img style='height: 100%; width: 100%; object-fit: contain' src="image/cons.png" width="343"
-                        height="300" alt="Junior Sys Admin" />
-                </a>
-                <div class="fea-1"><h3>Exp: Junior Sys Admin</h3></div>
-            </div>
-            <div class="fea-item3">
-                <a href="/contactpage">
-                    <img style='height: 100%; width: 100%; object-fit: contain' src="image/contact.png" width="343"
-                        height="300" alt="Contact Me" />
-                </a>
-                <div class="fea-1"><h3>Contact Me</h3></div>
-            </div>
-        </div>
-    </div>
-    <br></br>
-    <br></br>
-    <br></br>
-    <br></br>
-    <br></br>
-    <br></br>
-    <br></br>
-    <div class="footer">
-        <a href="/"><button class="dropbtn">Home</button></a>
-        <div class="footmenu">
-            <a href="/skills"><button class="dropbtn">Skills</button></a>
-            <a href="/education"><button class="dropbtn">Education</button></a>
-            <a href="/contactpage"><button class="dropbtn">Contact Me</button></a>
-        </div>
-    </div>
-    </html>
-    `;
-    res.send(modifiedHTML);
-});
-app.get('/i-sight', (req, res) => {
-    const modifiedHTML = `
-    <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Junior System Admin</title>
-        <link rel="stylesheet" href="style/style.css">
-    </head>
-    <div class="topnav">
-        <div>
-            <a class="name" href="/"><p>Shahjehan (Shah) Solehria</p></a>
-            <h2 class="title">Cloud | DevOps | Data</h2>
-        </div>
-        <div>
-            <div id="menu-bar">
-                <div id="menu-buttons">
-                    <div class="dropdown">
-                        <button class="dropbtn">Experience</button>
-                        <div class="dropdown-content">
-                            <a href="/seniorsystemsadmin">Senior IS Network Admin</a>
-                            <a href="/i-sightII">Systems Administrator</a>
-                            <a href="/i-sight">Junior Systems Admin</a>
-                        </div>
-                    </div>
-                    <div class="dropdown">
-                        <button class="dropbtn">Projects</button>
-                        <div class="dropdown-content">
-                            <a href="/fastapi">FastAPI Server</a>
-                            <a href="/geolocate">Geo Location App</a>
-                            <a href="/selfie">Selfie App</a>
-                            <a href="/shahgpt">ChatGPT Clone</a>
-                        </div>
-                    </div>
-                    <button onclick="highlightButton(this)" class="menu"><a href="/education">Education</a></button>
-                    <button onclick="highlightButton(this)" class="menu"><a href="/skills">Skills</a></button>
-                    <button onclick="highlightButton(this)" class="menu"><a href="/contactpage">Contact</a></button>
-                    <button onclick="highlightButton(this)" class="menu">
-                        <a href="Shah_Solehria_Resume.pdf" target="_blank">Resume</a>
-                    </button>
-                </div>
-            </div>
-        </div>
-        <div class="ham">
-            <button class="hamburger-menu">        
-                <div class="hamburger-line"></div>
-                <div class="hamburger-line"></div>
-                <div class="hamburger-line"></div>
-            </button>
-        </div>
-            <script src="js/hamburger.js"></script>
-    </div>
-    <div class="workexp">
-        <div class="workexpc">
-            <h1>Junior Systems Administrator (i-Sight)</h1>
-            <ul>
-                <li>
-                    ❖ Spearheaded the containerized deployment of Yellowfin with Docker, Java, & PostgreSQL.
-                </li>
-                <li>
-                    ❖ Quickly excelled at SQL extract, transform, & load operations for MySQL & PostgreSQL.
-                </li>
-                <li>
-                    ❖ Designed secure backup & storage for global customer base with Azure, & cloud storage mounts.
-                </li>        
-                <li>
-                    ❖ Improved & maintained Mail/security with Nginx Reverse Proxy & DNS.
-                </li>                
-                <li>
-                    ❖Audited & provisioned Checkpoint Firewall, Checkpoint VPN, Mail Gateway, & PaloAlto firewall.
-                </li>
-            </ul>
-        </div>
-    </div>
-    <br></br>
-    <br></br>
-    <br></br>
-    <div class="latnew"><h1>Quick Links</h1></div>
-    <br></br>
-    <div class="features1">
-        <div class="features-in">
-            <div class="fea-item1">
-                <a href="/selfie">
-                    <img style='height: 100%; width: 100%; object-fit: contain' src="image/active.jpg" width="343"
-                        height="300" alt="nodeJS and neDB Selfie App" />
-                </a>
-                <div class="fea-1"><h3>nodeJS and neDB Selfie App</h3></div>
-            </div>
-            <div class="fea-item2">
-                <a href="/seniorsystemsadmin">
-                    <img style='height: 100%; width: 100%; object-fit: contain' src="image/cons.png" width="343"
-                        height="300" alt="Senior IS Systems Admin" />
-                </a>
-                <div class="fea-1"><h3>Exp: Senior IS Sys Admin</h3></div>
-            </div>
-            <div class="fea-item3">
-                <a href="/contactpage">
-                    <img style='height: 100%; width: 100%; object-fit: contain' src="image/contact.png" width="343"
-                        height="300" alt="Contact Me" />
-                </a>
-                <div class="fea-1"><h3>Contact Me</h3></div>
-            </div>
-        </div>
-    </div>
-    <br></br>
-    <br></br>
-    <br></br>
-    <br></br>
-    <br></br>
-    <br></br>
-    <br></br>
-    <div class="footer">
-        <a href="/"><button class="dropbtn">Home</button></a>
-        <div class="footmenu">
-            <a href="/skills"><button class="dropbtn">Skills</button></a>
-            <a href="/education"><button class="dropbtn">Education</button></a>
-            <a href="/contactpage"><button class="dropbtn">Contact Me</button></a>
-        </div>
-    </div>
-    </html>
-    `;
-    res.send(modifiedHTML);
-});
 app.get('/', (req, res) => {
     const modifiedHTML = `
     <html lang="en">
@@ -817,14 +422,6 @@ app.get('/', (req, res) => {
             <div id="menu-bar">
                 <div id="menu-buttons">
                     <div class="dropdown">
-                        <button class="dropbtn">Experience</button>
-                        <div class="dropdown-content">
-                            <a href="/seniorsystemsadmin">Senior IS Network Admin</a>
-                            <a href="/i-sightII">Systems Administrator</a>
-                            <a href="/i-sight">Junior Systems Admin</a>
-                        </div>
-                    </div>
-                    <div class="dropdown">
                         <button class="dropbtn">Projects</button>
                         <div class="dropdown-content">
                             <a href="/fastapi">FastAPI Server</a>
@@ -833,8 +430,6 @@ app.get('/', (req, res) => {
                             <a href="/shahgpt">ChatGPT Clone</a>
                         </div>
                     </div>
-                    <button onclick="highlightButton(this)" class="menu"><a href="/education">Education</a></button>
-                    <button onclick="highlightButton(this)" class="menu"><a href="/skills">Skills</a></button>
                     <button onclick="highlightButton(this)" class="menu"><a href="/contactpage">Contact</a></button>
                     <button onclick="highlightButton(this)" class="menu"><a href="Shah_Solehria_Resume.pdf" target="_blank">Resume</a></button>
                 </div>
@@ -874,54 +469,80 @@ app.get('/', (req, res) => {
     </div>
     <br></br>
     <div class="latnew">
-        <h2>Site Overview & Note</h2>
+        <h1>Site CI/CD & Security Evolution</h1>
+        <br></br>
+        <p>Project began with a simple static HTML, CSS, & JS site originally deployed on GitHub pages. Today the site is full CI/CD, KOPS Infrastructure as Code (IaC), microservices Kubernetes (K8s) deployment in AWS cloud!</p>
+        <br></br>
+        <p>Major revisions have been categorized into three categories:</p>
         <ul>
-            <li>
-                ❖ Transformed static site into a CI/CD microservices Kubernetes (K8s) deployment in AWS.
-            </li>
-            <li>
-                ❖ Setup Kops K8s prerequisites: DNS, AWS S3, & installed necessary software.
-            </li>
-            <li>
-                ❖ Defined K8s definition files: endpoints, secrets, services, & Nginx Ingress Controller (with SSL)
-            </li>
-            <li>
-                ❖ Developed parameterized Jenkins pipeline (groovy): polling of SCCM (build trigger), code pull, build, test, code analysis (SonarQube), image archive, & deploy.
-            </li>
-            <li>
-                ❖ Integrated Helm into the Jenkins pipeline for deployment of app to K8s.
-            </li>
-            <li>
-                ❖ Deployed site to the web with a Nginx Ingress Controller Deployment definition, DNS, & wildcard SSL.
-            </li>
+            <li>Web Development</li>
+            <li>Site Reliability Engineering</li>
+            <li>DevOps Engineering / Automation</li>
         </ul>
-        <p>
-            </br>
-            </br>
-            On the top right of the page is a hamburger menu that if you click 
-            will open up the site navigation menu. 
-            </br>
-            </br>
-            Check out the Projects tab to see my JS API projects including: ChatGPT 
-            Clone, Google Maps API and 
-            Gelocation, Selfie Application that allows you to store your pictures 
-            and a message You can permanently delete your images and post with 
-            the delete button found by clicking on the "Data Repo" Button (Antivirus may 
-            interfere with the webcam resource accessibility requirements for the proper 
-            functioning of this page). Finally, 
-            my Python (fastAPI) and Postgres Social Media App API.
-            </br>
-            </br>
-            The resume tab if clicked will download a PDF copy of my resume to your screen.
-            </br>
-            </br>
-            All Other sections you are free to explore!
-            </br>
-            </br>
-            Best,
-            </br>
-            Shah Solehria
-        </p>
+        <br></br>
+
+        <h2>Web Development</h2>
+        <p>Portfolio site notable features include:</p>
+        <ul>
+            <li>Downloadable PDF Resume.</li>
+            <li>Hover-sensing dynamic GUI including: opacity control, scaling, & drop-down lists.</li>
+            <li>A selfie project that uses your computers camera to take pictures & data storing it in a NEDB database.</li>
+            <li>Ability to view and delete saved posts.</li>
+            <li>A geolocation API integration with GCP Maps API.</li>
+            <li>ChatGPT clone using the ChatGPT API.</li>
+        </ul>
+        <br></br>
+
+        <p>The application is containerized in Docker runtime with separate containers for the frontend and backend. To bolster security, keys are relocated to the backend Node server (facilitating frontend API calls). Docker images are archived on Docker Hub. Code is optimized for GitHub by concealing passwords & usernames for enhanced at-rest code security.</p>
+        <br></br>
+
+        <h2>Site Reliability Engineering</h2>
+
+        <p>Installed and setup a Jenkins server and automated the deployment pipeline from GitHub commit to Kubernetes cluster deployment on AWS cloud; This includes a multi-stage Jenkinsfile, local SonarQube server for code testing, Docker image builds, local container execution/ testing, build notifications on Slack, & image push to Docker Hub. Passwords and usernames are securely stored in Jenkins.</p>
+        <br></br>
+
+        <p>The application was adapted for Kubernetes with manually crafted definition files. Infrastructure as Code (IaC) AWS backend for the Kubernetes cluster was developed using KOPS in AWS.</p>
+        <br></br>
+
+        <p>Code and Jenkinsfile are updated and pushed to GitHub this triggers the Jenkins build.</p>
+        <br></br>
+
+        <h2>DevOps Engineering / Automation</h2>
+
+        <p>CI/CD pipeline script in Jenkins pipeline script (Jenkinsfile) involves workspace cleanup, code testing in SonarQube server, GitHub Code Pull, Docker image build, container execution/ testing on Jenkins slave, JS path operation validation, image push to Docker Hub, & Kubernetes build with Helm.</p>
+        <br></br>
+
+        <p>The live site is optimized for costs using KOPS (IaC) deployment in AWS that enables scaling of instances to zero when not in use, & scaling instances to default levels (Creates master & slave EC2 instances & updates DNS).</p>
+        <br></br>
+
+        <h2>Security</h2>
+
+        <p>The code maintains parameterized variables for at-rest code security applicable to:</p>
+        <ul>
+            <li>Dockerfiles</li>
+            <li>JS files</li>
+            <li>Jenkinsfiles (Groovy)</li>
+            <li>Helm</li>
+            <li>Kubernetes secrets</li>
+        </ul>
+        <br></br>
+
+        <p>Also, there is proxy security over the web with Nginx Ingress Controller (AWS ELB) http origin security, redirects, & SSL.</p>
+        
+        </br>
+        </br>
+        </br>
+        </br>
+        </br>
+        </br>
+
+        <h2>Site Overview</h2>
+        <p>On the top right of the page is a hamburger menu used to navigate the site:</p>
+        <ul>
+            <li>Projects: Selfie App, Geolocation App, ChatGPT App, & my FastAPI App.<li>
+            <li>Resume: Download a PDF copy of my resume to your screen.<li>
+            <li>Contact: Links to my communication platforms.<li>
+        </ul>
         </br>
         </br>
         <h1>Notable Academia</h1>
@@ -1063,14 +684,6 @@ app.get('/selfie', (req, res) => {
             <div id="menu-bar">
                 <div id="menu-buttons">
                     <div class="dropdown">
-                        <button class="dropbtn">Experience</button>
-                        <div class="dropdown-content">
-                            <a href="/seniorsystemsadmin">Senior IS Network Admin</a>
-                            <a href="/i-sightII">Systems Administrator</a>
-                            <a href="/i-sight">Junior Systems Admin</a>
-                        </div>
-                    </div>
-                    <div class="dropdown">
                         <button class="dropbtn">Projects</button>
                         <div class="dropdown-content">
                             <a href="/fastapi">FastAPI Server</a>
@@ -1079,8 +692,6 @@ app.get('/selfie', (req, res) => {
                             <a href="/shahgpt">ChatGPT Clone</a>
                         </div>
                     </div>
-                    <button onclick="highlightButton(this)" class="menu"><a href="/education">Education</a></button>
-                    <button onclick="highlightButton(this)" class="menu"><a href="/skills">Skills</a></button>
                     <button onclick="highlightButton(this)" class="menu"><a href="/contactpage">Contact</a></button>
                     <button onclick="highlightButton(this)" class="menu"><a href="Shah_Solehria_Resume.pdf" target="_blank">Resume</a></button>
                 </div>
@@ -1135,313 +746,6 @@ app.get('/selfie', (req, res) => {
     `;
     res.send(modifiedHTML);
 });
-app.get('/seniorsystemsadmin', (req, res) => {
-    const modifiedHTML = `
-    <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Senior IS Network Administrator</title>
-        <link rel="stylesheet" href="style/style.css">
-    </head> 
-    <div class="topnav">
-        <div>
-            <a class="name" href="/"><p>Shahjehan (Shah) Solehria</p></a>
-            <h2 class="title">Cloud | DevOps | Data</h2>
-        </div>
-        <div>
-            <div id="menu-bar">
-                <div id="menu-buttons">
-                    <div class="dropdown">
-                        <button class="dropbtn">Experience</button>
-                        <div class="dropdown-content">
-                            <a href="/rivermeadow">Migration Engineer</a>
-                            <a href="/seniorsystemsadmin">Senior IS Network Admin</a>
-                            <a href="/i-sightII">Systems Administrator</a>
-                            <a href="/i-sight">Junior Systems Admin</a>
-                        </div>
-                    </div>
-                    <div class="dropdown">
-                        <button class="dropbtn">Projects</button>
-                        <div class="dropdown-content">
-                            <a href="/fastapi">FastAPI Server</a>
-                            <a href="/geolocate">Geo Location App</a>
-                            <a href="/selfie">Selfie App</a>
-                            <a href="/shahgpt">ChatGPT Clone</a>
-                        </div>
-                    </div>
-                    <button onclick="highlightButton(this)" class="menu"><a href="/education">Education</a></button>
-                    <button onclick="highlightButton(this)" class="menu"><a href="/skills">Skills</a></button>
-                    <button onclick="highlightButton(this)" class="menu"><a href="/contactpage">Contact</a></button>
-                    <button onclick="highlightButton(this)" class="menu"><a href="Shah_Solehria_Resume.pdf" target="_blank">Resume</a></button>
-                </div>
-            </div>
-        </div>
-        <div class="ham">
-            <button class="hamburger-menu">            
-                <div class="hamburger-line"></div>
-                <div class="hamburger-line"></div>
-                <div class="hamburger-line"></div>
-            </button>
-        </div>
-        <script src="js/hamburger.js"></script>
-    </div>
-    <div class="workexp">
-        <div class="workexpc">
-            <h1>Senior IS Network Administrator (Electrameccanica)</h1>
-            <ul>
-                <li>
-                    ❖ Engineered windows migrations by: preparing landing zone infrastructure (Azure), configuring Hyper-V disks with PowerShell, handled Windows Server DNS, performed dependency analysis with Azure migrate, performed failover testing, & secured the entire process with Veeam backups.
-                </li>
-                <li>
-                    ❖ Quickly learned physical setup, CLI configuration, & console management of Fortinet FortiGate firewalls, & designed a plan for SDWAN built on top of existing ADVPN Dynamic VPN tunneling.
-                </li>
-                <li>
-                    ❖ Assumed responsibility over Linux based Zscaler application including updating, patching, & troubleshooting issues (successfully resolved a site wide outage).
-                </li>
-            </ul>
-        </div>
-    </div>
-    <br></br>
-    <br></br>
-    <br></br>
-    <div class="latnew"><h1>Quick Links</h1></div>
-    <br></br>
-    <div class="features1">
-        <div class="features-in">
-            <div class="fea-item1">
-                <a href="/selfie">
-                    <img style='height: 100%; width: 100%; object-fit: contain' src="image/active.jpg" width="343"
-                        height="300" alt="nodeJS and neDB Selfie App" />
-                </a>
-                <div class="fea-1"><h3>nodeJS and neDB Selfie App</h3></div>
-            </div>
-            <div class="fea-item2">
-                <a href="/i-sightII">
-                    <img style='height: 100%; width: 100%; object-fit: contain' src="image/cons.png" width="343"
-                        height="300" alt="Systems Administrator" />
-                </a>
-                <div class="fea-1"><h3>Exp: Systems Administrator</h3></div>
-            </div>
-            <div class="fea-item3">
-                <a href="/contactpage">
-                    <img style='height: 100%; width: 100%; object-fit: contain' src="image/contact.png" width="343"
-                        height="300" alt="Contact Me" />
-                </a>
-                <div class="fea-1"><h3>Contact Me</h3></div>
-            </div>
-        </div>
-    </div>
-    <br></br>
-    <br></br>
-    <br></br>
-    <br></br>
-    <br></br>
-    <br></br>
-    <br></br>
-    <div class="footer">
-        <a href="/"><button class="dropbtn">Home</button></a>
-        <div class="footmenu">
-            <a href="/skills"><button class="dropbtn">Skills</button></a>
-            <a href="/education"><button class="dropbtn">Education</button></a>
-            <a href="/contactpage"><button class="dropbtn">Contact Me</button></a>
-        </div>
-    </div>
-    </html>
-    `;
-    res.send(modifiedHTML);
-});
-app.get('/skills', (req, res) => {
-    const modifiedHTML = `
-    <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Skill | Project Work</title>
-        <link rel="stylesheet" href="style/style.css">
-    </head>
-    <div class="topnav">
-        <div>
-            <a class="name" href="/"><p>Shahjehan (Shah) Solehria</p></a>
-            <h2 class="title">Cloud | DevOps | Data</h2>
-        </div>
-        <div>
-            <div id="menu-bar">
-                <div id="menu-buttons">
-                    <div class="dropdown">
-                        <button class="dropbtn">Experience</button>
-                        <div class="dropdown-content">
-                            <a href="/rivermeadow">Migration Engineer</a>
-                            <a href="/seniorsystemsadmin">Senior IS Network Admin</a>
-                            <a href="/i-sightII">Systems Administrator</a>
-                            <a href="/i-sight">Junior Systems Admin</a>
-                        </div>
-                    </div>
-                    <div class="dropdown">
-                        <button class="dropbtn">Projects</button>
-                        <div class="dropdown-content">
-                            <a href="/fastapi">FastAPI Server</a>
-                            <a href="/geolocate">Geo Location App</a>
-                            <a href="/selfie">Selfie App</a>
-                            <a href="/shahgpt">ChatGPT Clone</a>
-                        </div>
-                    </div>
-                    <button onclick="highlightButton(this)" class="menu"><a href="/education">Education</a></button>
-                    <button onclick="highlightButton(this)" class="menu"><a href="/skills">Skills</a></button>
-                    <button onclick="highlightButton(this)" class="menu"><a href="/contactpage">Contact</a></button>
-                    <button onclick="highlightButton(this)" class="menu"><a href="Shah_Solehria_Resume.pdf" target="_blank">Resume</a></button>
-                </div>
-            </div>
-        </div>
-        <div class="ham">
-            <button class="hamburger-menu">        
-                <div class="hamburger-line"></div>
-                <div class="hamburger-line"></div>
-                <div class="hamburger-line"></div>
-            </button>
-        </div>
-        <script src="js/hamburger.js"></script>
-    </div>
-    <div class="workexp">
-        <div class="workexpc">
-            <h1>Azure Cloud</h1>
-            <ul>
-                <li> Azure Kubernetes</li>
-                <li> Hub and Spoke Network design and deployment in Microsoft Azure</li>
-                <li> Applied knowledge of how to setup and use Troubleshooting tools like boot diagnostics, RUN Command,
-                    Azure Cloud Shell & Setup and Use of Monitoring</li>
-                <li> Peering, Site-to-Site VPN, Azure RDS, storage, & backups</li>
-                <li> Azure CLI automating deployments in Windows and Linux deployment servers along with integrations into
-                    build tools like Jenkins</li>
-                <li> Azure Migrations, Azure Image based deployment for linux and windows based systems, replica management
-                    for DR strategies</li>
-                <li> Strong networking experience: NIC, NSG, network peering, VNET, & subnets</li>
-                <li> Experience migrating Linux and Windows to Azure</li>
-                <li> Experience with AD automation, dynamic role assignments, users, & groups</li>
-            </ul>
-            <h1>AWS Cloud</h1>
-            <ul>
-                <li> Migrating on-prem systems to AWS cloud</li>
-                <li> Peering, Site-to-Site VPN, RDS, autoscaling, load balancing, & networking</li>
-                <li> Strategic understanding of network design to ensure adherence to security best practices and
-                    availability best practices</li>
-                <li> AWS CLI for build automation, changes, or data collection</li>
-                <li> Best practices for storage strategies, backups, availability, scalability, billing, security, and user
-                    IAM roles</li>
-                <li> AWS Kubernetes deployment experience</li>
-                <li> Lambda automation for S3, triggers to start operations, and storage lifecycle automation</li>
-                <li> Creating AMI and automating deployments using deployment scripts</li>
-                <li> Experience migrating Linux and Windows to AWS</li>
-            </ul>
-            <h1>Dev-Ops</h1>
-            <ul>
-                <li> Fully automated Vagrant VM deployments and configuration of VagrantFile</li>
-                <ul>
-                    <li>o Multi-VM Vagrantfile with provisioning via external bash files</li>
-                </ul>
-                <li> Automating the build of Java applications with bash scripting, Vagrantfile, GIT, Maven, and Apache
-                    Tomcat webserver deployments</li>
-                <ul>
-                    <li>o Memcached caching for MySQL and RabbitMQ for queueing</li>
-                    <li>o Nginx front end redirecting request from port 80 to 8080</li>
-                </ul>
-                <li> MySQL & PostgreSQL migrations/deployments using dump files, alembic, and ORM</li>
-                <li> Ansible deployment and automation experience for automating deployments</li>
-                <li> Deploying fully secure Python API with JWT authentication using SQLAlchemy & MySQL</li>
-                <li> Expert knowledge of Bash in Linux (loops, if logic, nested scripting, remote execution, dependency
-                    calls, scheduling, key creation, ssh, API Calls) and Batch files in Windows (robocopy, file
-                    manipulation, dependency calls, task scheduler, API calls)</li>
-                <li> Applied knowledge of Networking, ports, routing technologies, and firewalls in the context of a cloud
-                    and on prem environments</li>
-                <li> Creating images with Dockerfile, Hyper-V, VMWARE, EC2 Images, Windows Sysprep, along with best
-                    practices for storing images for security, version control, and ease of automated access during deploys
-                </li>
-                <li> Applied understanding of build tools like Maven, Jenkins, AWS CLI, Azure CLI, Cloud Formation, & AWS
-                    templates</li>
-                <li> Creating Docker microservices architecture, docker images, docker hub, building docker compose scripts,
-                    API automation, code testing</li>
-                <li> Built JAVA applications using Maven and deploy to Apache Tomcat Servers</li>
-            </ul>
-            <h1>Code</h1>
-            <ul>
-                <li> Full stack development of python API and Webserver with frameworks like FastAPI, Django, Flask, and
-                    Postgres</li>
-                <li> Understanding the implementation of Authentication via JWT tokens for FastAPI</li>
-                <li> Web UI design with Jinja2 templates</li>
-                <li> End to end Docker migration capabilities for python based API with technologies like Docker Compose,
-                    Docker Swarm, Docker file images, Nginx reverse proxy, and automatic dependency install</li>
-                <li> Hands on experience with validation and testing of python code and databases with assert</li>
-                <li> Automated push and pull to GitHub using git and key based authentication</li>
-                <li> Automated full stack deployments with batch scripting on windows, bash scripting on Linux, Vagrantfile
-                    Ruby scripts</li>
-                <li> Intermediate applied knowledge of autoscaling techniques in AWS, Azure, Docker Swarm, Docker Compose
-                </li>
-                <li> Applied expertise in the best practices for using environmental variables to ensure security, validity,
-                    and flexibility of deployments and code storage</li>
-                <li> Know how to plan security of at rest user data by hashing user data like passwords</li>
-                <li> Managing Python deployments within the context of a virtual environment</li>
-                <li> Automated creation and migration of database to PostgreSQL using Python models and Alembic</li>
-                <li> Experience working with JAVA and Nodejs applications in an enterprise SAAS company environment</li>
-                <li> JAVA, JSP, Servlets, JDBC, J2EE, configuring JVM, JRE config, & deploying JAVA apps</li>
-                <li> Experience building JAVA apps, connecting to database, authentication, cookies</li>
-                <li> Solid skills in HTML, CSS, and JavaScript</li>
-                <li> Extensive experience using ChatGPT API, built a ChatGPT Clone, & skilled at ChatGPT querying to solve
-                    code problems</li>
-            </ul>
-        </div>
-    </div>
-    <br></br>
-    <br></br>
-    <br></br>
-    <br></br>
-    <br></br>
-    <br></br>
-    <div class="latnew"><h1>Quick Links</h1></div>
-    <br></br>
-    <div class="features1">
-        <div class="features-in">
-            <div class="fea-item1">
-                <a href="/">
-                    <img style='height: 100%; width: 100%; object-fit: contain' src="image/sum.png" width="343" height="300"
-                        alt="Skills" />
-                </a>
-                <div class="fea-1"><h3>Professional Summary</h3></div>
-            </div>
-            <div class="fea-item2">
-                <a href="/education">
-                    <img style='height: 100%; width: 100%; object-fit: contain' src="image/privcloud.png" width="343"
-                        height="300" alt="Education" />
-                </a>
-                <div class="fea-1"><h3>Education</h3></div>
-            </div>
-            <div class="fea-item3">
-                <a href="/contactpage">
-                    <img style='height: 100%; width: 100%; object-fit: contain' src="image/contact.png" width="343"
-                        height="300" alt="Contact Me" />
-                </a>
-                <div class="fea-1"><h3>Contact Me</h3></div>
-            </div>
-        </div>
-    </div>
-    <br></br>
-    <br></br>
-    <br></br>
-    <br></br>
-    <br></br>
-    <br></br>
-    <br></br>
-    <div class="footer">
-        <a href="/"><button class="dropbtn">Home</button></a>
-        <div class="footmenu">
-            <a href="/skills"><button class="dropbtn">Skills</button></a>
-            <a href="/education"><button class="dropbtn">Education</button></a>
-            <a href="/contactpage"><button class="dropbtn">Contact Me</button></a>
-        </div>
-    </div>
-    </html>
-    `;
-    res.send(modifiedHTML);
-});
 app.get('/data', (req, res) => {
     const modifiedHTML = `
     <html lang="en">
@@ -1460,15 +764,6 @@ app.get('/data', (req, res) => {
             <div id="menu-bar">
                 <div id="menu-buttons">
                     <div class="dropdown">
-                        <button class="dropbtn">Experience</button>
-                        <div class="dropdown-content">
-                            <a href="/rivermeadow">Migration Engineer</a>
-                            <a href="/seniorsystemsadmin">Senior IS Network Admin</a>
-                            <a href="/i-sightII">Systems Administrator</a>
-                            <a href="/i-sight">Junior Systems Admin</a>
-                        </div>
-                    </div>
-                    <div class="dropdown">
                         <button class="dropbtn">Projects</button>
                         <div class="dropdown-content">
                             <a href="/fastapi">FastAPI Server</a>
@@ -1477,8 +772,6 @@ app.get('/data', (req, res) => {
                             <a href="/shahgpt">ChatGPT Clone</a>
                         </div>
                     </div>
-                    <button onclick="highlightButton(this)" class="menu"><a href="/education">Education</a></button>
-                    <button onclick="highlightButton(this)" class="menu"><a href="/skills">Skills</a></button>
                     <button onclick="highlightButton(this)" class="menu"><a href="/contactpage">Contact</a></button>
                     <button onclick="highlightButton(this)" class="menu"><a href="Shah_Solehria_Resume.pdf" target="_blank">Resume</a></button>
                 </div>
