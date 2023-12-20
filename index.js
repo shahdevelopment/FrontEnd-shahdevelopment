@@ -470,16 +470,15 @@ app.get('/', (req, res) => {
     <br></br>
     <div class="latnew">
         <h1>Site CI/CD & Security Evolution</h1>
-        <br></br>
+
         <p>Project began with a simple static HTML, CSS, & JS site originally deployed on GitHub pages. Today the site is full CI/CD, KOPS Infrastructure as Code (IaC), microservices Kubernetes (K8s) deployment in AWS cloud!</p>
-        <br></br>
+
         <p>Major revisions have been categorized into three categories:</p>
         <ul>
             <li>Web Development</li>
             <li>Site Reliability Engineering</li>
             <li>DevOps Engineering / Automation</li>
         </ul>
-        <br></br>
 
         <h2>Web Development</h2>
         <p>Portfolio site notable features include:</p>
@@ -491,57 +490,47 @@ app.get('/', (req, res) => {
             <li>A geolocation API integration with GCP Maps API.</li>
             <li>ChatGPT clone using the ChatGPT API.</li>
         </ul>
-        <br></br>
 
         <p>The application is containerized in Docker runtime with separate containers for the frontend and backend. To bolster security, keys are relocated to the backend Node server (facilitating frontend API calls). Docker images are archived on Docker Hub. Code is optimized for GitHub by concealing passwords & usernames for enhanced at-rest code security.</p>
-        <br></br>
 
         <h2>Site Reliability Engineering</h2>
 
         <p>Installed and setup a Jenkins server and automated the deployment pipeline from GitHub commit to Kubernetes cluster deployment on AWS cloud; This includes a multi-stage Jenkinsfile, local SonarQube server for code testing, Docker image builds, local container execution/ testing, build notifications on Slack, & image push to Docker Hub. Passwords and usernames are securely stored in Jenkins.</p>
-        <br></br>
 
         <p>The application was adapted for Kubernetes with manually crafted definition files. Infrastructure as Code (IaC) AWS backend for the Kubernetes cluster was developed using KOPS in AWS.</p>
-        <br></br>
 
         <p>Code and Jenkinsfile are updated and pushed to GitHub this triggers the Jenkins build.</p>
-        <br></br>
 
         <h2>DevOps Engineering / Automation</h2>
 
         <p>CI/CD pipeline script in Jenkins pipeline script (Jenkinsfile) involves workspace cleanup, code testing in SonarQube server, GitHub Code Pull, Docker image build, container execution/ testing on Jenkins slave, JS path operation validation, image push to Docker Hub, & Kubernetes build with Helm.</p>
-        <br></br>
 
         <p>The live site is optimized for costs using KOPS (IaC) deployment in AWS that enables scaling of instances to zero when not in use, & scaling instances to default levels (Creates master & slave EC2 instances & updates DNS).</p>
-        <br></br>
 
         <h2>Security</h2>
 
-        <p>The code maintains parameterized variables for at-rest code security applicable to:</p>
+        <p>The code maintains parameterized variables that are pulled and parsed from the builds centralized Jenkins multi line string object/file that protects at-rest code for:</p>
         <ul>
             <li>Dockerfiles</li>
-            <li>JS files</li>
             <li>Jenkinsfiles (Groovy)</li>
             <li>Helm</li>
             <li>Kubernetes secrets</li>
         </ul>
-        <br></br>
+
+        <p>JS programs parameterize and secure code by pulling variable values from container envrionment variables.</p>
 
         <p>Also, there is proxy security over the web with Nginx Ingress Controller (AWS ELB) http origin security, redirects, & SSL.</p>
-        
-        </br>
-        </br>
         </br>
         </br>
         </br>
         </br>
 
-        <h2>Site Overview</h2>
+        <h1>Site Overview</h1>
         <p>On the top right of the page is a hamburger menu used to navigate the site:</p>
         <ul>
-            <li>Projects: Selfie App, Geolocation App, ChatGPT App, & my FastAPI App.<li>
-            <li>Resume: Download a PDF copy of my resume to your screen.<li>
-            <li>Contact: Links to my communication platforms.<li>
+            <li>Projects: Selfie App, Geolocation App, ChatGPT App, & my FastAPI App.</li>
+            <li>Resume: Download a PDF copy of my resume to your screen.</li>
+            <li>Contact: Links to my communication platforms.</li>
         </ul>
         </br>
         </br>
