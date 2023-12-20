@@ -65,7 +65,7 @@ app.get('/geolocate', (req, res) => {
     <div class="topnav">
         <div>
             <a class="name" href="/">
-                <p>Shahjehan (Shah) Solehria</p>
+                <p>Shah Solehria</p>
             </a>
             <h2 class="title">Cloud | DevOps | Data</h2>
         </div>
@@ -181,7 +181,7 @@ app.get('/contactpage', (req, res) => {
     </head>
     <div class="topnav">
         <div>
-            <a class="name" href="/"><p>Shahjehan (Shah) Solehria</p></a>
+            <a class="name" href="/"><p>Shah Solehria</p></a>
             <h2 class="title">Cloud | DevOps | Data</h2>
         </div>
         <div>
@@ -301,7 +301,7 @@ app.get('/fastapi', (req, res) => {
     </head>
     <div class="topnav">
         <div>
-            <a class="name" href="/"><p>Shahjehan (Shah) Solehria</p></a>
+            <a class="name" href="/"><p>Shah Solehria</p></a>
             <h2 class="title">Cloud | DevOps | Data</h2>
         </div>
         <div>
@@ -449,21 +449,11 @@ app.get('/', (req, res) => {
         <div class="pictcont"><div class="shahcont"><h2>Cloud | DevOps | Data</h2></div></div>
         <div class="secdiv">
             <h1>Abstract</h1>
-            <p>
-                Experienced technology
-                professional proficient in
-                maintaining, developing, and
-                managing full-stack multi-tier SAAS
-                applications. Skilled in automating
-                SDLC for enhanced efficiency,
-                flexibility, and security. Excels at
-                overseeing change management and
-                optimizing performance. Strong
-                expertise in designing secure
-                infrastructures. Collaborative and
-                committed to delivering high-quality
-                results.
-            </p>
+            <p>Software Engineeer proficient with full-stack SAAS applications written in Python, Java, or JavaScript. Subject matter expert in "DevOps" & "Site Reliability Engineering" at enterprise scale!</p>
+
+            <p>Excels at overseeing change management, optimizing performance, designing secure infrastructure.</p>
+            
+            <p>Committed to delivering high-quality & timely results.</p>
             <div class="btn-shadow"><a href="/contactpage" class="btn">Reach Out</a></div>
         </div>
     </div>
@@ -520,10 +510,6 @@ app.get('/', (req, res) => {
         <p>JS programs parameterize and secure code by pulling variable values from container envrionment variables.</p>
 
         <p>Also, there is proxy security over the web with Nginx Ingress Controller (AWS ELB) http origin security, redirects, & SSL.</p>
-        </br>
-        </br>
-        </br>
-        </br>
 
         <h1>Site Overview</h1>
         <p>On the top right of the page is a hamburger menu used to navigate the site:</p>
@@ -605,14 +591,8 @@ app.get('/', (req, res) => {
         <div id="dotsContainer"></div>
     </div>
     <script src="js/myScript.js"></script>
-    <br />
-    <br />
-    <br />
-    <br />
     <br></br>
-    <br></br>
-    <br></br>
-    <br></br>
+
     <div class="latnew"><h1>Quick Links</h1></div>
     <div class="features1">
         <div class="features-in">
@@ -667,7 +647,7 @@ app.get('/selfie', (req, res) => {
     </head>
     <div class="topnav">
         <div>
-            <a class="name" href="/"><p>Shahjehan (Shah) Solehria</p></a>
+            <a class="name" href="/"><p>Shah Solehria</p></a>
             <h2 class="title">Dev-Ops | Cloud | Security | Software</h2>
         </div>
         <div>
@@ -747,7 +727,7 @@ app.get('/data', (req, res) => {
     </head>
     <div class="topnav">
         <div>
-            <a class="name" href="/"><p>Shahjehan (Shah) Solehria</p></a>
+            <a class="name" href="/"><p>Shah Solehria</p></a>
             <h2 class="title">Cloud | DevOps | Data</h2>
         </div>
         <div>
