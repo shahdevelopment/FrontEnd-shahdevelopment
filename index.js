@@ -449,7 +449,7 @@ app.get('/', (req, res) => {
         <div class="pictcont"><div class="shahcont"><h2>Cloud | DevOps | Data</h2></div></div>
         <div class="secdiv">
             <h1>Abstract</h1>
-            <p>Software Engineeer proficient with full-stack SAAS applications written in Python, Java, or JavaScript. Subject matter expert in "DevOps" & "Site Reliability Engineering" at enterprise scale!</p>
+            <p>Software Engineer proficient with full-stack SAAS applications written in Python, Java, or JavaScript. Subject matter expert in "DevOps" & "Site Reliability Engineering" at enterprise scale!</p>
 
             <p>Excels at overseeing change management, optimizing performance, designing secure infrastructure.</p>
             
