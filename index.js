@@ -449,7 +449,7 @@ app.get('/', (req, res) => {
     <div class="bodymain">
         <div class="pictcont">
             <div class="shahcont">
-                <img style='height: 100%; width: 100%; object-fit: contain' src="image shah.jpg" width="343" height="300" alt="Contact Me" />
+                <img style='height: 100%; width: 100%; object-fit: contain' src="image/shah.jpg" width="343" height="300" alt="Contact Me" />
             </div>
         </div>
         <div class="secdiv">
