@@ -416,7 +416,8 @@ app.get('/', (req, res) => {
     </head>
     <div class="topnav">
         <div>
-            <a class="name" href="/"><p>Shah Solehria's Web Portfolio</p></a>
+            <a class="name" href="/"><p>Shah Solehria</p></a>
+            <h2 class="title">Cloud | DevOps | Data</h2>
         </div>
         <div>
             <div id="menu-bar">
@@ -446,7 +447,11 @@ app.get('/', (req, res) => {
     </div>
     <body>
     <div class="bodymain">
-        <div class="pictcont"><div class="shahcont"><h2>Cloud | DevOps | Data</h2></div></div>
+        <div class="pictcont">
+            <div class="shahcont">
+                <img style='height: 100%; width: 100%; object-fit: contain' src="image shah.jpg" width="343" height="300" alt="Contact Me" />
+            </div>
+        </div>
         <div class="secdiv">
             <h1>Abstract</h1>
             <p>Software Engineer proficient with full-stack SAAS applications written in Python, Java, or JavaScript. Subject matter expert in "DevOps" & "Site Reliability Engineering" at enterprise scale!</p>
@@ -468,6 +473,7 @@ app.get('/', (req, res) => {
             <li>Web Development</li>
             <li>Site Reliability Engineering</li>
             <li>DevOps Engineering / Automation</li>
+            <li>Security</li>
         </ul>
 
         <h2>Web Development</h2>
@@ -604,18 +610,18 @@ app.get('/', (req, res) => {
                 <div class="fea-1"><h3>Contact Me</h3></div>
             </div>
             <div class="fea-item2">
-                <a href="/education">
-                    <img style='height: 100%; width: 100%; object-fit: contain' src="image/comp5.png" alt="Education"
+                <a href="/geolocate">
+                    <img style='height: 100%; width: 100%; object-fit: contain' src="image/abc.jpg" alt="Geo Location App"
                         class=feature />
                 </a>
-                <div class="fea-1"><h3>Education</h3></div>
+                <div class="fea-1"><h3>Geo Location App</h3></div>
             </div>
             <div class="fea-item3">
                 <a href="/selfie">
                     <img style='height: 100%; width: 100%; object-fit: contain' src="image/active.jpg"
                         alt="Selfie App" class=feature />
                 </a>
-                <div class="fea-1"><h3>nodeJS and neDB Selfie App</h3></div>
+                <div class="fea-1"><h3>Selfie App</h3></div>
             </div>
         </div>
     </div>
@@ -625,9 +631,9 @@ app.get('/', (req, res) => {
     </body>
     <div class="footer">
         <div class="footmenu">
-            <a href="/skills"><button class="dropbtn">Skills</button></a>
-            <a href="/education"><button class="dropbtn">Education</button></a>
-            <a href="/contactpage"><button class="dropbtn">Contact Me</button></a>
+            <a href="mailto:shahjehan-solehria@hotmail.com"><button><img style='height: 100%; width: 100%; object-fit: contain' src="image/outlook.png"/></button></a>
+            <a href="https://github.com/shahdevelopment/"><button><img style='height: 100%; width: 100%; object-fit: contain' src="image/github.png"/></button></a>
+            <a href="https://fastapi-shah.herokuapp.com/docs"><button><img style='height: 100%; width: 100%; object-fit: contain' src="image/fastapi.png"/></button></a>
         </div>
     </div>
     </html>
@@ -648,7 +654,7 @@ app.get('/selfie', (req, res) => {
     <div class="topnav">
         <div>
             <a class="name" href="/"><p>Shah Solehria</p></a>
-            <h2 class="title">Dev-Ops | Cloud | Security | Software</h2>
+            <h2 class="title">Cloud | DevOps | Data</h2>
         </div>
         <div>
             <div id="menu-bar">
