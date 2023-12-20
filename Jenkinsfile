@@ -6,13 +6,8 @@ def COLOR_MAP = [
     'SUCCESS': 'good', 
     'FAILURE': 'danger',
 ]
-// ------------------------ Good for PI
 pipeline {
     agent {label 'ansible'}
-    // options {
-    //     Reuse the workspace from previous builds
-    //     ws("/opt/jenkins-slave/workspace/profile-site-build")
-    // }
     environment {
         // Docker Registry Info
         registry_front = ""
@@ -79,28 +74,8 @@ pipeline {
         slack_devops = ""
         slack_cluster = ""
     }
-    // ------------------------ Good for PI
     options { skipDefaultCheckout() }
     stages {
-        // stage('Cluster-Delete') {
-        //     steps {
-        //         dir("${k8}") {
-        //             script {
-        //                 sh '''
-        //                     echo ----------//---------------------//---------------------------
-        //                     echo ----------//---------------------//---------------------------
-        //                     echo "Deleting Deployment........."
-        //                 '''
-        //                 sh """
-        //                     set +e
-        //                     kops delete cluster --region=${awsregion} --config=${config} --name ${kubecluster} --state=${s3bucket} --yes && sleep 30
-        //                     set -e
-        //                 """
-        //             }
-        //         }
-        //     }
-        // }
-        // ------------------------ Good for PI
         stage('File Param WA') {
             steps {
                 cleanWs()

@@ -6,13 +6,8 @@ def COLOR_MAP = [
     'SUCCESS': 'good', 
     'FAILURE': 'danger',
 ]
-// ------------------------ Good for PI
 pipeline {
     agent {label 'ansible'}
-    // options {
-    //     Reuse the workspace from previous builds
-    //     ws("/opt/jenkins-slave/workspace/profile-site-build")
-    // }
     environment {
         // Docker Registry Info
         registry_front = ""
