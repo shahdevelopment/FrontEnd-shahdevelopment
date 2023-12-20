@@ -631,9 +631,9 @@ app.get('/', (req, res) => {
     </body>
     <div class="footer">
         <div class="footmenu">
-            <a href="mailto:shahjehan-solehria@hotmail.com"><button><img style='height: 100%; width: 100%; object-fit: contain' src="image/outlook.png"/></button></a>
-            <a href="https://github.com/shahdevelopment/"><button><img style='height: 100%; width: 100%; object-fit: contain' src="image/github.png"/></button></a>
-            <a href="https://fastapi-shah.herokuapp.com/docs"><button><img style='height: 100%; width: 100%; object-fit: contain' src="image/fastapi.png"/></button></a>
+            <a href="mailto:shahjehan-solehria@hotmail.com"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/outlook.png"/></button></a>
+            <a href="https://github.com/shahdevelopment/"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/github.png"/></button></a>
+            <a href="https://fastapi-shah.herokuapp.com/docs"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/fastapi.png"/></button></a>
         </div>
     </div>
     </html>
