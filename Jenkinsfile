@@ -79,7 +79,6 @@ pipeline {
         slack_devops = ""
         slack_cluster = ""
     }
-    // ------------------------ Good for PI
     options { skipDefaultCheckout() }
     stages {
         stage('File Param WA') {
@@ -229,6 +228,5 @@ pipeline {
                 }
             }
         }
-        // ------------------------ Good for PI
     }
 }
