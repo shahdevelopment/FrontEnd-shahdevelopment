@@ -99,7 +99,7 @@ app.get('/geolocate', (req, res) => {
     <body>
         <div class="geoSelfie">
             <div class="geobuttonDiv">
-                <h1>nodeJS and neDB Selfie App</h1>
+                <h1>Location API w/ GCP Google Maps Integration</h1>
                 <br />
                 <br />
                 <button id="locate">Locate me</button>
@@ -617,10 +617,11 @@ app.get('/', (req, res) => {
     <div class="features1">
         <div class="features-in">
             <div class="fea-item1">
-                <a href="/skills">
-                    <img style='height: 100%; width: 100%; object-fit: contain' src="image/det.jpg" alt="Skills" />
+                <a href="/contactpage">
+                    <img style='height: 100%; width: 100%; object-fit: contain' src="image/contact.png" width="343"
+                        height="300" alt="Contact Me" />
                 </a>
-                <div class="fea-1"><h3>Skills</h3></div>
+                <div class="fea-1"><h3>Contact Me</h3></div>
             </div>
             <div class="fea-item2">
                 <a href="/education">
@@ -632,7 +633,7 @@ app.get('/', (req, res) => {
             <div class="fea-item3">
                 <a href="/selfie">
                     <img style='height: 100%; width: 100%; object-fit: contain' src="image/active.jpg"
-                        alt="nodeJS and neDB Selfie App" class=feature />
+                        alt="Selfie App" class=feature />
                 </a>
                 <div class="fea-1"><h3>nodeJS and neDB Selfie App</h3></div>
             </div>
