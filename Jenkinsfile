@@ -191,9 +191,9 @@ pipeline {
                         sh """
                             echo "------------------------------------"
                             echo "------------------------------------"
-                            set +e
 
                             kops edit ig ${n1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set="spec.maxSize=0"
+                            set +e
                             kops edit ig ${n1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set="spec.minSize=0"
                             echo "------------------------------------"
 
@@ -203,9 +203,9 @@ pipeline {
 
                             kops edit ig ${m1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set="spec.maxSize=0"
                             kops edit ig ${m1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set="spec.minSize=0"
+
                             kops update cluster --config=${config} --name=${kubecluster} --state=${s3bucket} --yes --admin
                             set -e
-                            echo "------------------------------------"
                         """
                     }
                 }
