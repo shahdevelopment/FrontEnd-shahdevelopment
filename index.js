@@ -125,9 +125,9 @@ app.get('/geolocate', (req, res) => {
     <div class="footer">
         <a href="/"><button class="dropbtn">Home</button></a>
         <div class="footmenu">
-            <a href="/skills"><button class="dropbtn">Skills</button></a>
-            <a href="/education"><button class="dropbtn">Education</button></a>
-            <a href="/contactpage"><button class="dropbtn">Contact Me</button></a>
+            <a href="mailto:shahjehan-solehria@hotmail.com"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/outlook.png"/></button></a>
+            <a href="https://github.com/shahdevelopment/"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/github.png"/></button></a>
+            <a href="https://fastapi-shah.herokuapp.com/docs"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/fastapi.png"/></button></a>
         </div>
     </div>
     </html>
@@ -281,9 +281,9 @@ app.get('/contactpage', (req, res) => {
     <div class="footer">
         <a href="/"><button class="dropbtn">Home</button></a>
         <div class="footmenu">
-            <a href="/skills"><button class="dropbtn">Skills</button></a>
-            <a href="/education"><button class="dropbtn">Education</button></a>
-            <a href="/contactpage"><button class="dropbtn">Contact Me</button></a>
+            <a href="mailto:shahjehan-solehria@hotmail.com"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/outlook.png"/></button></a>
+            <a href="https://github.com/shahdevelopment/"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/github.png"/></button></a>
+            <a href="https://fastapi-shah.herokuapp.com/docs"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/fastapi.png"/></button></a>
         </div>
     </div>
     </html>
@@ -396,9 +396,9 @@ app.get('/fastapi', (req, res) => {
     <div class="footer">
         <a href="/"><button class="dropbtn">Home</button></a>
         <div class="footmenu">
-            <a href="/skills"><button class="dropbtn">Skills</button></a>
-            <a href="/education"><button class="dropbtn">Education</button></a>
-            <a href="/contactpage"><button class="dropbtn">Contact Me</button></a>
+            <a href="mailto:shahjehan-solehria@hotmail.com"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/outlook.png"/></button></a>
+            <a href="https://github.com/shahdevelopment/"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/github.png"/></button></a>
+            <a href="https://fastapi-shah.herokuapp.com/docs"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/fastapi.png"/></button></a>
         </div>
     </div>
     </html>
@@ -449,7 +449,7 @@ app.get('/', (req, res) => {
     <div class="bodymain">
         <div class="pictcont">
             <div class="shahcont">
-                <img style='height: 100%; width: 100%; object-fit: contain' src="image/shah.jpg" width="343" height="300" alt="Contact Me" />
+                <img src="image/shah.jpg" width="343" height="300" />
             </div>
         </div>
         <div class="secdiv">
@@ -713,9 +713,9 @@ app.get('/selfie', (req, res) => {
     <div class="footer">
         <a href="/"><button class="dropbtn">Home</button></a>
         <div class="footmenu">
-            <a href="/skills"><button class="dropbtn">Skills</button></a>
-            <a href="/education"><button class="dropbtn">Education</button></a>
-            <a href="/contactpage"><button class="dropbtn">Contact Me</button></a>
+            <a href="mailto:shahjehan-solehria@hotmail.com"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/outlook.png"/></button></a>
+            <a href="https://github.com/shahdevelopment/"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/github.png"/></button></a>
+            <a href="https://fastapi-shah.herokuapp.com/docs"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/fastapi.png"/></button></a>
         </div>
     </div>
     </html>
@@ -775,10 +775,10 @@ app.get('/data', (req, res) => {
     <div class="footer">
         <a href="/"><button class="dropbtn">Home</button></a>
         <div class="footmenu">
-            <a href="/skills"><button class="dropbtn">Skills</button></a>
-            <a href="/education"><button class="dropbtn">Education</button></a>
-            <a href="/contactpage"><button class="dropbtn">Contact Me</button></a>
-        </div>
+            <a href="mailto:shahjehan-solehria@hotmail.com"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/outlook.png"/></button></a>
+            <a href="https://github.com/shahdevelopment/"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/github.png"/></button></a>
+            <a href="https://fastapi-shah.herokuapp.com/docs"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/fastapi.png"/></button></a>
+    </div>
     </div>
     </html>
 `;
