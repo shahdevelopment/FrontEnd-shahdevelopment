@@ -189,7 +189,7 @@ pipeline {
                 dir("${k8}") {
                     script {
                         sh """
-                            echo "------------------------------------"
+                            echo "------------------------------------>"
                             echo "------------------------------------"
 
                             kops edit ig ${n1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set="spec.maxSize=0"
