@@ -449,7 +449,7 @@ app.get('/', (req, res) => {
     <div class="bodymain">
         <div class="pictcont">
             <div class="shahcont">
-                <img src="image/shah.jpg" width="343" height="300" />
+                <img src="image/shah.jpg" />
             </div>
         </div>
         <div class="secdiv">
