@@ -190,16 +190,24 @@ pipeline {
                     retry(4) {
                         script {
                             sh """
+                                echo "------------------------------------"
                                 kops edit ig ${n1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set="spec.maxSize=0"
+                                sleep 3
                                 kops edit ig ${n1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set="spec.minSize=0"
+                                sleep 3
                                 echo "------------------------------------"
 
                                 kops edit ig ${n2} --config=${config} --name=${kubecluster} --state=${s3bucket} --set="spec.maxSize=0"
+                                sleep 3
                                 kops edit ig ${n2} --config=${config} --name=${kubecluster} --state=${s3bucket} --set="spec.minSize=0"
+                                sleep 3
                                 echo "------------------------------------"
 
                                 kops edit ig ${m1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set="spec.maxSize=0"
+                                sleep 3
                                 kops edit ig ${m1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set="spec.minSize=0"
+                                sleep 3
+                                echo "------------------------------------"
                                 set +e
                                 kops update cluster --config=${config} --name=${kubecluster} --state=${s3bucket} --yes --admin
                                 set -e
@@ -213,7 +221,7 @@ pipeline {
                     echo '########## Cluster Scaled to 0 ##########'
                     slackSend channel: "${slack_cluster}",
                     color: COLOR_MAP[currentBuild.currentResult],
-                    message: "Cluster Scaled to Zero: *${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
+                    message: "Cluster Scale to Zero: *${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
                 }
             }
         }
