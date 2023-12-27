@@ -306,6 +306,8 @@ body {
   text-decoration-style: solid;
   margin: 0 auto;
   margin-bottom: 50;
+  background-color: #000000;
+  opacity: 0.6;
 }
 
 .logs {
@@ -702,6 +704,7 @@ body {
   flex-wrap: wrap;
   letter-spacing: 1px;
   font-weight: normal;
+  justify-content: space-between;
 }
 
 .features1 {

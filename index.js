@@ -217,7 +217,7 @@ app.get('/contactpage', (req, res) => {
                 <div class="features-in">
                     <div class="fea-item1">
                         <a href="mailto:shahjehan-solehria@hotmail.com" id="email">
-                            <img style='height: 100%; width: 100%; object-fit: contain' src="image/email.jpg" width="343"
+                            <img style='height: 100%; width: 100%; object-fit: contain' src="image/outlook.png" width="343"
                                 height="300" alt="Email Link" />
                         </a>
                         <div class="fea-1"><h3>Email</h3></div>
@@ -454,6 +454,7 @@ app.get('/', (req, res) => {
         </div>
         <div class="secdiv">
             <h1>Abstract</h1>
+            <p>Built first .NET web app seven years ago at British Columbia Institute of Technology (BCIT)!</p>
             <p>Software Engineer proficient with full-stack SAAS applications written in Python, Java, or JavaScript. Subject matter expert in "DevOps" & "Site Reliability Engineering" at enterprise scale!</p>
 
             <p>Excels at overseeing change management, optimizing performance, designing secure infrastructure.</p>
