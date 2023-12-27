@@ -189,7 +189,7 @@ pipeline {
                 dir("${k8}") {
                     script {
                         sh """
-                            echo "------------------------------------"
+                            echo "------------------------------------>"
                             echo "------------------------------------"
                             kops update cluster --config=${config} --name=${kubecluster} --state=${s3bucket} --yes --admin
                             echo "------------------------------------"
