@@ -295,19 +295,18 @@ body {
 .bodymain {
   background-image: url("../image/mountain2.jpg");
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   margin: 0 auto;
   flex-wrap: wrap;
+
 }
 
 .secdiv {
   max-width: 500px;
   color: white;
   text-decoration-style: solid;
-  margin: 0 auto;
+  margin: auto;
   margin-bottom: 50;
-  background-color: #000000;
-  opacity: 0.6;
 }
 
 .logs {
