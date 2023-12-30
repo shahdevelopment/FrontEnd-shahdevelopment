@@ -469,7 +469,7 @@ app.get('/', (req, res) => {
 
         <p>Project began with a simple static HTML, CSS, & JS site originally deployed on GitHub pages. Today the site is full CI/CD, KOPS Infrastructure as Code (IaC), microservices Kubernetes (K8s) deployment in AWS cloud!</p>
 
-        <p>Major revisions have been categorized into three categories:</p>
+        <p>Major revisions have been categorized into four categories:</p>
         <ul>
             <li>Web Development</li>
             <li>Site Reliability Engineering</li>

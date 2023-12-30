@@ -190,25 +190,25 @@ pipeline {
                     retry(4) {
                         script {
                             sh """
-                                echo "------------------------------------"
-                                kops edit ig ${n1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set="spec.maxSize=0"
+                                echo '------------------------------------'
+                                kops edit ig ${n1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set='spec.maxSize=0'
                                 set +e
                                 sleep 3
-                                kops edit ig ${n1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set="spec.minSize=0"
+                                kops edit ig ${n1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set='spec.minSize=0'
                                 sleep 3
-                                echo "------------------------------------"
+                                echo '------------------------------------'
 
-                                kops edit ig ${n2} --config=${config} --name=${kubecluster} --state=${s3bucket} --set="spec.maxSize=0"
+                                kops edit ig ${n2} --config=${config} --name=${kubecluster} --state=${s3bucket} --set='spec.maxSize=0'
                                 sleep 3
-                                kops edit ig ${n2} --config=${config} --name=${kubecluster} --state=${s3bucket} --set="spec.minSize=0"
+                                kops edit ig ${n2} --config=${config} --name=${kubecluster} --state=${s3bucket} --set='spec.minSize=0'
                                 sleep 3
-                                echo "------------------------------------"
+                                echo '------------------------------------'
 
-                                kops edit ig ${m1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set="spec.maxSize=0"
+                                kops edit ig ${m1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set='spec.maxSize=0'
                                 sleep 3
-                                kops edit ig ${m1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set="spec.minSize=0"
+                                kops edit ig ${m1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set='spec.minSize=0'
                                 sleep 3
-                                echo "------------------------------------"
+                                echo '------------------------------------'
                                 kops update cluster --config=${config} --name=${kubecluster} --state=${s3bucket} --yes --admin
                                 set -e
                             """
