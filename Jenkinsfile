@@ -5,7 +5,7 @@
 // Shah's Portfolio Web Application
 // ~
 // NPM | Node.JS | Kubernetes | AWS Cloud | Helm | Docker Hub | Jenkins | Sonarqube | GIT | GitHub | KOPS | Bash | Groovy | Slack | Linux Ubuntu | NEDB | Microservices Design
-// -------------------------------------------------------------- >>
+// -------------------------------------------------------------->>>
 def COLOR_MAP = [
     'SUCCESS': 'good', 
     'FAILURE': 'danger',
