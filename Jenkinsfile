@@ -200,9 +200,7 @@ pipeline {
                             echo "Deleting Deployment........."
                         '''
                         sh """
-                            set +e
-                            kops delete cluster --region=${awsregion} --config=${config} --name ${kubecluster} --state=${s3bucket} --yes && sleep 30
-                            set -e
+                            kops delete cluster --region=${awsregion} --config=${config} --name ${kubecluster} --state=${s3bucket} --yes && sleep  >> delete_log.txt
                         """
                         sh "echo ----------//---------------------//---------------------------"
                         sh "kops update cluster --config=${config} --name ${kubecluster} --state=${s3bucket} --yes --admin && sleep 2"
@@ -222,6 +220,7 @@ pipeline {
             post {
                 always {
                     echo '########## Cluster Deleted ##########'
+                    echo delete_log.txt
                     slackSend channel: "${slack_cluster}",
                     color: COLOR_MAP[currentBuild.currentResult],
                     message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
