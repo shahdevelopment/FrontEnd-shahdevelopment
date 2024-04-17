@@ -204,7 +204,27 @@ pipeline {
                             kops delete cluster --region=${awsregion} --config=${config} --name ${kubecluster} --state=${s3bucket} --yes && sleep 30
                             set -e
                         """
+                        sh "echo ----------//---------------------//---------------------------"
+                        sh "kops update cluster --config=${config} --name ${kubecluster} --state=${s3bucket} --yes --admin && sleep 2"
+                        sh "echo ----------//---------------------//---------------------------"
+                        sh """
+                            set +e
+                            kops validate cluster --config=${config} --name=${kubecluster} --state=${s3bucket} --wait 20m --count 5 && sleep 2
+                            set -e
+                        """
+                        sh '''
+                            echo ----------//---------------------//---------------------------
+                            echo ----------//---------------------//---------------------------
+                        '''
                     }
+                }
+            }
+            post {
+                always {
+                    echo '########## Cluster Deleted ##########'
+                    slackSend channel: "${slack_cluster}",
+                    color: COLOR_MAP[currentBuild.currentResult],
+                    message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
                 }
             }
         }
