@@ -11,7 +11,7 @@ function changeInput(value) {
 }
 
 async function getMessage() {
-    const baseUrl = 'https://k8-backend.shahdevelopment.tech/chat'
+    const baseUrl = 'https://k8-backend.shahsportfolio.online/chat'
 
     const res = await fetch(baseUrl,
         {

@@ -15,7 +15,7 @@ function setup() {
             },
             body: JSON.stringify(data)
         };
-        const response = await fetch('https://k8-backend.shahdevelopment.tech/api', options);
+        const response = await fetch('https://k8-backend.shahsportfolio.online/api', options);
         const json = await response.json();
         console.log(json);
         alert("Post Submitted!");
