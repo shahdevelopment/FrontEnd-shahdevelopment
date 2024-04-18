@@ -214,6 +214,14 @@ pipeline {
                     echo --------------------------------------------------------------------
                 '''
             }
+            post {
+                always {
+                    echo 'Slack Notifications.'
+                    slackSend channel: "${slack_devops}",
+                    color: COLOR_MAP[currentBuild.currentResult],
+                    message: "*System Check Completed with Result - ${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"                    
+                }
+            }            
         }
         // ------------------------ Good for PI
         stage('Clone Github Repos') {
@@ -248,7 +256,15 @@ pipeline {
                             }
                         }
                     }
-            }    
+            }
+            post {
+                always {
+                    echo 'Slack Notifications.'
+                    slackSend channel: "${slack_devops}",
+                    color: COLOR_MAP[currentBuild.currentResult],
+                    message: "*GitHub Repo Clone Step with Result - ${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"                    
+                }
+            }                
         }
         // ------------------------ Good for PI
         stage('Code Sonarqube Analysis') {
@@ -262,6 +278,14 @@ pipeline {
                         sh "sleep 1"
                         sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${backend}"
                     }
+                }
+            }
+            post {
+                always {
+                    echo 'Slack Notifications.'
+                    slackSend channel: "${slack_devops}",
+                    color: COLOR_MAP[currentBuild.currentResult],
+                    message: "*Sonarqube Code Analysis Step Result - ${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"                    
                 }
             }
         }
@@ -281,6 +305,15 @@ pipeline {
                     }
                 }    
             }
+            post {
+                always {
+                    echo 'Slack Notifications.'
+                    slackSend channel: "${slack_devops}",
+                    color: COLOR_MAP[currentBuild.currentResult],
+                    message: "*Dev Docker Build Step Result - ${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"                    
+                }
+            }
+
         }
         // ------------------------ Good for PI
         stage('Run Test Containers') {
@@ -295,6 +328,15 @@ pipeline {
                     sh 'sleep 5'
                 }
             }
+            post {
+                always {
+                    echo 'Slack Notifications.'
+                    slackSend channel: "${slack_devops}",
+                    color: COLOR_MAP[currentBuild.currentResult],
+                    message: "*Dev Docker Container Run Step Result - ${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"                    
+                }
+            }
+            
         }
         // ------------------------ PI Found ***************************************
         stage('Run Path Check on Test Containers') {
@@ -329,6 +371,10 @@ pipeline {
 
                         sh "docker rmi ${back_image} ${front_image}"
                     }
+                    echo 'Slack Notifications.'
+                    slackSend channel: "${slack_devops}",
+                    color: COLOR_MAP[currentBuild.currentResult],
+                    message: "*Path Check Step Complted with Result - ${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"                    
                 }
             }
         }
@@ -366,6 +412,10 @@ pipeline {
                     script {
                         sh "docker rmi ${back_image} ${front_image}"
                     }
+                    echo 'Slack Notifications.'
+                    slackSend channel: "${slack_devops}",
+                    color: COLOR_MAP[currentBuild.currentResult],
+                    message: "*Docker Build & Push Production Step Completed with Result - ${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
                 }
             }
         }
@@ -405,7 +455,7 @@ pipeline {
         //             echo '########## Cluster Health Notification ##########'
         //             slackSend channel: "${slack_cluster}",
         //             color: COLOR_MAP[currentBuild.currentResult],
-        //             message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
+        //             message: "*Cluster Scaled with Result - ${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
         //         }
         //     }
         // }
@@ -431,63 +481,6 @@ pipeline {
                             echo Cluster not running after 15m!
                         fi
                     '''
-                    sh '''
-                        echo '------------------------------------------------------------------'
-                        echo '------------------------------------------------------------------'
-                        set +x
-                        echo B                  
-                        echo B "                               ▓▓▓▓▒▒▒▒▒▒                      "
-                        echo B "                             ▓▓▓▓▒▒▒▒▒▒▓▓▒▒▓▓                  "
-                        echo B "                           ▓▓▓▓▓▓░░░░░░▓▓▓▓▓▓                  "
-                        echo B "                         ▓▓▓▓▓▓░░░░░░░░░░▓▓▓▓▓▓                "
-                        echo B "                         ▓▓▓▓░░░░░░░░░░░░▓▓▓▓▓▓                "
-                        echo B "                   ░░    ▓▓▓▓░░░░░░░░░░░░░░▓▓▓▓                "
-                        echo B "                   ░░░░  ▓▓▓▓░░░░░░░░░░░░░░▓▓▓▓▓▓              "
-                        echo B "                   ░░░░    ▓▓░░░░░░░░░░░░██▓▓▓▓▓▓              "
-                        echo B "                   ░░░░░░  ▓▓██░░░░░░░░▒▒██▓▓▓▓▓▓              "
-                        echo B "                     ░░░░  ▓▓▓▓██▒▒░░▒▒░░██▓▓▓▓                "
-                        echo B "                       ░░  ░░▓▓░░░░░░░░░░░░░░▓▓                "
-                        echo B "                       ░░  ▒▒░░░░░░░░░░░░░░▓▓░░░░              "
-                        echo B "                     ░░░░  ▒▒░░░░▒▒░░░░░░▓▓░░░░░░░░            "
-                        echo B "                     ░░░░▓▓░░░░▒▒░░░░░░▓▓░░░░░░░░░░            "
-                        echo B "                   ░░░░▒▒▓▓▒▒▓▓▓▓▓▓▓▓▓▓▓▓░░░░▒▒░░░░            "
-                        echo B "                   ░░░░▓▓▓▓▓▓▓▓░░▓▓▓▓▓▓▓▓▓▓░░  ░░░░            "
-                        echo B "                   ░░░░░░▓▓▓▓░░░░░░▓▓▓▓▓▓░░    ░░░░            "
-                        echo B "                   ░░░░░░  ░░░░░░░░░░░░░░      ░░░░            "
-                        echo B "                           ░░░░░░░░░░░░▒▒      ░░░░░░          "
-                        echo B "                           ░░░░░░░░░░░░░░░░      ░░░░░░        "
-                        echo B "                           ░░░░░░░░░░░░░░░░░░░     ░░░░░░      "
-                        echo B "                           ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓    ░░░░░░    "
-                        echo B "                           ▓▓▓▓▓▓░░░░░░░░░░░░░░▓▓    ░░░░    "
-                        echo B "                           ▓▓░░░░░░░░░░░░░░░░░░▒▒    ░░░░░░  "
-                        echo B "                           ░░░░░░░░░░░░░░░░░░░░░      ░░  ░░  "
-                        echo B "                           ░░░░░░░░░░░░░░░░░░         ░░    ░░"
-                        echo B "                         ░░░░░░░░░░░░░░░░░░                    "
-                        echo B "                       ░░░░░░░░░░░░░░░░░░░░                    "
-                        echo B "                       ░░░░░░░░░░░░░░░░░░░░                    "
-                        echo B "                     ░░░░░░░░░░░░░░░░░░░░░░                    "
-                        echo B "                   ░░░░░░░░░░░░░░░░░░░░░░░░                    "
-                        echo B "                 ░░░░░░░░░░░░░░░░░░░░░░░░░░                    "
-                        echo B "                 ░░░░░░░░░░░░░░░░░░░░░░░░    ░░░░              "
-                        echo B "                 ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░          "
-                        echo B "                   ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░      "
-                        echo B "                                 ░░░░░░░░                      "
-                        echo B "                                 ░░░░░░░░░░                    "
-                        echo B "                                 ░░░░░░░░░░                    "
-                        echo B "                                 ░░░░░░░░░░                    "
-                        echo B "                                   ░░░░░░░░                    "
-                        echo B "                                   ░░░░░░░░                    "
-                        echo B "                                   ░░░░░░                      "
-                        echo B "                                   ░░░░░░                      "
-                        echo B "                                   ░░░░░░                      "
-                        echo B "                                   ░░░░                        "
-                        echo B "                                   ░░░░                        "
-                        echo B "                                 ░░░░░░                        "
-                        echo B "                           ▒▒░░░░░░░░░░░░        "
-                        set -x
-                        echo "------------------------------------------------------------------"
-                        echo "------------------------------------------------------------------"
-                    '''
                 }
             }
             post {
@@ -495,7 +488,7 @@ pipeline {
                     echo 'Slack Notifications.'
                     slackSend channel: "${slack_devops}",
                     color: COLOR_MAP[currentBuild.currentResult],
-                    message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
+                    message: "*Build Completed with Result - ${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
                 }
             }
         }
