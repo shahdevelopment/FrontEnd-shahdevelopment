@@ -178,7 +178,7 @@ pipeline {
             post {
                 always {
                     echo '########## Build Status Notification ##########'
-                    slackSend channel: "${slack_devops}",
+                    slackSend channel: "${slack_cluster}",
                     color: COLOR_MAP[currentBuild.currentResult],
                     message: "Build Started: *${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
                 }
@@ -191,22 +191,22 @@ pipeline {
                         script {
                             sh """
                                 echo '------------------------------------'
-                                kops edit ig ${n1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set='spec.maxSize=0'
+                                kops edit ig nodes-us-west-1c --config=${config} --name=${kubecluster} --state=${s3bucket} --set='spec.maxSize=0'
                                 set +e
                                 sleep 3
-                                kops edit ig ${n1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set='spec.minSize=0'
+                                kops edit ig nodes-us-west-1c --config=${config} --name=${kubecluster} --state=${s3bucket} --set='spec.minSize=0'
                                 sleep 3
                                 echo '------------------------------------'
 
-                                kops edit ig ${n2} --config=${config} --name=${kubecluster} --state=${s3bucket} --set='spec.maxSize=0'
+                                kops edit ig nodes-us-west-1b --config=${config} --name=${kubecluster} --state=${s3bucket} --set='spec.maxSize=0'
                                 sleep 3
-                                kops edit ig ${n2} --config=${config} --name=${kubecluster} --state=${s3bucket} --set='spec.minSize=0'
+                                kops edit ig nodes-us-west-1b --config=${config} --name=${kubecluster} --state=${s3bucket} --set='spec.minSize=0'
                                 sleep 3
                                 echo '------------------------------------'
 
-                                kops edit ig ${m1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set='spec.maxSize=0'
+                                kops edit ig control-plane-us-west-1b --config=${config} --name=${kubecluster} --state=${s3bucket} --set='spec.maxSize=0'
                                 sleep 3
-                                kops edit ig ${m1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set='spec.minSize=0'
+                                kops edit ig control-plane-us-west-1b --config=${config} --name=${kubecluster} --state=${s3bucket} --set='spec.minSize=0'
                                 sleep 3
                                 echo '------------------------------------'
                                 kops update cluster --config=${config} --name=${kubecluster} --state=${s3bucket} --yes --admin
