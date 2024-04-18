@@ -1,4 +1,4 @@
-FROM node:21-alpine3.18
+FROM node:lts-alpine3.18
 # Set environment variables
 ARG map_key
 ENV api_key_new="$map_key"
