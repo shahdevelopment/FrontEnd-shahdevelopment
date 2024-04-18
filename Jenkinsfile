@@ -294,7 +294,7 @@ pipeline {
             steps {
                 dir("${frontend}") {
                     script {
-                        dockerImage = docker.build("${front_image}", "--build-arg maps_key=${api_maps_key} --build-arg ENVIRONMENT=dev  .")
+                        dockerImage = docker.build("${front_image}", "--build-arg maps_key=${api_maps_key} --build-arg ENVIRONMENT=dev .")
                         sh 'sleep 1'
                     }
                 }

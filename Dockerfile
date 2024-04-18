@@ -1,4 +1,4 @@
-FROM node:lts-alpine3.18
+FROM node
 # Set environment variables
 ARG map_key
 ENV api_key_new="$map_key"
@@ -7,9 +7,8 @@ WORKDIR /usr/src/app
 ARG ENVIRONMENT
 # Install deps
 # Install dependencies
-RUN apk update && \
-    apk add --no-cache ca-certificates && \
-    apk del --no-cache .build-deps
+RUN apt update
+RUN apt install ca-certificates && apt autoremove
 
 # RUN npm install
 # If you are building your code for production
