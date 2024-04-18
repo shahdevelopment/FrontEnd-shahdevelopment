@@ -186,7 +186,7 @@ pipeline {
                     echo '########## Build Status Notification ##########'
                     slackSend channel: "${slack_cluster}",
                     color: COLOR_MAP[currentBuild.currentResult],
-                    message: "Build Started: *${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
+                    message: "Cluster Create Started: *${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
                 }
             }
         }
