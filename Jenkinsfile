@@ -211,6 +211,7 @@ pipeline {
                                 echo '------------------------------------'
                                 kops update cluster --config=${config} --name=${kubecluster} --state=${s3bucket} --yes --admin
                                 set -e
+                                echo 'Scaled to Zero'
                             """
                         }
                     }

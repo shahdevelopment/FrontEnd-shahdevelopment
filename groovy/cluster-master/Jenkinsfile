@@ -200,7 +200,7 @@ pipeline {
         //                     echo "Deleting Deployment........."
         //                 '''
         //                 sh """
-        //                     kops delete cluster --region=${awsregion} --config=${config} --name ${kubecluster} --state=${s3bucket} --yes && sleep  >> delete_log.txt
+        //                     kops delete cluster --region=${awsregion} --config=${config} --name ${kubecluster} --state=${s3bucket} --yes && sleep
         //                 """
         //                 sh "echo ----------//---------------------//---------------------------"
         //                 sh "kops update cluster --config=${config} --name ${kubecluster} --state=${s3bucket} --yes --admin && sleep 2"
@@ -220,7 +220,6 @@ pipeline {
         //     post {
         //         always {
         //             echo '########## Cluster Deleted ##########'
-        //             echo delete_log.txt
         //             slackSend channel: "${slack_cluster}",
         //             color: COLOR_MAP[currentBuild.currentResult],
         //             message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
@@ -237,7 +236,7 @@ pipeline {
                             echo ----------//---------------------//---------------------------
                             echo "Attempting Deployment..............."
                         '''
-                        sh "kops create cluster --config=${config} --name=${kubecluster} --state=${s3bucket} --zones=${awszones} --node-count=2 --node-size=t3.medium --master-size=t3.medium --dns-zone=${kubecluster} --node-volume-size=15 --master-volume-size=15 && sleep 2"
+                        sh "kops create cluster --config=${config} --name=${kubecluster} --state=${s3bucket} --zones=${awszones} --node-count=1 --node-size=t3.medium --master-size=t3.medium --dns-zone=${kubecluster} --node-volume-size=15 --master-volume-size=15 && sleep 2"
                         sh "echo ----------//---------------------//---------------------------"
                         sh "kops update cluster --config=${config} --name ${kubecluster} --state=${s3bucket} --yes --admin && sleep 2"
                         sh "echo ----------//---------------------//---------------------------"
