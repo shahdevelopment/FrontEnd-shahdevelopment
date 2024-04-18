@@ -7,11 +7,19 @@ ENV api_key_new="$map_key"
 WORKDIR /usr/src/app
 ARG ENVIRONMENT
 # Install deps
-RUN apk update
+# RUN apk update
 
 # Create Certificate
-RUN apk install ca-certificates && apk autoremove
+# RUN apk install ca-certificates && apk autoremove
 
+# Install deps
+RUN apk update && \
+    apk upgrade && \
+    apk add --no-cache bash git openssh
+
+# Create Certificate
+RUN apk add --no-cache ca-certificates && \
+    apk del --no-cache .build-deps
 # RUN npm install
 # If you are building your code for production
 
