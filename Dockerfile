@@ -1,4 +1,4 @@
-FROM alpine:3.18
+FROM node:18-alpine3.15
 # Set environment variables
 
 ARG map_key
@@ -7,19 +7,10 @@ ENV api_key_new="$map_key"
 WORKDIR /usr/src/app
 ARG ENVIRONMENT
 # Install deps
-# RUN apk update
+RUN apt update
 
-# Create Certificate
-# RUN apk install ca-certificates && apk autoremove
+RUN apt install ca-certificates && apt autoremove
 
-# Install deps
-RUN apk update && \
-    apk upgrade && \
-    apk add --no-cache bash git openssh
-
-# Create Certificate
-RUN apk add --no-cache ca-certificates && \
-    apk del --no-cache .build-deps
 # RUN npm install
 # If you are building your code for production
 
