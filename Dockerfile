@@ -1,5 +1,4 @@
-FROM node
-
+FROM alpine:3.18
 # Set environment variables
 
 ARG map_key
