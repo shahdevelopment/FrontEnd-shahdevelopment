@@ -290,7 +290,7 @@ pipeline {
             }
         }
         // ------------------------ Good for PI
-        stage('Build Test Container') {
+        stage('Build Dev Container') {
             steps {
                 dir("${frontend}") {
                     script {
@@ -316,7 +316,7 @@ pipeline {
 
         }
         // ------------------------ Good for PI
-        stage('Run Test Containers') {
+        stage('Run Dev Containers') {
             steps{
                 script {
                     sh "docker run -dt --name ${backend} -p 9000:9000 ${back_image}"
@@ -339,7 +339,7 @@ pipeline {
             
         }
         // ------------------------ PI Found ***************************************
-        stage('Run Path Check on Test Containers') {
+        stage('Run Path Check on Dev Containers') {
             steps {
                 dir("${frontend}") {
                     script {
@@ -374,12 +374,12 @@ pipeline {
                     echo 'Slack Notifications.'
                     slackSend channel: "${slack_devops}",
                     color: COLOR_MAP[currentBuild.currentResult],
-                    message: "*Path Check Step Complted with Result - ${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"                    
+                    message: "*Path Check Step Completed with Result - ${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"                    
                 }
             }
         }
         // ------------------------ Good for PI
-        stage('Docker-Build') {
+        stage('Docker-Build-Push') {
             steps {
                 dir("${frontend}") {
                     //     echo " ____   _    _  _____  _       _____       _____  ______  ______  _____   "
@@ -420,7 +420,7 @@ pipeline {
             }
         }
         // ------------------------ Good for PI
-        // stage('Cluster Scale/Connect') {
+        // stage('Kube Cluster Scale/Connect') {
         //     steps {
         //         dir("${k8}") {
         //             script {
@@ -463,12 +463,12 @@ pipeline {
         stage('Application-Deployment') {
             steps {
                 dir("${k8}") {
-                    echo "helm install my-app ./helm/profilecharts --set backimage=${back_image} --set frontimage=${front_image} --set docker_configjson=${docker_config_json} --set tls_crt=${ssl_tls_crt} --set tls_key=${ssl_tls_key} && sleep 30"
+                    echo "helm upgrade my-app ./helm/profilecharts --set backimage=${back_image} --set frontimage=${front_image} --set docker_configjson=${docker_config_json} --set tls_crt=${ssl_tls_crt} --set tls_key=${ssl_tls_key} && sleep 30"
                     sh 'echo ------------------------------------'
                     sh '/bin/bash move.sh'
                     sh 'echo ------------------------------------'
                     sh 'echo ------------------------------------'
-                    sh "helm install my-app ./helm/profilecharts --set backimage=${back_image} --set frontimage=${front_image} --set docker_configjson=${docker_config_json} --set tls_crt=${ssl_tls_crt} --set tls_key=${ssl_tls_key} && sleep 30"
+                    sh "helm upgrade my-app ./helm/profilecharts --set backimage=${back_image} --set frontimage=${front_image} --set docker_configjson=${docker_config_json} --set tls_crt=${ssl_tls_crt} --set tls_key=${ssl_tls_key} && sleep 30"
                     // notes
                     sh '''
                         sleep 30
