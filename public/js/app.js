@@ -35,7 +35,7 @@ async function getMessage() {
             max_tokens: 100
         })
     };
-    const res = await fetch(baseUrl, options)
+    fetch(baseUrl, options)
         .then(response => {
             if (response.ok) {
                 return response.json();
