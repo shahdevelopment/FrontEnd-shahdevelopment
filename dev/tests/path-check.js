@@ -12,15 +12,10 @@ const pathsToEvaluate = [
     '/geolocate',
     '/shahgpt',
     '/contactpage',
-    '/education',
     '/fastapi',
-    '/i-sightII',
-    '/i-sight',
     '/',
     '/selfie',
-    '/seniorsystemsadmin',
     '/skills',
-    '/data',
 ];
 
 async function evaluatePaths() {
