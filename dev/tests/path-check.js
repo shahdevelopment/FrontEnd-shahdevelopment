@@ -15,7 +15,6 @@ const pathsToEvaluate = [
     '/fastapi',
     '/',
     '/selfie',
-    '/skills',
 ];
 
 async function evaluatePaths() {
