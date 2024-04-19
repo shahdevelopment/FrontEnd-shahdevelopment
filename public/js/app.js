@@ -11,21 +11,22 @@ function changeInput(value) {
 }
 
 async function getMessage() {
-    const baseUrl = 'https://k8-backend.shahsportfolio.online/chat'
+    // const baseUrl = 'https://k8-backend.shahsportfolio.online/chat'
 
-    const res = await fetch(baseUrl,
-        {
-            method: 'GET'
-        })
-    const key = await res.json()
-    const chatKey = key.info
+    // const res = await fetch(baseUrl,
+    //     {
+    //         method: 'GET'
+    //     })
+    // const key = await res.json()
+    // const chatKey = key.info
 
     console.log('Clicked');
     alert('Sending Chat.......');
+
+    const baseUrl = 'https://k8-backend.shahsportfolio.online/chat'
     const options = {
         method: 'POST',
         headers: {
-            'Authorization': `Bearer ${chatKey}`,
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -34,8 +35,7 @@ async function getMessage() {
             max_tokens: 100
         })
     };
-
-    fetch('https://api.openai.com/v1/chat/completions', options)
+    const res = await fetch(baseUrl, options)
         .then(response => {
             if (response.ok) {
                 return response.json();
@@ -55,6 +55,30 @@ async function getMessage() {
         .catch(error => {
             console.error(error)
         })
+
+    // const options = {
+    //     method: 'POST',
+    //     headers: {
+    //         'Authorization': `Bearer ${chatKey}`,
+    //         'Content-Type': 'application/json'
+    //     },
+    //     body: JSON.stringify({
+    //         model: 'gpt-3.5-turbo',
+    //         messages: [{ role: 'user', content: inputElement.value }],
+    //         max_tokens: 100
+    //     })
+    // };
+
+    // fetch('https://api.openai.com/v1/chat/completions', options)
+    //     .then(response => {
+    //         if (response.ok) {
+    //             return response.json();
+    //         } else {
+    //             throw new Error('Error: ' + response.status);
+    //         }
+    //     })
+
+
 }
 
 inputContainer.addEventListener('keypress', function (event) {
