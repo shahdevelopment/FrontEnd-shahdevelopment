@@ -52,6 +52,7 @@ pipeline {
         // API Keys
         api_maps_key = ""
         api_chat_key = ""
+        api_email_key = ""
 
         // // K8s Docker Creds 
         // docker_config_json = ""
@@ -144,6 +145,7 @@ pipeline {
                     // ---------- API Keys
                     api_maps_key = parameters['api.maps_key']
                     api_chat_key = parameters['api.chat_key']
+                    api_email_key = parameters['api.email_key']
                     
                     // ---------- SSL
                     // ssl_tls_key = parameters['tls.key']
@@ -300,7 +302,7 @@ pipeline {
                 }
                 dir("${backend}") {
                     script {
-                        dockerImage = docker.build("${back_image}", "--build-arg chat_key=${api_chat_key} --build-arg ENVIRONMENT=dev .")
+                        dockerImage = docker.build("${back_image}", "--build-arg chat_key=${api_chat_key} --build-arg ENVIRONMENT=dev --build-arg email_key=${api_email_key} .")
                         sh 'sleep 1'
                     }
                 }    
@@ -398,7 +400,7 @@ pipeline {
                 }
                 dir("${backend}") {
                     script {
-                        dockerImage = docker.build("${back_image}", "--build-arg chat_key=${api_chat_key} .")
+                        dockerImage = docker.build("${back_image}", "--build-arg chat_key=${api_chat_key} --build-arg email_key=${api_email_key} .")
                         sh 'sleep 1'
 
                         docker.withRegistry('', registryCredentials) {

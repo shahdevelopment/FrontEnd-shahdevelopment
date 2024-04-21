@@ -851,3 +851,22 @@ body {
 .geo:hover {
   opacity: .7;
 }
+
+.submit-form h1 {
+  color: black;
+}
+.submit-form label {
+  color: black;
+}
+
+.submit-form button {
+  color: black;
+}
+
+.submit-form input {
+  color: black;
+}
+
+.submit-form textarea {
+  color: black;
+}

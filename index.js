@@ -779,8 +779,84 @@ app.get('/data', (req, res) => {
             <a href="mailto:shahjehan-solehria@hotmail.com"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/outlook.png"/></button></a>
             <a href="https://github.com/shahdevelopment/"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/github.png"/></button></a>
             <a href="https://fastapi-shah.herokuapp.com/docs"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/fastapi.png"/></button></a>
+        </div>
     </div>
+    </html>
+`;
+    res.send(modifiedHTML);
+});
+app.get('/form', (req, res) =>{
+    const modifiedHTML = `
+    <html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Skill | Project Work</title>
+        <link rel="stylesheet" href="style/style.css">
+    </head>
+    <div class="topnav">
+        <div>
+            <a class="name" href="/"><p>Shah Solehria</p></a>
+            <h2 class="title">Cloud | DevOps | Data</h2>
+        </div>
+        <div>
+            <div id="menu-bar">
+                <div id="menu-buttons">
+                    <div class="dropdown">
+                        <button class="dropbtn">Projects</button>
+                        <div class="dropdown-content">
+                            <a href="/fastapi">FastAPI Server</a>
+                            <a href="/geolocate">Geo Location App</a>
+                            <a href="/selfie">Selfie App</a>
+                            <a href="/shahgpt">ChatGPT Clone</a>
+                        </div>
+                    </div>
+                    <button onclick="highlightButton(this)" class="menu"><a href="/contactpage">Contact</a></button>
+                    <button onclick="highlightButton(this)" class="menu"><a href="Shah_Solehria_Resume.pdf" target="_blank">Resume</a></button>
+                </div>
+            </div>
+        </div>
+        <div class="ham">
+            <button class="hamburger-menu">
+                <div class="hamburger-line"></div>
+                <div class="hamburger-line"></div>
+                <div class="hamburger-line"></div>
+            </button>
+        </div>
+        <script src="js/hamburger.js"></script>
     </div>
+    <body>
+        <div class="submit-form">
+            <h1>Appointment Booking</h1>
+            <form id="contactForm">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required><br><br>
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required><br><br>
+
+                <label for="date">Date:</label>
+                <input type="date" id="date" name="date" required><br><br>
+
+                <label for="time">Time:</label>
+                <input type="time" id="time" name="time" required><br><br>
+
+                <label for="message">Message:</label><br>
+                <textarea id="message" name="message" rows="4" cols="50" required></textarea><br><br>
+
+                <button type="submit">Submit</button>
+            </form>
+            <script src="js/email.js"></script>
+        </div>
+    </body>
+    <div class="footer">
+        <a href="/"><button class="dropbtn">Home</button></a>
+        <div class="footmenu">
+            <a href="mailto:shahjehan-solehria@hotmail.com"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/outlook.png"/></button></a>
+            <a href="https://github.com/shahdevelopment/"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/github.png"/></button></a>
+            <a href="https://fastapi-shah.herokuapp.com/docs"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/fastapi.png"/></button></a>
+        </div>
+    </div>    
     </html>
 `;
     res.send(modifiedHTML);
