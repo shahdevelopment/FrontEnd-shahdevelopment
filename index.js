@@ -82,6 +82,7 @@ app.get('/geolocate', (req, res) => {
                         </div>
                     </div>
                     <button onclick="highlightButton(this)" class="menu"><a href="/contactpage">Contact</a></button>
+                    <button onclick="highlightButton(this)" class="menu"><a href="/form">Email Form</a></button>
                     <button onclick="highlightButton(this)" class="menu"><a href="Shah_Solehria_Resume.pdf"
                             target="_blank">Resume</a></button>
                 </div>
@@ -197,6 +198,7 @@ app.get('/contactpage', (req, res) => {
                         </div>
                     </div>
                     <button onclick="highlightButton(this)" class="menu"><a href="/contactpage">Contact</a></button>
+                    <button onclick="highlightButton(this)" class="menu"><a href="/form">Email Form</a></button>
                     <button onclick="highlightButton(this)" class="menu"><a href="Shah_Solehria_Resume.pdf" target="_blank">Resume</a></button>
                 </div>
             </div>
@@ -317,6 +319,7 @@ app.get('/fastapi', (req, res) => {
                         </div>
                     </div>
                     <button onclick="highlightButton(this)" class="menu"><a href="/contactpage">Contact</a></button>
+                    <button onclick="highlightButton(this)" class="menu"><a href="/form">Email Form</a></button>
                     <button onclick="highlightButton(this)" class="menu"><a href="Shah_Solehria_Resume.pdf" target="_blank">Resume</a></button>
                 </div>
             </div>
@@ -432,6 +435,7 @@ app.get('/', (req, res) => {
                         </div>
                     </div>
                     <button onclick="highlightButton(this)" class="menu"><a href="/contactpage">Contact</a></button>
+                    <button onclick="highlightButton(this)" class="menu"><a href="/form">Email Form</a></button>
                     <button onclick="highlightButton(this)" class="menu"><a href="Shah_Solehria_Resume.pdf" target="_blank">Resume</a></button>
                 </div>
             </div>
@@ -670,6 +674,7 @@ app.get('/selfie', (req, res) => {
                         </div>
                     </div>
                     <button onclick="highlightButton(this)" class="menu"><a href="/contactpage">Contact</a></button>
+                    <button onclick="highlightButton(this)" class="menu"><a href="/form">Email Form</a></button>
                     <button onclick="highlightButton(this)" class="menu"><a href="Shah_Solehria_Resume.pdf" target="_blank">Resume</a></button>
                 </div>
             </div>
@@ -750,6 +755,7 @@ app.get('/data', (req, res) => {
                         </div>
                     </div>
                     <button onclick="highlightButton(this)" class="menu"><a href="/contactpage">Contact</a></button>
+                    <button onclick="highlightButton(this)" class="menu"><a href="/form">Email Form</a></button>
                     <button onclick="highlightButton(this)" class="menu"><a href="Shah_Solehria_Resume.pdf" target="_blank">Resume</a></button>
                 </div>
             </div>
