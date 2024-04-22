@@ -11,6 +11,7 @@ COPY package*.json ./
 RUN apk update \
     && apk add --no-cache ca-certificates \
     && apk add --no-cache bash \
+    && apk add --no-cache curl \
     && rm -rf /var/cache/apk/*
 
 RUN if [ "$ENVIRONMENT" = "dev" ]; then \
