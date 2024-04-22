@@ -10,7 +10,7 @@ def COLOR_MAP = [
     'SUCCESS': 'good', 
     'FAILURE': 'danger',
 ]
-// ------------------------ Good for PI
+// ------------------------ Good for PI -change
 pipeline {
     agent {label 'ansible'}
     // options {
