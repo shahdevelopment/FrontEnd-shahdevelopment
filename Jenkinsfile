@@ -10,7 +10,7 @@ def COLOR_MAP = [
     'SUCCESS': 'good', 
     'FAILURE': 'danger',
 ]
-// ------------------------ Good for PI -change
+// ------------------------ Good for PI
 pipeline {
     agent {label 'ansible'}
     // options {
@@ -340,7 +340,7 @@ pipeline {
             }
             
         }
-        // ------------------------ PI Found ***************************************
+        // ------------------------ Good for PI
         stage('Run Path Check on Dev Containers') {
             steps {
                 dir("${frontend}") {
