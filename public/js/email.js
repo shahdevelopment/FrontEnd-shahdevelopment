@@ -13,7 +13,7 @@ document.getElementById('contactForm').addEventListener('submit', function(event
     console.log(formDataObject)
     console.log('Clicked');
     alert('Sending email.......');
-    const baseUrl = 'https://kubernetes.shahsportfolio.online/email'
+    const baseUrl = 'https://k8-backend.shahsportfolio.online/email'
     const options = {
         method: 'POST',
         headers: {
