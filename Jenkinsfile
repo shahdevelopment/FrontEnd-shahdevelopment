@@ -296,7 +296,7 @@ pipeline {
             steps {
                 dir("${frontend}") {
                     script {
-                        dockerImage = docker.build("${front_image}", "--build-arg maps_key=${api_maps_key} --build-arg ENVIRONMENT=dev .")
+                        dockerImage = docker.build("${front_image}", "--build-arg maps_key='${api_maps_key}' --build-arg ENVIRONMENT=dev .")
                         sh 'sleep 1'
                     }
                 }
@@ -400,7 +400,7 @@ pipeline {
                 }
                 dir("${backend}") {
                     script {
-                        dockerImage = docker.build("${back_image}", "--build-arg chat_key=${api_chat_key} --build-arg email_key=${api_email_key} .")
+                        dockerImage = docker.build("${back_image}", "--build-arg chat_key=${api_chat_key} --build-arg email_key='${api_email_key}' .")
                         sh 'sleep 1'
 
                         docker.withRegistry('', registryCredentials) {
