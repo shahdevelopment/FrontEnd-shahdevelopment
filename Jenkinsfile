@@ -10,7 +10,6 @@ def COLOR_MAP = [
     'SUCCESS': 'good', 
     'FAILURE': 'danger',
 ]
-// ------------------------ Good for PI
 pipeline {
     agent {label 'ansible'}
     // options {
@@ -84,7 +83,6 @@ pipeline {
         slack_devops = ""
         slack_cluster = ""
     }
-    // ------------------------ Good for PI
     options { skipDefaultCheckout() }
     stages {
         stage('File Param WA') {
@@ -196,7 +194,6 @@ pipeline {
                 }
             }
         }
-        // ------------------------ Good for PI
         stage('System Check') {
             steps {
                 sh '''
@@ -225,7 +222,6 @@ pipeline {
                 }
             }            
         }
-        // ------------------------ Good for PI
         stage('Clone Github Repos') {
             steps {
                     script {
@@ -268,7 +264,6 @@ pipeline {
                 }
             }                
         }
-        // ------------------------ Good for PI
         stage('Code Sonarqube Analysis') {
             environment {
                 scannerHome = tool 'sonar4.7'
@@ -291,7 +286,6 @@ pipeline {
                 }
             }
         }
-        // ------------------------ Good for PI
         stage('Build Dev Container') {
             steps {
                 dir("${frontend}") {
@@ -317,7 +311,6 @@ pipeline {
             }
 
         }
-        // ------------------------ Good for PI
         stage('Run Dev Containers') {
             steps{
                 script {
@@ -340,7 +333,6 @@ pipeline {
             }
             
         }
-        // ------------------------ Good for PI
         stage('Run Path Check on Dev Containers') {
             steps {
                 dir("${frontend}") {
@@ -380,7 +372,6 @@ pipeline {
                 }
             }
         }
-        // ------------------------ Good for PI
         stage('Docker-Build-Push') {
             steps {
                 dir("${frontend}") {
@@ -421,7 +412,6 @@ pipeline {
                 }
             }
         }
-        // ------------------------ Good for PI
         // stage('Kube Cluster Scale/Connect') {
         //     steps {
         //         dir("${k8}") {
@@ -461,7 +451,6 @@ pipeline {
         //         }
         //     }
         // }
-        // ------------------------ Good for PI
         stage('Application-Deployment') {
             steps {
                 dir("${k8}") {
@@ -494,6 +483,5 @@ pipeline {
                 }
             }
         }
-        // ------------------------ Good for PI
     }
 }
