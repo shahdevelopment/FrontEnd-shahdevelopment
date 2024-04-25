@@ -456,7 +456,7 @@ pipeline {
                 dir("${k8}") {
                     script {
                         echo "helm install my-app ./helm/profilecharts --set backimage=${back_image} --set frontimage=${front_image} --set docker_configjson=${docker_config_json} --set tls_crt=${ssl_tls_crt} --set tls_key=${ssl_tls_key} && sleep 30"
-                        sh 'echo --------------------------------------'
+                        sh 'echo ------------------------------------'
                         sh '/bin/bash move.sh'
                         sh 'echo ------------------------------------'
                         sh 'echo ------------------------------------'
