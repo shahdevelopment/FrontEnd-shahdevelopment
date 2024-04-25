@@ -454,6 +454,7 @@ pipeline {
         stage('Application-Deployment') {
             steps {
                 dir("${k8}") {
+                    script {
                     echo "helm install my-app ./helm/profilecharts --set backimage=${back_image} --set frontimage=${front_image} --set docker_configjson=${docker_config_json} --set tls_crt=${ssl_tls_crt} --set tls_key=${ssl_tls_key} && sleep 30"
                     sh 'echo ------------------------------------'
                     sh '/bin/bash move.sh'
@@ -461,6 +462,13 @@ pipeline {
                     sh 'echo ------------------------------------'
                     sh "helm upgrade my-app ./helm/profilecharts --set backimage=${back_image} --set frontimage=${front_image} --set docker_configjson=${docker_config_json} --set tls_crt=${ssl_tls_crt} --set tls_key=${ssl_tls_key} && sleep 30"
                     // notes
+                    sh "control=$(kubectl get nodes | grep control-plane | awk '{print $1}')"
+                    sh "kubectl label nodes $control dedicated=master"
+                    sh """
+                        set +e
+                        kubectl taint nodes $control node-role.kubernetes.io/control-plane:NoSchedule-
+                        set -e
+                    """
                     sh '''
                         sleep 30
                         kubectl get pods -n profile-site
@@ -472,6 +480,7 @@ pipeline {
                             echo Cluster not running after 15m!
                         fi
                     '''
+                    }
                 }
             }
             post {
