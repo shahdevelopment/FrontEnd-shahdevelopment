@@ -1,13 +1,18 @@
 // -------------------------------------------------------------- >>
-// This Script is for Scaling Instances Down to Zero
+// This Script is for KOPS Scaling
 // -------------------------------------------------------------- >>
 // -------------------------------------------------------------- >>
 def COLOR_MAP = [
     'SUCCESS': 'good', 
     'FAILURE': 'danger',
 ]
+// ------------------------ Good for PI
 pipeline {
     agent {label 'ansible'}
+    // options {
+    //     Reuse the workspace from previous builds
+    //     ws("/opt/jenkins-slave/workspace/profile-site-build")
+    // }
     environment {
         // Docker Registry Info
         registry_front = ""
@@ -74,6 +79,7 @@ pipeline {
         slack_devops = ""
         slack_cluster = ""
     }
+    // ------------------------ Good for PI
     options { skipDefaultCheckout() }
     stages {
         stage('File Param WA') {
@@ -180,44 +186,80 @@ pipeline {
                     echo '########## Build Status Notification ##########'
                     slackSend channel: "${slack_cluster}",
                     color: COLOR_MAP[currentBuild.currentResult],
-                    message: "*Cluster Scale to Zero Started: ${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
+                    message: "Cluster Create Started: *${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
                 }
             }
         }
-        stage('Cluster Scale down') {
+        stage('Cluster-Delete') {
             steps {
                 dir("${k8}") {
-                    retry(4) {
-                        script {
-                            sh """
-                                echo '------------------------------------'
-                                kops edit ig ${n1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set='spec.minSize=0'
-                                set +e
-                                sleep 3
-                                kops edit ig ${n1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set='spec.maxSize=0'                                
-                                sleep 3
-                                echo '------------------------------------'
-                                kops edit ig ${m1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set='spec.minSize=0'
-                                sleep 3
-                                kops edit ig ${m1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set='spec.maxSize=0'
-                                sleep 3
-                                echo '------------------------------------'
-                                kops update cluster --config=${config} --name=${kubecluster} --state=${s3bucket} --yes --admin
-                                set -e
-                                echo 'Scaled to Zero'
-                            """
-                        }
+                    script {
+                        sh '''
+                            echo ----------//---------------------//---------------------------
+                            echo ----------//---------------------//---------------------------
+                            echo "Deleting Deployment........."
+                        '''
+                        sh """
+                            kops delete cluster --region=${awsregion} --config=${config} --name ${kubecluster} --state=${s3bucket} --yes && sleep 2
+                        """
+                        sh "echo ----------//---------------------//---------------------------"
+                        sh "kops update cluster --config=${config} --name ${kubecluster} --state=${s3bucket} --yes --admin && sleep 2"
+                        sh "echo ----------//---------------------//---------------------------"
+                        sh """
+                            set +e
+                            kops validate cluster --config=${config} --name=${kubecluster} --state=${s3bucket} --wait 20m --count 5 && sleep 2
+                            set -e
+                        """
+                        sh '''
+                            echo ----------//---------------------//---------------------------
+                            echo ----------//---------------------//---------------------------
+                        '''
                     }
                 }
             }
             post {
                 always {
-                    echo '########## Cluster Scaled to 0 ##########'
+                    echo '########## Cluster Deleted ##########'
                     slackSend channel: "${slack_cluster}",
                     color: COLOR_MAP[currentBuild.currentResult],
-                    message: "*Cluster Scaled to Zero with Result - ${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
+                    message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
                 }
             }
         }
+        // ------------------------ Good for PI
+        // stage('Cluster-Deployment') {
+        //     steps {
+        //         dir("${k8}") {
+        //             script {
+        //                 sh '''
+        //                     echo ----------//---------------------//---------------------------
+        //                     echo ----------//---------------------//---------------------------
+        //                     echo "Attempting Deployment..............."
+        //                 '''
+        //                 sh "kops create cluster --config=${config} --name=${kubecluster} --state=${s3bucket} --zones=${awszones} --node-count=1 --node-size=t3.medium --master-size=t3.medium --dns-zone=${kubecluster} --node-volume-size=15 --master-volume-size=15 && sleep 2"
+        //                 sh "echo ----------//---------------------//---------------------------"
+        //                 sh "kops update cluster --config=${config} --name ${kubecluster} --state=${s3bucket} --yes --admin && sleep 2"
+        //                 sh "echo ----------//---------------------//---------------------------"
+        //                 sh """
+        //                     set +e
+        //                     kops validate cluster --config=${config} --name=${kubecluster} --state=${s3bucket} --wait 20m --count 5 && sleep 2
+        //                     set -e
+        //                 """
+        //                 sh '''
+        //                     echo ----------//---------------------//---------------------------
+        //                     echo ----------//---------------------//---------------------------
+        //                 '''
+        //             }
+        //         }
+        //     }
+        //     post {
+        //         always {
+        //             echo '########## Cluster Health Notification ##########'
+        //             slackSend channel: "${slack_cluster}",
+        //             color: COLOR_MAP[currentBuild.currentResult],
+        //             message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
+        //         }
+        //     }
+        // }
     }
 }
