@@ -190,53 +190,18 @@ pipeline {
                 }
             }
         }
-        stage('Cluster-Delete') {
-            steps {
-                dir("${k8}") {
-                    script {
-                        sh '''
-                            echo ----------//---------------------//---------------------------
-                            echo ----------//---------------------//---------------------------
-                            echo "Deleting Deployment........."
-                        '''
-                        sh """
-                            kops delete cluster --region=${awsregion} --config=${config} --name ${kubecluster} --state=${s3bucket} --yes && sleep 2
-                        """
-                        sh "echo ----------//---------------------//---------------------------"
-                        sh "kops update cluster --config=${config} --name ${kubecluster} --state=${s3bucket} --yes --admin && sleep 2"
-                        sh "echo ----------//---------------------//---------------------------"
-                        sh """
-                            set +e
-                            kops validate cluster --config=${config} --name=${kubecluster} --state=${s3bucket} --wait 20m --count 5 && sleep 2
-                            set -e
-                        """
-                        sh '''
-                            echo ----------//---------------------//---------------------------
-                            echo ----------//---------------------//---------------------------
-                        '''
-                    }
-                }
-            }
-            post {
-                always {
-                    echo '########## Cluster Deleted ##########'
-                    slackSend channel: "${slack_cluster}",
-                    color: COLOR_MAP[currentBuild.currentResult],
-                    message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
-                }
-            }
-        }
-        // ------------------------ Good for PI
-        // stage('Cluster-Deployment') {
+        // stage('Cluster-Delete') {
         //     steps {
         //         dir("${k8}") {
         //             script {
         //                 sh '''
         //                     echo ----------//---------------------//---------------------------
         //                     echo ----------//---------------------//---------------------------
-        //                     echo "Attempting Deployment..............."
+        //                     echo "Deleting Deployment........."
         //                 '''
-        //                 sh "kops create cluster --config=${config} --name=${kubecluster} --state=${s3bucket} --zones=${awszones} --node-count=1 --node-size=t3.medium --master-size=t3.medium --dns-zone=${kubecluster} --node-volume-size=15 --master-volume-size=15 && sleep 2"
+        //                 sh """
+        //                     kops delete cluster --region=${awsregion} --config=${config} --name ${kubecluster} --state=${s3bucket} --yes && sleep 2
+        //                 """
         //                 sh "echo ----------//---------------------//---------------------------"
         //                 sh "kops update cluster --config=${config} --name ${kubecluster} --state=${s3bucket} --yes --admin && sleep 2"
         //                 sh "echo ----------//---------------------//---------------------------"
@@ -254,12 +219,47 @@ pipeline {
         //     }
         //     post {
         //         always {
-        //             echo '########## Cluster Health Notification ##########'
+        //             echo '########## Cluster Deleted ##########'
         //             slackSend channel: "${slack_cluster}",
         //             color: COLOR_MAP[currentBuild.currentResult],
         //             message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
         //         }
         //     }
         // }
+        // ------------------------ Good for PI
+        stage('Cluster-Deployment') {
+            steps {
+                dir("${k8}") {
+                    script {
+                        sh '''
+                            echo ----------//---------------------//---------------------------
+                            echo ----------//---------------------//---------------------------
+                            echo "Attempting Deployment..............."
+                        '''
+                        sh "kops create cluster --config=${config} --name=${kubecluster} --state=${s3bucket} --zones=${awszones} --node-count=1 --node-size=t3.medium --master-size=t3.medium --dns-zone=${kubecluster} --node-volume-size=15 --master-volume-size=15 && sleep 2"
+                        sh "echo ----------//---------------------//---------------------------"
+                        sh "kops update cluster --config=${config} --name ${kubecluster} --state=${s3bucket} --yes --admin && sleep 2"
+                        sh "echo ----------//---------------------//---------------------------"
+                        sh """
+                            set +e
+                            kops validate cluster --config=${config} --name=${kubecluster} --state=${s3bucket} --wait 20m --count 5 && sleep 2
+                            set -e
+                        """
+                        sh '''
+                            echo ----------//---------------------//---------------------------
+                            echo ----------//---------------------//---------------------------
+                        '''
+                    }
+                }
+            }
+            post {
+                always {
+                    echo '########## Cluster Health Notification ##########'
+                    slackSend channel: "${slack_cluster}",
+                    color: COLOR_MAP[currentBuild.currentResult],
+                    message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
+                }
+            }
+        }
     }
 }
