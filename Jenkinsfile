@@ -1,5 +1,5 @@
 // -------------------------------------------------------------- >>
-// This Script is for Scaling Instances Down to Zero
+// This Script is for Scaling Instances to Default
 // -------------------------------------------------------------- >>
 // -------------------------------------------------------------- >>
 def COLOR_MAP = [
@@ -178,33 +178,36 @@ pipeline {
             post {
                 always {
                     echo '########## Build Status Notification ##########'
-                    slackSend channel: "${slack_cluster}",
+                    slackSend channel: "${slack_devops}",
                     color: COLOR_MAP[currentBuild.currentResult],
-                    message: "*Cluster Scale to Zero Started: ${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
+                    message: "Build Started: *${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
                 }
             }
         }
-        stage('Cluster Scale down') {
+        stage('Cluster Scale/Connect') {
             steps {
                 dir("${k8}") {
                     retry(4) {
                         script {
                             sh """
-                                echo '------------------------------------'
-                                kops edit ig ${n1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set='spec.minSize=0'
-                                set +e
-                                sleep 3
-                                kops edit ig ${n1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set='spec.maxSize=0'                                
-                                sleep 3
-                                echo '------------------------------------'
-                                kops edit ig ${m1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set='spec.minSize=0'
-                                sleep 3
-                                kops edit ig ${m1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set='spec.maxSize=0'
-                                sleep 3
+                                echo '------------------------------------>'
                                 echo '------------------------------------'
                                 kops update cluster --config=${config} --name=${kubecluster} --state=${s3bucket} --yes --admin
-                                set -e
-                                echo 'Scaled to Zero'
+                                echo '------------------------------------'
+                                kops edit ig ${m1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set='spec.maxSize=${m1_maxS}'
+                                kops edit ig ${m1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set='spec.minSize=${m1_minS}'
+                                kops update cluster --config=${config} --name=${kubecluster} --state=${s3bucket} --yes --admin
+                                kops validate cluster --config=${config} --name=${kubecluster} --state=${s3bucket} --wait 40m --count 2
+                                
+                                echo '------------------------------------'
+                                kops edit ig ${n1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set='spec.maxSize=${n1_maxS}'
+                                kops edit ig ${n1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set='spec.minSize=${n1_minS}'
+                                kops update cluster --config=${config} --name=${kubecluster} --state=${s3bucket} --yes --admin
+                                kops validate cluster --config=${config} --name=${kubecluster} --state=${s3bucket} --wait 40m --count 2
+                                
+                                echo '------------------------------------'
+                                # kops rolling-update cluster --config=${config} --name=${kubecluster} --state=${s3bucket}
+                                echo '------------------------------------'
                             """
                         }
                     }
@@ -212,10 +215,10 @@ pipeline {
             }
             post {
                 always {
-                    echo '########## Cluster Scaled to 0 ##########'
+                    echo '########## Cluster Health Notification ##########'
                     slackSend channel: "${slack_cluster}",
                     color: COLOR_MAP[currentBuild.currentResult],
-                    message: "*Cluster Scaled to Zero with Result - ${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
+                    message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
                 }
             }
         }
