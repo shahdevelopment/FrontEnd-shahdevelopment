@@ -458,10 +458,7 @@ app.get('/', (req, res) => {
         </div>
         <div class="secdiv">
             <h1>Abstract</h1>
-            <p>Built first .NET web app seven years ago at British Columbia Institute of Technology (BCIT)!</p>
-            <p>Professional proficient with full-stack SAAS applications written in Python, Java, or JavaScript; Expertise in "DevOps" & "Site Reliability Engineering" at enterprise scale!</p>
-
-            <p>Excels at overseeing change management, optimizing performance, designing secure infrastructure.</p>
+            <p>Over half a decade of experience with full stack web applications and development for business processes!</p>
             
             <p>Committed to delivering high-quality & timely results.</p>
             <div class="btn-shadow"><a href="/contactpage" class="btn">Reach Out</a></div>
