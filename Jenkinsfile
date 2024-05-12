@@ -190,7 +190,7 @@ pipeline {
                     retry(4) {
                         script {
                             sh """
-                                echo '------------------------------------'
+                                echo '--------------------------------------'
                                 kops edit ig ${n1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set='spec.minSize=0'
                                 set +e
                                 sleep 3
