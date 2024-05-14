@@ -243,7 +243,6 @@ pipeline {
                             set +e
                             kops validate cluster --config=${config} --name=${kubecluster} --state=${s3bucket} --wait 20m --count 5 && sleep 2
                             set -e
-
                         """
                         sh '''
                             kubectl get pods -n profile-site
