@@ -462,7 +462,6 @@ pipeline {
                         sh 'echo ------------------------------------'
                         sh '''
                             helm upgrade my-app ./helm/profilecharts --set backimage=${back_image} --set frontimage=${front_image} --set docker_configjson=${docker_config_json} --set tls_crt=${ssl_tls_crt} --set tls_key=${ssl_tls_key} && sleep 30
-                            kubectl get pods -n profile-site
                         '''
                     }
                 }

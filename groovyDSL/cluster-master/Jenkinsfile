@@ -243,6 +243,15 @@ pipeline {
                             set +e
                             kops validate cluster --config=${config} --name=${kubecluster} --state=${s3bucket} --wait 20m --count 5 && sleep 2
                             set -e
+                            kubectl get pods -n profile-site
+
+                            if [ $? -eq 0 ]; then
+                                echo Cluster is now up and running!
+                                echo Please add DNS entry if applicable for:
+                                aws elbv2 describe-load-balancers | grep DNSName
+                            else
+                                echo Cluster not running!
+                            fi
                         """
                         sh '''
                             echo ----------//---------------------//---------------------------
