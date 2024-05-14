@@ -240,46 +240,6 @@ app.get('/contactpage', (req, res) => {
             </div>
         </div>
     </div>
-    <br></br>
-    <br></br>
-    <br></br>
-    <br></br>
-    <br></br>
-    <br></br>
-    <div class="latnew"><h1>Quick Links</h1></div>
-    <div class="features1">
-        <div class="features-in">
-            <div class="fea-item1">
-                <a href="/i-sightII">
-                    <img style='height: 100%; width: 100%; object-fit: contain' src="image/r.jpg" width="343" height="300"
-                        alt="Skills" />
-                </a>
-                <div class="fea-1"><h3>Exp: Systems Administrator</h3></div>
-            </div>
-            <div class="fea-item2">
-                <a href="/skills">
-                    <img style='height: 100%; width: 100%; object-fit: contain' src="image/det.jpg" width="343" height="300"
-                        alt="Education" />
-                </a>
-                <div class="fea-1"><h3>Skills</h3></div>
-            </div>
-            <div class="fea-item3">
-                <a href="/i-sight">
-                    <img style='height: 100%; width: 100%; object-fit: contain' src="image/privcloud.png" width="343"
-                        height="300" alt="Jr. Systems Administrator" />
-                </a>
-                <div class="fea-1"><h3>Exp: Jr. Systems Admin</h3></div>
-            </div>
-        </div>
-    </div>
-    <br></br>
-    <br></br>
-    <br></br>
-    <br></br>
-    <br></br>
-    <br></br>
-    <br></br>
-    <br></br>
     <div class="footer">
         <a href="/"><button class="dropbtn">Home</button></a>
         <div class="footmenu">
@@ -336,25 +296,28 @@ app.get('/fastapi', (req, res) => {
     <div class="workexp">
         <div class="workexpc">
             <h1>FastAPI & PostgreSQL API</h1>
-            <h2>API Endpoint ==> https://fastapi-shah.herokuapp.com/docs</h2>
+            <h2>Endpoint > https://fastapi-shah.herokuapp.com</h2>
             <ul>
                 <li>
-                    ❖ Redefined existing understanding of Python: designed authenticated (OAuth2) social-media backend API on AWS.
+                    OAuth2 authenticated Python FastAPI social-media application backend running on Heroku with a PostgreSQL Dyno.
                 </li>
                 <li>
-                    ❖ Validated & parameterized i/o for path operations achieving desired data states in PostgreSQL.
+                    Validated & parameterized i/o for path operations achieving desired data states in PostgreSQL.
                 </li>
                 <li>
-                    ❖ Secured code in GitHub using variables & online with access-controlled Nginx Reverse Proxy.
+                    Secured code in GitHub using envrionment variables & online with access-controlled Nginx Reverse Proxy.
                 </li>
                 <li>
-                    ❖ Defined front-end, back-end, & Nginx with Docker Compose: services & API calls to test i/o.
+                    Migrated to front-end, back-end, & Nginx with Docker Compose configuration.
                 </li>
                 <li>
-                    ❖ Alembic used for Postgres DB deploy.
+                    Implemented testing of API path operations with test API calls integrated into Docker Compose.
+                </li>                
+                <li>
+                    SQLalchemy ORM used for schema deployment and Alembic used for DB backup and automation.
                 </li>
                 <li>
-                    ❖ Postman for test, authentication, & environment variables.
+                    Postman used for test, development, authentication, & environment variables.
                 </li>
             </ul>
         </div>
@@ -367,18 +330,18 @@ app.get('/fastapi', (req, res) => {
     <div class="features1">
         <div class="features-in">
             <div class="fea-item1">
-                <a href="/selfie">
-                    <img style='height: 100%; width: 100%; object-fit: contain' src="image/active.jpg" width="343"
-                        height="300" alt="nodeJS and neDB Selfie App" />
+                <a href="https://github.com/shahdevelopment">
+                    <img style='height: 100%; width: 100%; object-fit: contain' src="image/github.png" width="343"
+                        height="300" alt="GitHub Link" />
                 </a>
-                <div class="fea-1"><h3>nodeJS and neDB Selfie App</h3></div>
+                <div class="fea-1"><h3>Shah's GitHub</h3></div>
             </div>
             <div class="fea-item2">
-                <a href="/seniorsystemsadmin">
-                    <img style='height: 100%; width: 100%; object-fit: contain' src="image/cons.png" width="343"
-                        height="300" alt="Senior IS Systems Admin" />
+                <a href="https://fastapi-shah.herokuapp.com/docs">
+                    <img style='height: 100%; width: 100%; object-fit: contain' src="image/fastapi-2.png" width="343"
+                        height="300" alt="FastAPI" />
                 </a>
-                <div class="fea-1"><h3>Exp: Senior IS Sys Admin</h3></div>
+                <div class="fea-1"><h3>FastAPI Docs</h3></div>
             </div>
             <div class="fea-item3">
                 <a href="/contactpage">
@@ -466,8 +429,16 @@ app.get('/', (req, res) => {
     </div>
     <br></br>
     <div class="latnew">
-        <h1>Site CI/CD & Security Evolution</h1>
 
+        <h1>Site Overview</h1>
+        <p>On the top right of the page is a hamburger menu used to navigate the site:</p>
+        <ul>
+            <li>Projects: Selfie App, Geolocation App, ChatGPT App, & my FastAPI App.</li>
+            <li>Resume: Download a PDF copy of my resume to your screen.</li>
+            <li>Contact: Links to my communication platforms.</li>
+        </ul>
+
+        <h1>Site CI/CD & Security Evolution</h1>
         <p>Project began with a simple static HTML, CSS, & JS site originally deployed on GitHub pages. Today the site is full CI/CD, KOPS Infrastructure as Code (IaC), microservices Kubernetes (K8s) deployment in AWS cloud!</p>
 
         <p>Major revisions have been categorized into four categories:</p>
@@ -488,25 +459,18 @@ app.get('/', (req, res) => {
             <li>A geolocation API integration with GCP Maps API.</li>
             <li>ChatGPT clone using the ChatGPT API.</li>
         </ul>
-
         <p>The application is containerized in Docker runtime with separate containers for the frontend and backend. To bolster security, keys are relocated to the backend Node server (facilitating frontend API calls). Docker images are archived on Docker Hub. Code is optimized for GitHub by concealing passwords & usernames for enhanced at-rest code security.</p>
 
         <h2>Site Reliability Engineering</h2>
-
         <p>Installed and setup a Jenkins server and automated the deployment pipeline from GitHub commit to Kubernetes cluster deployment on AWS cloud; This includes a multi-stage Jenkinsfile, local SonarQube server for code testing, Docker image builds, local container execution/ testing, build notifications on Slack, & image push to Docker Hub. Passwords and usernames are securely stored in Jenkins.</p>
-
         <p>The application was adapted for Kubernetes with manually crafted definition files. Infrastructure as Code (IaC) AWS backend for the Kubernetes cluster was developed using KOPS in AWS.</p>
-
         <p>Code and Jenkinsfile are updated and pushed to GitHub this triggers the Jenkins build.</p>
-
+        
         <h2>DevOps Engineering / Automation</h2>
-
         <p>CI/CD pipeline script in Jenkins pipeline script (Jenkinsfile) involves workspace cleanup, code testing in SonarQube server, GitHub Code Pull, Docker image build, container execution/ testing on Jenkins slave, JS path operation validation, image push to Docker Hub, & Kubernetes build with Helm.</p>
-
         <p>The live site is optimized for costs using KOPS (IaC) deployment in AWS that enables scaling of instances to zero when not in use, & scaling instances to default levels (Creates master & slave EC2 instances & updates DNS).</p>
 
         <h2>Security</h2>
-
         <p>The code maintains parameterized variables that are pulled and parsed from the builds centralized Jenkins multi line string object/file that protects at-rest code for:</p>
         <ul>
             <li>Dockerfiles</li>
@@ -514,18 +478,9 @@ app.get('/', (req, res) => {
             <li>Helm</li>
             <li>Kubernetes secrets</li>
         </ul>
-
         <p>JS programs parameterize and secure code by pulling variable values from container envrionment variables.</p>
-
-        <p>Also, there is proxy security over the web with Nginx Ingress Controller (AWS ELB) http origin security, redirects, & SSL.</p>
-
-        <h1>Site Overview</h1>
-        <p>On the top right of the page is a hamburger menu used to navigate the site:</p>
-        <ul>
-            <li>Projects: Selfie App, Geolocation App, ChatGPT App, & my FastAPI App.</li>
-            <li>Resume: Download a PDF copy of my resume to your screen.</li>
-            <li>Contact: Links to my communication platforms.</li>
-        </ul>
+        <h3>Nginx Ingress Controller</h3>
+        <p>AWS ELB Nginx Ingress Controller secured with http origin valiadation, CORS, redirects, rate limiting, & TLS/SSL.</p>
         </br>
         </br>
         <h1>Notable Academia</h1>
@@ -537,6 +492,10 @@ app.get('/', (req, res) => {
             <div onclick="plusSlides(1)" class="nextPrevBtn rightArrow"><span class="arrow arrowRight"></span></div>
             <div class="captionTextHolder"><p class="captionText slideTextFromTop"></p></div>
             <div class="imageHolder">
+                <img style='height: 100%; width: 100%; object-fit: contain' src="academia/docker&dotnetcore.png">1366X768
+                <p class="captionText">Docker and .NET Core</p>
+            </div>
+            <div class="imageHolder">
                 <img style='height: 100%; width: 100%; object-fit: contain' src="academia/websecurity&bugbounty.jpg">1366X768
                 <p class="captionText">Web Security & Bug Bounty - 2023</p>
             </div>
@@ -545,25 +504,33 @@ app.get('/', (req, res) => {
                 <p class="captionText">DevOps Beginners to Advanced with Projects</p>
             </div>
             <div class="imageHolder">
-                <img style='height: 100%; width: 100%; object-fit: contain' src="academia/Job_Interview_Tips_for_Software_Engineers.png">1366X768
-                <p class="captionText">Job Interview Tips for Software Engineers</p>
-            </div>            
-            <div class="imageHolder">
                 <img style='height: 100%; width: 100%; object-fit: contain' src="academia/awsSArc.jpg">1366X768
                 <p class="captionText">AWS Solutions Architect</p>
             </div>
             <div class="imageHolder">
                 <img style='height: 100%; width: 100%; object-fit: contain' src="academia/Az303.jpg">
                 <p class="captionText">Azure Architect</p>
-            </div>            
+            </div>
             <div class="imageHolder">
                 <img style='height: 100%; width: 100%; object-fit: contain' src="academia/AzureAZ104.jpg">
                 <p class="captionText">Azure Administrator</p>
             </div>
             <div class="imageHolder">
-                <img style='height: 100%; width: 100%; object-fit: contain' src="academia/internet_security_remote_work.png">1366X768
-                <p class="captionText">Internet Security - Remote</p>
+                <img style='height: 100%; width: 100%; object-fit: contain' src="academia/Diploma.jpg">
+                <p class="captionText">Diploma in Business Information Technology Management</p>
             </div>
+            <div class="imageHolder">
+                <img style='height: 100%; width: 100%; object-fit: contain' src="academia/BBA.jpg">1366X768
+                <p class="captionText">Bachelor of Business Administration (BBA)</p>
+            </div>          
+            <div class="imageHolder">
+                <img style='height: 100%; width: 100%; object-fit: contain' src="academia/Certificate Coding.jpg">
+                <p class="captionText">JS Coding</p>
+            </div>
+            <div class="imageHolder">
+                <img style='height: 100%; width: 100%; object-fit: contain' src="academia/Certificate Coding 2.jpg">
+                <p class="captionText">JS Coding II</p>
+            </div>   
             <div class="imageHolder">
                 <img style='height: 100%; width: 100%; object-fit: contain' src="academia/2020_security_awareness.png">1366X768
                 <p class="captionText">2020 Security Awareness</p>
@@ -575,61 +542,39 @@ app.get('/', (req, res) => {
             <div class="imageHolder">
                 <img style='height: 100%; width: 100%; object-fit: contain' src="academia/hipaa.png">1366X768
                 <p class="captionText">HIPAA for Business Associates</p>
-            </div>            
-            <div class="imageHolder">
-                <img style='height: 100%; width: 100%; object-fit: contain' src="academia/BBA.jpg">1366X768
-                <p class="captionText">Bachelor of Business Administration (BBA)</p>
-            </div>
-            <div class="imageHolder">
-                <img style='height: 100%; width: 100%; object-fit: contain' src="academia/Diploma.jpg">
-                <p class="captionText">Diploma in Business IT Management (BITMAN)</p>
-            </div>            <div class="imageHolder">
-                <img style='height: 100%; width: 100%; object-fit: contain' src="academia/Certificate Coding.jpg">
-                <p class="captionText">JS Coding</p>
-            </div>
-            <div class="imageHolder">
-                <img style='height: 100%; width: 100%; object-fit: contain' src="academia/Certificate Coding 2.jpg">
-                <p class="captionText">JS Coding II</p>
-            </div>
-            <div class="imageHolder">
-                <img style='height: 100%; width: 100%; object-fit: contain' src="academia/InterPrep.jpg">
-                <p class="captionText">Interview Preperation</p>
-            </div>            
+            </div>      
         </div>
         <div id="dotsContainer"></div>
     </div>
     <script src="js/myScript.js"></script>
     <br></br>
 
-    <div class="latnew"><h1>Quick Links</h1></div>
+    <div class="latnew"><h1>Check out This Site's GitHub Repos</h1></div>
     <div class="features1">
         <div class="features-in">
             <div class="fea-item1">
-                <a href="/contactpage">
-                    <img style='height: 100%; width: 100%; object-fit: contain' src="image/contact.png" width="343"
-                        height="300" alt="Contact Me" />
+                <a href="https://github.com/shahdevelopment/FrontEnd-shahdevelopment">
+                    <img style='height: 100%; width: 100%; object-fit: contain' src="image/privcloud.png" width="343"
+                        height="300" alt="Front End" />
                 </a>
-                <div class="fea-1"><h3>Contact Me</h3></div>
+                <div class="fea-1"><h3>Front-End Code</h3></div>
             </div>
             <div class="fea-item2">
-                <a href="/geolocate">
-                    <img style='height: 100%; width: 100%; object-fit: contain' src="image/abc.jpg" alt="Geo Location App"
+                <a href="https://github.com/shahdevelopment/BackEnd-shahdevelopment">
+                    <img style='height: 100%; width: 100%; object-fit: contain' src="image/backend.jpg" alt="Back-End"
                         class=feature />
                 </a>
-                <div class="fea-1"><h3>Geo Location App</h3></div>
+                <div class="fea-1"><h3>Back-End Code</h3></div>
             </div>
             <div class="fea-item3">
-                <a href="/selfie">
-                    <img style='height: 100%; width: 100%; object-fit: contain' src="image/active.jpg"
-                        alt="Selfie App" class=feature />
+                <a href="https://github.com/shahdevelopment/K8sDefinitions-shahdevelopment">
+                    <img style='height: 100%; width: 100%; object-fit: contain' src="image/k8.png"
+                        alt="Kubernetes Defintion Files" class=feature />
                 </a>
-                <div class="fea-1"><h3>Selfie App</h3></div>
+                <div class="fea-1"><h3>Kubernetes Defintions Code</h3></div>
             </div>
         </div>
     </div>
-    <br></br>
-    <br></br>
-    <br></br>
     </body>
     <div class="footer">
         <div class="footmenu">
