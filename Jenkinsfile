@@ -461,15 +461,8 @@ pipeline {
                         sh 'echo ------------------------------------'
                         sh 'echo ------------------------------------'
                         sh '''
+                            helm upgrade my-app ./helm/profilecharts --set backimage=${back_image} --set frontimage=${front_image} --set docker_configjson=${docker_config_json} --set tls_crt=${ssl_tls_crt} --set tls_key=${ssl_tls_key} && sleep 30
                             kubectl get pods -n profile-site
-                            if [ $? -eq 0 ]; then
-                                helm upgrade my-app ./helm/profilecharts --set backimage=${back_image} --set frontimage=${front_image} --set docker_configjson=${docker_config_json} --set tls_crt=${ssl_tls_crt} --set tls_key=${ssl_tls_key} && sleep 30
-                                echo Cluster is now up and running!
-                                echo Please add DNS entry if applicable for:
-                                aws elbv2 describe-load-balancers | grep DNSName
-                            else
-                                echo Cluster not running!
-                            fi
                         '''
                     }
                 }
