@@ -421,9 +421,7 @@ app.get('/', (req, res) => {
         </div>
         <div class="secdiv">
             <h1>Abstract</h1>
-            <p>Over half a decade of experience with full stack web applications and development for business processes!</p>
-            
-            <p>Committed to delivering high-quality & timely results.</p>
+            <p>Over half a decade of experience with full stack web applications and development for business processes!</p>            
             <div class="btn-shadow"><a href="/contactpage" class="btn">Reach Out</a></div>
         </div>
     </div>
