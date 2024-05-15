@@ -206,9 +206,7 @@ pipeline {
                             """
                             sh "kops update cluster --config=${config} --name=${kubecluster} --state=${s3bucket} --yes --admin"
                             sh "kops validate cluster --config=${config} --name=${kubecluster} --state='${s3bucket}' --wait 40m --count 2"
-
                             sh """
-                                
                                 echo '------------------------------------'
                                 control=$(kubectl get nodes | grep control-plane | awk '{print $1}')
                                 kubectl label nodes $control dedicated=master
