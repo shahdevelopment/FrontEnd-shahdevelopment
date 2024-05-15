@@ -415,7 +415,7 @@ pipeline {
                         }
 
                         // Postgres
-                        dockerImage = docker.build("${db_image}", "--build-arg pg_user=${postgres_user} --build-arg pg_pass=${postgres_pass} --build-arg pg_db=${postgres_db} -f dev/Dockerfile")
+                        dockerImage = docker.build("${db_image}", "--build-arg pg_user=${postgres_user} --build-arg pg_pass=${postgres_pass} --build-arg pg_db=${postgres_db} -f ./dev/Dockerfile .")
                         sh 'sleep 1'
 
                         docker.withRegistry('', registryCredentials) {
@@ -490,13 +490,10 @@ pipeline {
             }
             post {
                 always {
-                    script {
-                        def logs = currentBuild.rawBuild.getLog(1000)
-                        echo 'Slack Notifications.'
-                        slackSend channel: "${slack_devops}",
-                            color: COLOR_MAP[currentBuild.currentResult],
-                            message: "*Build Completed with Result - ${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL} \n -------------->> Logs \n ${logs}"
-                    }
+                    echo 'Slack Notifications.'
+                    slackSend channel: "${slack_devops}",
+                        color: COLOR_MAP[currentBuild.currentResult],
+                        message: "*Build Completed with Result - ${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL} \n -------------->> Logs \n ${currentBuild.rawBuild.getLog(1000)}"
                 }
             }
         }
