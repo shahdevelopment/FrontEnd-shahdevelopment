@@ -192,8 +192,9 @@ pipeline {
                             sh """
                                 echo '------------------------------------'
                                 echo '------------------------------------'
-                                kops update cluster --config=${config} --name=${kubecluster} --state='${s3bucket}' --yes --admin
-                                
+                            """
+                            sh "kops update cluster --config='${config}' --name='${kubecluster}' --state='${s3bucket}' --yes --admin"
+                            sh """ 
                                 echo '------------------------------------'
                                 kops edit ig ${m1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set='spec.maxSize=${m1_maxS}'
                                 kops edit ig ${m1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set='spec.minSize=${m1_minS}'                                
@@ -201,8 +202,12 @@ pipeline {
                                 echo '------------------------------------'
                                 kops edit ig ${n1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set='spec.maxSize=${n1_maxS}'
                                 kops edit ig ${n1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set='spec.minSize=${n1_minS}'
-                                kops update cluster --config=${config} --name=${kubecluster} --state=${s3bucket} --yes --admin
-                                kops validate cluster --config=${config} --name=${kubecluster} --state='${s3bucket}' --wait 40m --count 2
+
+                            """
+                            sh "kops update cluster --config=${config} --name=${kubecluster} --state=${s3bucket} --yes --admin"
+                            sh "kops validate cluster --config=${config} --name=${kubecluster} --state='${s3bucket}' --wait 40m --count 2"
+
+                            sh """
                                 
                                 echo '------------------------------------'
                                 control=$(kubectl get nodes | grep control-plane | awk '{print $1}')
