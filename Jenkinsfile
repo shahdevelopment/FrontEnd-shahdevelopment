@@ -426,11 +426,11 @@ pipeline {
                 always {
                     script {
                         sh "docker rmi ${back_image} ${front_image}"
+                        echo 'Slack Notifications.'
+                        slackSend channel: "${slack_devops}",
+                        color: COLOR_MAP[currentBuild.currentResult],
+                        message: "*Docker Build & Push Production Step Completed with Result - ${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL} \n *Logs:* \n ${currentBuild.rawBuild.getLog(1000)}"
                     }
-                    echo 'Slack Notifications.'
-                    slackSend channel: "${slack_devops}",
-                    color: COLOR_MAP[currentBuild.currentResult],
-                    message: "*Docker Build & Push Production Step Completed with Result - ${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL} \n *Logs:* \n ${currentBuild.rawBuild.getLog(1000)}"
                 }
             }
         }
