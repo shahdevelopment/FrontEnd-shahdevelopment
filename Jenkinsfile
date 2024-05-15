@@ -202,7 +202,7 @@ pipeline {
                                 kops edit ig ${n1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set='spec.maxSize=${n1_maxS}'
                                 kops edit ig ${n1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set='spec.minSize=${n1_minS}'
                                 kops update cluster --config=${config} --name=${kubecluster} --state=${s3bucket} --yes --admin
-                                kops validate cluster --config=${config} --name=${kubecluster} --state=${s3bucket} --wait 40m --count 2
+                                kops validate cluster --config=${config} --name=${kubecluster} --state='${s3bucket}' --wait 40m --count 2
                                 
                                 echo '------------------------------------'
                                 control=$(kubectl get nodes | grep control-plane | awk '{print $1}')
