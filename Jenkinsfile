@@ -192,7 +192,7 @@ pipeline {
                             sh """
                                 echo '------------------------------------'
                                 echo '------------------------------------'
-                                kops update cluster --config=${config} --name=${kubecluster} --state=${s3bucket} --yes --admin
+                                kops update cluster --config=${config} --name=${kubecluster} --state='${s3bucket}' --yes --admin
                                 
                                 echo '------------------------------------'
                                 kops edit ig ${m1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set='spec.maxSize=${m1_maxS}'
