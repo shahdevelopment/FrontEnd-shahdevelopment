@@ -415,7 +415,7 @@ pipeline {
                         }
 
                         // Postgres
-                        dockerImage = docker.build("${db_image}", "--build-arg pg_user=${postgres_user} --build-arg pg_pass=${postgres_pass} --build-arg pg_db=${postgres_db} -f dev/ .")
+                        dockerImage = docker.build("${db_image}", "--build-arg pg_user=${postgres_user} --build-arg pg_pass=${postgres_pass} --build-arg pg_db=${postgres_db} -f dev/Dockerfile")
                         sh 'sleep 1'
 
                         docker.withRegistry('', registryCredentials) {
