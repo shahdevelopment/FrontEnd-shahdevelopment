@@ -24,8 +24,11 @@ async function getData() {
     root.append(mood, date, image, button);
     logDiv.append(root);
 
+    button.dataset.id = item._id;
+
     button.addEventListener('click', () => {
-      deletePost(item._id);
+      const postId = button.dataset.id
+      deletePost(postId);
       // Call the deletePost function passing the post ID
     });
   }

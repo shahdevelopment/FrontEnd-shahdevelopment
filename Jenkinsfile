@@ -20,6 +20,7 @@ pipeline {
         // Docker Registry Info
         registry_front = ""
         registry_back = ""
+        registry_db = ""
         registryCredentials = ""
 
         // Workspace Subdirectories
@@ -38,6 +39,7 @@ pipeline {
         // Docker Images
         back_image = ""
         front_image = ""
+        db_image = ""
 
         // Kops
         kubecluster = ""
@@ -82,6 +84,11 @@ pipeline {
         // Slack Notifications
         slack_devops = ""
         slack_cluster = ""
+
+        // Postgres
+        postgres_pass = ""
+        postgres_user = ""
+        postgres_db = ""
     }
     options { skipDefaultCheckout() }
     stages {
@@ -110,6 +117,7 @@ pipeline {
                     // ---------- Docker Configuration
                     registry_front = parameters['registry.front']
                     registry_back = parameters['registry.back']
+                    registry_db = parameters['registry.db']
                     registryCredentials = parameters['registry.creds']
 
                     // ---------- Dir Names
@@ -153,6 +161,7 @@ pipeline {
                     // ---------- Docker Images
                     back_image = "${registry_back}:v${BUILD_NUMBER}"
                     front_image = "${registry_front}:v${BUILD_NUMBER}"
+                    db_image = "${registry_db}:v${BUILD_NUMBER}"
 
                     // ---------- Node 1
                     n1 = parameters['n1.label']
@@ -176,6 +185,12 @@ pipeline {
                     // ---------- Slack Notification
                     slack_devops = parameters['slack.devops']
                     slack_cluster = parameters['slack.cluster']
+
+
+                    // ---------- Postgres
+                    postgres_pass = parameters['postgres.pass']
+                    postgres_user = parameters['postgres.user']
+                    postgres_db = parameters['postgres.db']
 
                     // ---------- Moved to Pipeline Console Config
                     // ssl_tls_crt = params.ssl_tls_crt
@@ -391,12 +406,21 @@ pipeline {
                 }
                 dir("${backend}") {
                     script {
+                        // Backend Server
                         dockerImage = docker.build("${back_image}", "--build-arg chat_key=${api_chat_key} --build-arg email_key='${api_email_key}' .")
                         sh 'sleep 1'
 
                         docker.withRegistry('', registryCredentials) {
                             dockerImage.push("v$BUILD_NUMBER")
                         }
+
+                        // Postgres
+                        dockerImage = docker.build("${db_image}", "--build-arg pg_user=${postgres_user} --build-arg pg_pass=${postgres_pass} --build-arg pg_db=${postgres_db} -f dev/ .")
+                        sh 'sleep 1'
+
+                        docker.withRegistry('', registryCredentials) {
+                            dockerImage.push("v$BUILD_NUMBER")
+                        }                        
                     }
                 }    
             }
@@ -455,7 +479,7 @@ pipeline {
             steps {
                 dir("${k8}") {
                     script {
-                        echo "helm install my-app ./helm/profilecharts --set backimage=${back_image} --set frontimage=${front_image} --set docker_configjson=${docker_config_json} --set tls_crt=${ssl_tls_crt} --set tls_key=${ssl_tls_key} && sleep 30"
+                        echo "helm install my-app ./helm/profilecharts --set backimage=${back_image} --set frontimage=${front_image} --set pgimage=${db_image} --set docker_configjson=${docker_config_json} --set tls_crt=${ssl_tls_crt} --set tls_key=${ssl_tls_key} && sleep 30"
                         sh 'echo ------------------------------------'
                         sh '/bin/bash move.sh'
                         sh 'echo ------------------------------------'
