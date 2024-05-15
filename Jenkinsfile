@@ -1,26 +1,17 @@
 // -------------------------------------------------------------- >>
-// Default Build Groovy Script
+// This Script is for Scaling Instances Down to Zero
 // -------------------------------------------------------------- >>
 // -------------------------------------------------------------- >>
-// Shah's Portfolio Web Application
-// ~
-// NPM | Node.JS | Kubernetes | AWS Cloud | Helm | Docker Hub | Jenkins | Sonarqube | GIT | GitHub | KOPS | Bash | Groovy | Slack | Linux Ubuntu | NEDB | Microservices Design 
-// -------------------------------------------------------------->>>
 def COLOR_MAP = [
     'SUCCESS': 'good', 
     'FAILURE': 'danger',
 ]
 pipeline {
     agent {label 'ansible'}
-    // options {
-    //     Reuse the workspace from previous builds
-    //     ws("/opt/jenkins-slave/workspace/profile-site-build")
-    // }
     environment {
         // Docker Registry Info
         registry_front = ""
         registry_back = ""
-        registry_db = ""
         registryCredentials = ""
 
         // Workspace Subdirectories
@@ -39,7 +30,6 @@ pipeline {
         // Docker Images
         back_image = ""
         front_image = ""
-        db_image = ""
 
         // Kops
         kubecluster = ""
@@ -53,7 +43,6 @@ pipeline {
         // API Keys
         api_maps_key = ""
         api_chat_key = ""
-        api_email_key = ""
 
         // // K8s Docker Creds 
         // docker_config_json = ""
@@ -84,11 +73,6 @@ pipeline {
         // Slack Notifications
         slack_devops = ""
         slack_cluster = ""
-
-        // Postgres
-        postgres_pass = ""
-        postgres_user = ""
-        postgres_db = ""
     }
     options { skipDefaultCheckout() }
     stages {
@@ -117,7 +101,6 @@ pipeline {
                     // ---------- Docker Configuration
                     registry_front = parameters['registry.front']
                     registry_back = parameters['registry.back']
-                    registry_db = parameters['registry.db']
                     registryCredentials = parameters['registry.creds']
 
                     // ---------- Dir Names
@@ -151,7 +134,6 @@ pipeline {
                     // ---------- API Keys
                     api_maps_key = parameters['api.maps_key']
                     api_chat_key = parameters['api.chat_key']
-                    api_email_key = parameters['api.email_key']
                     
                     // ---------- SSL
                     // ssl_tls_key = parameters['tls.key']
@@ -161,7 +143,6 @@ pipeline {
                     // ---------- Docker Images
                     back_image = "${registry_back}:v${BUILD_NUMBER}"
                     front_image = "${registry_front}:v${BUILD_NUMBER}"
-                    db_image = "${registry_db}:v${BUILD_NUMBER}"
 
                     // ---------- Node 1
                     n1 = parameters['n1.label']
@@ -186,12 +167,6 @@ pipeline {
                     slack_devops = parameters['slack.devops']
                     slack_cluster = parameters['slack.cluster']
 
-
-                    // ---------- Postgres
-                    postgres_pass = parameters['postgres.pass']
-                    postgres_user = parameters['postgres.user']
-                    postgres_db = parameters['postgres.db']
-
                     // ---------- Moved to Pipeline Console Config
                     // ssl_tls_crt = params.ssl_tls_crt
                     // docker_config_json = params.docker_config_json
@@ -203,295 +178,44 @@ pipeline {
             post {
                 always {
                     echo '########## Build Status Notification ##########'
-                    slackSend channel: "${slack_devops}",
+                    slackSend channel: "${slack_cluster}",
                     color: COLOR_MAP[currentBuild.currentResult],
-                    message: "Build Started: *${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
+                    message: "*Cluster Scale to Zero Started: ${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
                 }
             }
         }
-        stage('System Check') {
-            steps {
-                sh '''
-                    echo "Gathering resource info on ansible control plane........."
-                    echo --------------------------------------------------------------------
-                    echo --------------------------------------------------------------------
-                    free -h -t
-                    echo --------------------------------------------------------------------
-                    df -h
-                    echo --------------------------------------------------------------------
-                    whoami
-                    echo --------------------------------------------------------------------
-                    docker ps
-                    echo --------------------------------------------------------------------
-                    docker images
-                    echo --------------------------------------------------------------------
-                    echo --------------------------------------------------------------------
-                '''
-            }
-            post {
-                always {
-                    echo 'Slack Notifications.'
-                    slackSend channel: "${slack_devops}",
-                    color: COLOR_MAP[currentBuild.currentResult],
-                    message: "*System Check Completed with Result - ${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"                    
-                }
-            }            
-        }
-        stage('Clone Github Repos') {
-            steps {
-                    script {
-                        echo frontgit
-                        retry(4) {
-                            withCredentials([sshUserPrivateKey(credentialsId: 'gitsshkey', keyFileVariable: 'SSH_KEY')]) {
-                                dir("${frontend}") {
-                                    sshagent(['gitsshkey']) {
-                                        sh "git clone $frontgit ."
-                                    }
-                                }
-                            }
-                        }
-                        retry(4) {
-                            withCredentials([sshUserPrivateKey(credentialsId: 'gitsshkey', keyFileVariable: 'SSH_KEY')]) {
-                                dir("${backend}") {
-                                    sshagent(['gitsshkey']) {
-                                        sh "git clone $backgit ."
-                                    }
-                                }
-                            }
-                        }
-                        retry(4) {
-                            withCredentials([sshUserPrivateKey(credentialsId: 'gitsshkey', keyFileVariable: 'SSH_KEY')]) {
-                                dir("${k8}") {
-                                    sshagent(['gitsshkey']) {
-                                        sh "git clone $defgit ."
-                                    }
-                                }
-                            }
-                        }
-                    }
-            }
-            post {
-                always {
-                    echo 'Slack Notifications.'
-                    slackSend channel: "${slack_devops}",
-                    color: COLOR_MAP[currentBuild.currentResult],
-                    message: "*GitHub Repo Clone Step with Result - ${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"                    
-                }
-            }                
-        }
-        stage('Code Sonarqube Analysis') {
-            environment {
-                scannerHome = tool 'sonar4.7'
-            }
-            steps {
-                withSonarQubeEnv('sonarqube') {
-                    script {
-                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${frontend}"
-                        sh "sleep 1"
-                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${backend}"
-                    }
-                }
-            }
-            post {
-                always {
-                    echo 'Slack Notifications.'
-                    slackSend channel: "${slack_devops}",
-                    color: COLOR_MAP[currentBuild.currentResult],
-                    message: "*Sonarqube Code Analysis Step Result - ${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"                    
-                }
-            }
-        }
-        stage('Build Dev Container') {
-            steps {
-                dir("${frontend}") {
-                    script {
-                        dockerImage = docker.build("${front_image}", "--build-arg maps_key='${api_maps_key}' --build-arg ENVIRONMENT=dev .")
-                        sh 'sleep 1'
-                    }
-                }
-                dir("${backend}") {
-                    script {
-                        dockerImage = docker.build("${back_image}", "--build-arg chat_key=${api_chat_key} --build-arg ENVIRONMENT=dev --build-arg email_key=${api_email_key} .")
-                        sh 'sleep 1'
-                    }
-                }    
-            }
-            post {
-                always {
-                    echo 'Slack Notifications.'
-                    slackSend channel: "${slack_devops}",
-                    color: COLOR_MAP[currentBuild.currentResult],
-                    message: "*Dev Docker Build Step Result - ${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"                    
-                }
-            }
-
-        }
-        stage('Run Dev Containers') {
-            steps{
-                script {
-                    sh "docker run -dt --name ${backend} -p 9000:9000 ${back_image}"
-                    sh 'sleep 5'
-                    sh "docker logs ${backend}"
-                    sh "docker run -dt --name ${frontend} -p 3000:3000 ${front_image}"
-                    sh 'sleep 5'
-                    sh "docker logs ${frontend}"
-                    sh 'sleep 5'
-                }
-            }
-            post {
-                always {
-                    echo 'Slack Notifications.'
-                    slackSend channel: "${slack_devops}",
-                    color: COLOR_MAP[currentBuild.currentResult],
-                    message: "*Dev Docker Container Run Step Result - ${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"                    
-                }
-            }
-            
-        }
-        stage('Run Path Check on Dev Containers') {
-            steps {
-                dir("${frontend}") {
-                    script {
-                        def healthCheckResult = sh(returnStatus: true, script: "docker exec ${frontend} node ${test_file}")
-                        if (healthCheckResult != 0) {
-                            currentBuild.result = 'UNSTABLE'
-                            error("front-Path operation health check failed!")
-                        }
-                        sh "docker cp ${frontend}:${test_result} ."
-                    }
-                }
-                dir("${backend}") {
-                    script {
-                        def healthCheckResult = sh(returnStatus: true, script: "docker exec ${backend} node ${test_file}")
-                        if (healthCheckResult != 0) {
-                            currentBuild.result = 'UNSTABLE'
-                            error("front-Path operation health check failed!")
-                        }
-                        sh "docker cp ${frontend}:${test_result} ."
-                    }
-                }
-            }
-            post {
-                always {
-                    script {
-                        sh "docker stop ${backend} ${frontend}"
-                        sh "docker rm ${backend} ${frontend} && sleep 10"
-
-
-                        sh "docker rmi ${back_image} ${front_image}"
-                    }
-                    echo 'Slack Notifications.'
-                    slackSend channel: "${slack_devops}",
-                    color: COLOR_MAP[currentBuild.currentResult],
-                    message: "*Path Check Step Completed with Result - ${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"                    
-                }
-            }
-        }
-        stage('Docker-Build-Push') {
-            steps {
-                dir("${backend}") {
-                    script {
-                        // Postgres
-                        dockerImage = docker.build("${db_image}", "--build-arg pg_user=${postgres_user} --build-arg pg_pass=${postgres_pass} --build-arg pg_db=${postgres_db} -f ./db/Dockerfile .")
-                        sh 'sleep 1'
-                        docker.withRegistry('', registryCredentials) {
-                            dockerImage.push("v$BUILD_NUMBER")
-                        }  
-                        // Backend Server
-                        dockerImage = docker.build("${back_image}", "--build-arg chat_key=${api_chat_key} --build-arg email_key='${api_email_key}' .")
-                        sh 'sleep 1'
-
-                        docker.withRegistry('', registryCredentials) {
-                            dockerImage.push("v$BUILD_NUMBER")
-                        }                      
-                    }
-                }                    
-                dir("${frontend}") {
-                    //     echo " ____   _    _  _____  _       _____       _____  ______  ______  _____   "
-                    //     echo "|  _ ) | |  | ||_   _|| |     |  _   |    /   __||__  __||  ____||  __ |  "
-                    //     echo "| |_|  | |  | |  | |  | |     | | |  |   |  (_     | |   | |__   | |__| | "
-                    //     echo "|  _ | | |  | |  | |  | |     | | |  |    |__  |   | |   |  __|  |  ___/  "
-                    //     echo "| |_) || |__| | _| |_ | |____ | |_/  /    ___)  |  | |   | |____ | |      "
-                    //     echo "|____/ |_____/ |_____||______||_____/    |_____/   |_|   |______||_|      "
-                    script {
-                        dockerImage = docker.build("${front_image}", "--build-arg map_key=${api_maps_key} .")
-                        sh 'sleep 1'
-                        docker.withRegistry('', registryCredentials) {dockerImage.push("v$BUILD_NUMBER")
-                        }
-                        sh 'sleep 1'
-                    }
-                }
-            }
-            post {
-                always {
-                    script {
-                        sh "docker rmi ${back_image} ${front_image}"
-                        echo 'Slack Notifications.'
-                        slackSend channel: "${slack_devops}",
-                        color: COLOR_MAP[currentBuild.currentResult],
-                        message: "*Docker Build & Push Production Step Completed with Result - ${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL} \n *Logs:* \n ${currentBuild.rawBuild.getLog(1000)}"
-                    }
-                }
-            }
-        }
-        // stage('Kube Cluster Scale/Connect') {
-        //     steps {
-        //         dir("${k8}") {
-        //             script {
-        //                 sh """
-        //                     echo "------------------------------------"
-        //                     echo "------------------------------------"
-        //                     kops update cluster --config=${config} --name=${kubecluster} --state=${s3bucket} --yes --admin
-        //                     echo "------------------------------------"
-
-        //                     kops edit ig ${n1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set="spec.maxSize=${n1_maxS}"
-        //                     kops edit ig ${n1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set="spec.minSize=${n1_minS}"
-        //                     echo "------------------------------------"
-
-        //                     kops edit ig ${n2} --config=${config} --name=${kubecluster} --state=${s3bucket} --set="spec.maxSize=${n2_maxS}"
-        //                     kops edit ig ${n2} --config=${config} --name=${kubecluster} --state=${s3bucket} --set="spec.minSize=${n2_minS}"
-        //                     echo "------------------------------------"
-
-        //                     kops edit ig ${m1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set="spec.maxSize=${m1_maxS}"
-        //                     kops edit ig ${m1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set="spec.minSize=${m1_minS}"
-        //                     echo "------------------------------------"
-
-        //                     # kops rolling-update cluster --config=${config} --name=${kubecluster} --state=${s3bucket}
-        //                     echo "------------------------------------"
-
-        //                     kops validate cluster --config=${config} --name=${kubecluster} --state=${s3bucket} --wait 40m --count 2
-        //                 """
-        //             }
-        //         }
-        //     }
-        //     post {
-        //         always {
-        //             echo '########## Cluster Health Notification ##########'
-        //             slackSend channel: "${slack_cluster}",
-        //             color: COLOR_MAP[currentBuild.currentResult],
-        //             message: "*Cluster Scaled with Result - ${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
-        //         }
-        //     }
-        // }
-        stage('Application-Deployment') {
+        stage('Cluster Scale down') {
             steps {
                 dir("${k8}") {
-                    script {
-                        echo "helm install my-app ./helm/profilecharts --set backimage=${back_image} --set frontimage=${front_image} --set pgimage=${db_image} --set docker_configjson=${docker_config_json} --set tls_crt=${ssl_tls_crt} --set tls_key=${ssl_tls_key} && sleep 30"
-                        sh 'echo ------------------------------------'
-                        sh '/bin/bash move.sh'
-                        sh 'echo ------------------------------------'
-                        sh 'echo ------------------------------------'
-                        sh "helm upgrade my-app ./helm/profilecharts --set backimage=${back_image} --set frontimage=${front_image} --set pgimage=${db_image} --set docker_configjson=${docker_config_json} --set tls_crt=${ssl_tls_crt} --set tls_key=${ssl_tls_key} && sleep 30"
+                    retry(4) {
+                        script {
+                            sh """
+                                echo '--------------------------------------'
+                                kops edit ig ${n1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set='spec.minSize=0'
+                                set +e
+                                sleep 3
+                                kops edit ig ${n1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set='spec.maxSize=0'                                
+                                sleep 3
+                                echo '------------------------------------'
+                                kops edit ig ${m1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set='spec.minSize=0'
+                                sleep 3
+                                kops edit ig ${m1} --config=${config} --name=${kubecluster} --state=${s3bucket} --set='spec.maxSize=0'
+                                sleep 3
+                                echo '------------------------------------'
+                                kops update cluster --config=${config} --name=${kubecluster} --state=${s3bucket} --yes --admin
+                                set -e
+                                echo 'Scaled to Zero'
+                            """
+                        }
                     }
                 }
             }
             post {
                 always {
-                    echo 'Slack Notifications.'
-                    slackSend channel: "${slack_devops}",
-                        color: COLOR_MAP[currentBuild.currentResult],
-                        message: "*Build Completed with Result - ${currentBuild.currentResult}:* \n Job ${env.JOB_NAME} \n build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL} \n *Logs:* \n ${currentBuild.rawBuild.getLog(1000)}"
+                    echo '########## Cluster Scaled to 0 ##########'
+                    slackSend channel: "${slack_cluster}",
+                    color: COLOR_MAP[currentBuild.currentResult],
+                    message: "*Cluster Scaled to Zero with Result - ${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
                 }
             }
         }
