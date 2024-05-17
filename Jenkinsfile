@@ -401,7 +401,7 @@ pipeline {
                             dockerImage.push("v$BUILD_NUMBER")
                         }  
                         // Backend Server
-                        dockerImage = docker.build("${back_image}", "--build-arg chat_key=${api_chat_key} --build-arg email_key='${api_email_key} '--build-arg pg_user=${postgres_user} --build-arg pg_pass=${postgres_pass} --build-arg pg_db=${postgres_db} --build-arg pg_host=${postgres_host} .")
+                        dockerImage = docker.build("${back_image}", "--build-arg chat_key=${api_chat_key} --build-arg email_key='${api_email_key}' --build-arg pg_user=${postgres_user} --build-arg pg_pass=${postgres_pass} --build-arg pg_db=${postgres_db} --build-arg pg_host='${postgres_host}' .")
                         sh 'sleep 1'
 
                         docker.withRegistry('', registryCredentials) {
