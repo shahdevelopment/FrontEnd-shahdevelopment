@@ -86,9 +86,10 @@ pipeline {
         slack_cluster = ""
 
         // Postgres
+        postgres_user = ""        
         postgres_pass = ""
-        postgres_user = ""
         postgres_db = ""
+        postgres_host = ""
     }
     options { skipDefaultCheckout() }
     stages {
@@ -188,9 +189,10 @@ pipeline {
 
 
                     // ---------- Postgres
+                    postgres_user = parameters['postgres.user']                    
                     postgres_pass = parameters['postgres.pass']
-                    postgres_user = parameters['postgres.user']
                     postgres_db = parameters['postgres.db']
+                    postgres_host = parameters['postgres.host']
 
                     // ---------- Moved to Pipeline Console Config
                     // ssl_tls_crt = params.ssl_tls_crt
@@ -392,7 +394,8 @@ pipeline {
                 dir("${backend}") {
                     script {
                         // Postgres
-                        dockerImage = docker.build("${db_image}", "--build-arg pg_user=${postgres_user} --build-arg pg_pass=${postgres_pass} --build-arg pg_db=${postgres_db} -f ./db/Dockerfile .")
+                        dockerImage = docker.build("${db_image}", "--build-arg pg_user=${postgres_user} --build-arg pg_pass=${postgres_pass} --build-arg pg_db=${postgres_db} --build-arg pg_host=${postgres_host} -f ./db/Dockerfile .")
+
                         sh 'sleep 1'
                         docker.withRegistry('', registryCredentials) {
                             dockerImage.push("v$BUILD_NUMBER")
@@ -482,6 +485,7 @@ pipeline {
                         sh '/bin/bash move.sh'
                         sh 'echo ------------------------------------'
                         sh 'echo ------------------------------------'
+
                         sh "helm upgrade my-app ./helm/profilecharts --set backimage=${back_image} --set frontimage=${front_image} --set pgimage=${db_image} --set docker_configjson=${docker_config_json} --set tls_crt=${ssl_tls_crt} --set tls_key=${ssl_tls_key} && sleep 30"
                     }
                 }
