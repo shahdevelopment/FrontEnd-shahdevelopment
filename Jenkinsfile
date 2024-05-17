@@ -281,28 +281,28 @@ pipeline {
                 }
             }                
         }
-        stage('Code Sonarqube Analysis') {
-            environment {
-                scannerHome = tool 'sonar4.7'
-            }
-            steps {
-                withSonarQubeEnv('sonarqube') {
-                    script {
-                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${frontend}"
-                        sh "sleep 1"
-                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${backend}"
-                    }
-                }
-            }
-            post {
-                always {
-                    echo 'Slack Notifications.'
-                    slackSend channel: "${slack_devops}",
-                    color: COLOR_MAP[currentBuild.currentResult],
-                    message: "*Sonarqube Code Analysis Step Result - ${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"                    
-                }
-            }
-        }
+        // stage('Code Sonarqube Analysis') {
+        //     environment {
+        //         scannerHome = tool 'sonar4.7'
+        //     }
+        //     steps {
+        //         withSonarQubeEnv('sonarqube') {
+        //             script {
+        //                 sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${frontend}"
+        //                 sh "sleep 1"
+        //                 sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${backend}"
+        //             }
+        //         }
+        //     }
+        //     post {
+        //         always {
+        //             echo 'Slack Notifications.'
+        //             slackSend channel: "${slack_devops}",
+        //             color: COLOR_MAP[currentBuild.currentResult],
+        //             message: "*Sonarqube Code Analysis Step Result - ${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"                    
+        //         }
+        //     }
+        // }
         stage('Build Dev Container') {
             steps {
                 dir("${frontend}") {
