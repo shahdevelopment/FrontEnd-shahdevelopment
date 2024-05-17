@@ -428,7 +428,7 @@ pipeline {
             post {
                 always {
                     script {
-                        sh "docker rmi ${back_image} ${front_image}"
+                        sh "docker rmi ${back_image} ${front_image} ${db_image}"
                         echo 'Slack Notifications.'
                         slackSend channel: "${slack_devops}",
                         color: COLOR_MAP[currentBuild.currentResult],
