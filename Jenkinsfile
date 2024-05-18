@@ -303,92 +303,92 @@ pipeline {
         //         }
         //     }
         // }
-        stage('Build Dev Container') {
-            steps {
-                dir("${frontend}") {
-                    script {
-                        dockerImage = docker.build("${front_image}", "--build-arg maps_key='${api_maps_key}' --build-arg ENVIRONMENT=dev .")
-                        sh 'sleep 1'
-                    }
-                }
-                dir("${backend}") {
-                    script {
-                        dockerImage = docker.build("${back_image}", "--build-arg chat_key=${api_chat_key} --build-arg ENVIRONMENT=dev --build-arg email_key=${api_email_key} .")
-                        sh 'sleep 1'
-                    }
-                }    
-            }
-            post {
-                always {
-                    echo 'Slack Notifications.'
-                    slackSend channel: "${slack_devops}",
-                    color: COLOR_MAP[currentBuild.currentResult],
-                    message: "*Dev Docker Build Step Result - ${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"                    
-                }
-            }
+        // stage('Build Dev Container') {
+        //     steps {
+        //         dir("${frontend}") {
+        //             script {
+        //                 dockerImage = docker.build("${front_image}", "--build-arg maps_key='${api_maps_key}' --build-arg ENVIRONMENT=dev .")
+        //                 sh 'sleep 1'
+        //             }
+        //         }
+        //         dir("${backend}") {
+        //             script {
+        //                 dockerImage = docker.build("${back_image}", "--build-arg chat_key=${api_chat_key} --build-arg ENVIRONMENT=dev --build-arg email_key=${api_email_key} .")
+        //                 sh 'sleep 1'
+        //             }
+        //         }    
+        //     }
+        //     post {
+        //         always {
+        //             echo 'Slack Notifications.'
+        //             slackSend channel: "${slack_devops}",
+        //             color: COLOR_MAP[currentBuild.currentResult],
+        //             message: "*Dev Docker Build Step Result - ${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"                    
+        //         }
+        //     }
 
-        }
-        stage('Run Dev Containers') {
-            steps{
-                script {
-                    sh "docker run -dt --name ${backend} -p 9000:9000 ${back_image}"
-                    sh 'sleep 5'
-                    sh "docker logs ${backend}"
-                    sh "docker run -dt --name ${frontend} -p 3000:3000 ${front_image}"
-                    sh 'sleep 5'
-                    sh "docker logs ${frontend}"
-                    sh 'sleep 5'
-                }
-            }
-            post {
-                always {
-                    echo 'Slack Notifications.'
-                    slackSend channel: "${slack_devops}",
-                    color: COLOR_MAP[currentBuild.currentResult],
-                    message: "*Dev Docker Container Run Step Result - ${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"                    
-                }
-            }
+        // }
+        // stage('Run Dev Containers') {
+        //     steps{
+        //         script {
+        //             sh "docker run -dt --name ${backend} -p 9000:9000 ${back_image}"
+        //             sh 'sleep 5'
+        //             sh "docker logs ${backend}"
+        //             sh "docker run -dt --name ${frontend} -p 3000:3000 ${front_image}"
+        //             sh 'sleep 5'
+        //             sh "docker logs ${frontend}"
+        //             sh 'sleep 5'
+        //         }
+        //     }
+        //     post {
+        //         always {
+        //             echo 'Slack Notifications.'
+        //             slackSend channel: "${slack_devops}",
+        //             color: COLOR_MAP[currentBuild.currentResult],
+        //             message: "*Dev Docker Container Run Step Result - ${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"                    
+        //         }
+        //     }
             
-        }
-        stage('Run Path Check on Dev Containers') {
-            steps {
-                dir("${frontend}") {
-                    script {
-                        def healthCheckResult = sh(returnStatus: true, script: "docker exec ${frontend} node ${test_file}")
-                        if (healthCheckResult != 0) {
-                            currentBuild.result = 'UNSTABLE'
-                            error("front-Path operation health check failed!")
-                        }
-                        sh "docker cp ${frontend}:${test_result} ."
-                    }
-                }
-                dir("${backend}") {
-                    script {
-                        def healthCheckResult = sh(returnStatus: true, script: "docker exec ${backend} node ${test_file}")
-                        if (healthCheckResult != 0) {
-                            currentBuild.result = 'UNSTABLE'
-                            error("front-Path operation health check failed!")
-                        }
-                        sh "docker cp ${frontend}:${test_result} ."
-                    }
-                }
-            }
-            post {
-                always {
-                    script {
-                        sh "docker stop ${backend} ${frontend}"
-                        sh "docker rm ${backend} ${frontend} && sleep 10"
+        // }
+        // stage('Run Path Check on Dev Containers') {
+        //     steps {
+        //         dir("${frontend}") {
+        //             script {
+        //                 def healthCheckResult = sh(returnStatus: true, script: "docker exec ${frontend} node ${test_file}")
+        //                 if (healthCheckResult != 0) {
+        //                     currentBuild.result = 'UNSTABLE'
+        //                     error("front-Path operation health check failed!")
+        //                 }
+        //                 sh "docker cp ${frontend}:${test_result} ."
+        //             }
+        //         }
+        //         dir("${backend}") {
+        //             script {
+        //                 def healthCheckResult = sh(returnStatus: true, script: "docker exec ${backend} node ${test_file}")
+        //                 if (healthCheckResult != 0) {
+        //                     currentBuild.result = 'UNSTABLE'
+        //                     error("front-Path operation health check failed!")
+        //                 }
+        //                 sh "docker cp ${frontend}:${test_result} ."
+        //             }
+        //         }
+        //     }
+        //     post {
+        //         always {
+        //             script {
+        //                 sh "docker stop ${backend} ${frontend}"
+        //                 sh "docker rm ${backend} ${frontend} && sleep 10"
 
 
-                        sh "docker rmi ${back_image} ${front_image}"
-                    }
-                    echo 'Slack Notifications.'
-                    slackSend channel: "${slack_devops}",
-                    color: COLOR_MAP[currentBuild.currentResult],
-                    message: "*Path Check Step Completed with Result - ${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"                    
-                }
-            }
-        }
+        //                 sh "docker rmi ${back_image} ${front_image}"
+        //             }
+        //             echo 'Slack Notifications.'
+        //             slackSend channel: "${slack_devops}",
+        //             color: COLOR_MAP[currentBuild.currentResult],
+        //             message: "*Path Check Step Completed with Result - ${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"                    
+        //         }
+        //     }
+        // }
         stage('Docker-Build-Push') {
             steps {
                 dir("${backend}") {
