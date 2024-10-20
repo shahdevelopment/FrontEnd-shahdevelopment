@@ -31,7 +31,7 @@ pipeline {
         // EndPoints
         app_back_end = ""
         app_domain = ""
-        app_front_url = ""
+        cors_url = ""
         
         // Sonarqube
         SONAR_PROJECT_KEY = ""
@@ -171,7 +171,7 @@ pipeline {
                     // EndPoints
                     app_back_end = parameters['app.back_end']
                     app_domain = parameters['app.domain']
-                    app_front_url = parameters['app.front_domain']
+                    cors_url = parameters['app.cors_url']
 
                     // ---------- Docker Images
                     back_image = "${registry_back}:v${BUILD_NUMBER}"
@@ -417,7 +417,7 @@ pipeline {
                             dockerImage.push("v$BUILD_NUMBER")
                         }  
                         // Backend Server
-                        dockerImage = docker.build("${back_image}", "--build-arg chat_key=${api_chat_key} --build-arg front_url=${app_front_url} --build-arg admin_email=${app_admin_email} --build-arg email_key='${api_email_key}' --build-arg pg_user=${postgres_user} --build-arg pg_pass=${postgres_pass} --build-arg pg_db=${postgres_db} --build-arg pg_host='${postgres_host}' --build-arg jwt_secret=${auth_jwt_secret} .")
+                        dockerImage = docker.build("${back_image}", "--build-arg chat_key=${api_chat_key} --build-arg admin_email=${app_admin_email} --build-arg email_key='${api_email_key}' --build-arg pg_user=${postgres_user} --build-arg pg_pass=${postgres_pass} --build-arg pg_db=${postgres_db} --build-arg pg_host='${postgres_host}' --build-arg jwt_secret=${auth_jwt_secret} --build-arg cors_url=${cors_url} .")
                         sh 'sleep 1'
 
                         docker.withRegistry('', registryCredentials) {
