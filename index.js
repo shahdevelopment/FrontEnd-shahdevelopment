@@ -159,7 +159,7 @@ app.get('/signup', (req, res) => {
                         const email = document.getElementById('email').value;
                         const password = document.getElementById('password').value;
                         
-                        const response = await fetch('http://${BACK_END}/signup', {
+                        const response = await fetch('${BACK_END}/signup', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ email, password })
@@ -256,7 +256,7 @@ app.get('/login', (req, res) => {
                         const password = document.getElementById('password').value;
 
                         try {
-                            const response = await fetch('http://${BACK_END}/login', {
+                            const response = await fetch('${BACK_END}/login', {
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/json' },
                                 body: JSON.stringify({ email, password })
@@ -943,7 +943,7 @@ app.get('/selfie', (req, res) => {
                 body: JSON.stringify({ token })  // Correctly stringify the token as an object
             };
             button.addEventListener('click', async event => {
-                const jwtdata = await fetch('http://${BACK_END}/jwtDecode', jwtoptions);
+                const jwtdata = await fetch('${BACK_END}/jwtDecode', jwtoptions);
                 const datajwt = await jwtdata.json();
                 if (datajwt) {
                     const mood = document.getElementById('mood').value;
@@ -959,7 +959,7 @@ app.get('/selfie', (req, res) => {
                         },
                         body: JSON.stringify({ data })
                     };
-                    var response = await fetch('http://${BACK_END}/api', options);
+                    var response = await fetch('${BACK_END}/api', options);
                     const postRes = await response.json();
                     alert("Post Submitted!");
 
@@ -1026,7 +1026,7 @@ app.get('/data', async (req, res) => {
             },
             body: JSON.stringify({ token })  // Correctly stringify the token as an object
         };
-        const jwtdata = await fetch(`http://${BACK_END}/jwtDecode`, jwtoptions);
+        const jwtdata = await fetch(`${BACK_END}/jwtDecode`, jwtoptions);
         const datajwt = await jwtdata.json();
         const userId = datajwt.id;
         console.log(userId);

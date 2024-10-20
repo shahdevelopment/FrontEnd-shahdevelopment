@@ -1,5 +1,5 @@
 async function getData(userId, backend) {
-  const response = await fetch(`http://${backend}/api/${userId}`);
+  const response = await fetch(`${backend}/api/${userId}`);
   const data = await response.json();
 
   for (item of data) {
@@ -34,7 +34,7 @@ async function getData(userId, backend) {
   console.log(data);
 }
 function deletePost(postId) {
-  fetch(`http://localhost:9000/api/${postId}`, {
+  fetch(`${backend}/api/${postId}`, {
     method: 'DELETE'
   })
     .then(response => {

@@ -13,7 +13,7 @@ function changeInput(value) {
 async function getMessage(backend) {
     console.log('Clicked');
     alert('Sending Chat.......');
-    const baseUrl = `https://${backend}/chat`
+    const baseUrl = `${backend}/chat`
     const options = {
         method: 'POST',
         headers: {

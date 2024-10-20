@@ -1,5 +1,5 @@
 async function getData(backend) {
-  const response = await fetch(`http://${backend}/allPosts/`);
+  const response = await fetch(`${backend}/allPosts/`);
   const data = await response.json();
 
   for (item of data) {
