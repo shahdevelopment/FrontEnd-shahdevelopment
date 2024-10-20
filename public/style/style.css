@@ -220,7 +220,6 @@ body {
   color: white;
   font-weight: bold;
   text-decoration: none;
-  border-radius: none;
 }
 
 /* ChatGPT */
@@ -264,6 +263,36 @@ body {
   border-radius: 8px;
 }
 
+.pictcontPortal {
+  max-height: 60px;
+  color: #000000;
+  min-width: 100px;
+  margin: auto;
+  user-select: none;
+  border: 1px solid #fff;
+  padding: 1px;
+  box-sizing: border-box;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  background-color: grey;
+}
+#loginForm button {
+  background-color: black;
+}
+#loginForm button:hover {
+  opacity: .5;
+  cursor: crosshair;
+}
+
+#signupForm button {
+  background-color: black;
+}
+#signupForm button:hover {
+  opacity: .5;
+  cursor: crosshair;
+}
+
 .pictcont .shahcont {
   max-width: 100%;
   max-height: 90%;
@@ -271,6 +300,18 @@ body {
   overflow: hidden;
   position: relative;
   border-radius: 8px;
+  
+}
+.pictcontPortal .shahcont {
+  max-width: 100%;
+  max-height: 90%;
+  overflow: hidden;
+  position: relative;
+  border-radius: 8px;
+}
+.loginLink:hover {
+  opacity: .5;
+
 }
 
 .workexp {
@@ -295,10 +336,8 @@ body {
 .bodymain {
   background-image: url("../image/mountain2.jpg");
   display: flex;
-  justify-content: space-between;
   margin: 0 auto;
   flex-wrap: wrap;
-
 }
 
 .secdiv {
@@ -307,6 +346,32 @@ body {
   text-decoration-style: solid;
   margin: auto;
   margin-bottom: 50;
+}
+
+.secdivPortal {
+  min-width: 300px;
+  color: black;
+  text-decoration-style: solid;
+  margin: auto;
+  margin-bottom: 50;
+  margin-top: 50;
+  background-color: grey;
+  display: flex;
+  justify-content: space-around;
+}
+
+.secdivPortal #loginForm {
+  margin-top: 20;
+}
+#loginForm input {
+  color: #000000;
+}
+#signupForm input {
+  color: #000000;
+}
+
+.secdivPortal #signupForm {
+  margin-top: 20;
 }
 
 .logs {
@@ -355,7 +420,6 @@ body {
   font-size: 25px;
   margin-bottom: 50;
   max-width: 690;
-  font-weight: 0;
 }
 
 .smol {

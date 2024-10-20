@@ -2,14 +2,17 @@ import express from 'express';
 const app = express();
 const PORT = 3000;
 const HOST = '0.0.0.0';
+import jwt from 'jsonwebtoken';
+import cookieParser from 'cookie-parser';
+
+const JWT_SECRET = process.env.JWT_SECRET;
+const BACK_END = process.env.BACK_END;
 
 // Set the MIME type for JavaScript files
 app.set('view engine', 'js');
 app.engine('js', (_, options, callback) => {
     callback(null, options.source);
 });
-
-// require('dotenv').config();
 
 app.use(express.static('public', {
     setHeaders: (response, path, stat) => {
@@ -19,7 +22,7 @@ app.use(express.static('public', {
     }
 }));
 app.use(express.json({ limit: '1mb' }));
-
+app.use(cookieParser());
 app.listen(PORT, HOST, () => {
     console.log(`Server is running on http://${HOST}:${PORT}`);
 });
@@ -51,6 +54,253 @@ app.get('/blocked', (req, res) => {
     `;
     res.send(modifiedHTML);
 })
+app.get('/signup', (req, res) => {
+    const modifiedHTML = `
+        <html lang="en">
+            <head>
+                <meta charset="utf-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1">
+                <title>Shah's Profile</title>
+                <link rel="stylesheet" href="style/style.css">
+            </head>
+            <div class="topnav">
+                <div>
+                    <a class="name"><p>Signup</p></a>
+                </div>
+                <div>
+                    <div id="menu-bar">
+                        <div id="menu-buttons">
+                            <div class="dropdown">
+                                <button class="dropbtn">Projects</button>
+                                <div class="dropdown-content">
+                                    <a href="/fastapi">FastAPI Server</a>
+                                    <a href="/geolocate">Geo Location App</a>
+                                    <a href="/shahgpt">ChatGPT Clone</a>
+                                    <a href="/login">My Profile</a>
+                                    <a href="/allPosts">Posts</a>
+                                </div>
+                            </div>
+                            <button onclick="highlightButton(this)" class="menu"><a href="/contactpage">Contact</a></button>
+                            <button onclick="highlightButton(this)" class="menu"><a href="/form">Email Form</a></button>
+                            <button onclick="highlightButton(this)" class="menu"><a href="Shah_Solehria_Resume.pdf" target="_blank">Resume</a></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="ham">
+                    <button class="hamburger-menu">        
+                        <div class="hamburger-line"></div>
+                        <div class="hamburger-line"></div>
+                        <div class="hamburger-line"></div>
+                    </button>
+                </div>
+                <script src="js/hamburger.js"></script>
+            </div>
+            <body>
+                <div class="bodymain">
+                    <div class="pictcontPortal">
+                        <div class="shahcont">
+                            <h2>Sign Up Now to Get Started!</h2>
+                        </div>
+                    </div>           
+                    <div class="secdivPortal">
+                        <form id="signupForm">
+                            <label for="email">Email:</label>
+                            <input type="email" id="email" required><br><br>
+                            <label for="password">Password:</label>
+                            <input type="password" id="password" required><br><br>
+                            <button type="submit">Create User</button>
+                        </form>
+                    </div>
+                </div>
+                <br></br>
+                <div class="latnew">
+                    <p>Fill out your email and password of choice to get started!</p>
+                </div>
+                <br></br>
+
+                <div class="latnew"><h1>Check out This Site's GitHub Repos</h1></div>
+                <div class="features1">
+                    <div class="features-in">
+                        <div class="fea-item1">
+                            <a href="https://github.com/shahdevelopment/FrontEnd-shahdevelopment">
+                                <img style='height: 100%; width: 100%; object-fit: contain' src="image/privcloud.png" width="343"
+                                    height="300" alt="Front End" />
+                            </a>
+                            <div class="fea-1"><h3>Front-End Code</h3></div>
+                        </div>
+                        <div class="fea-item2">
+                            <a href="https://github.com/shahdevelopment/BackEnd-shahdevelopment">
+                                <img style='height: 100%; width: 100%; object-fit: contain' src="image/backend.jpg" alt="Back-End"
+                                    class=feature />
+                            </a>
+                            <div class="fea-1"><h3>Back-End Code</h3></div>
+                        </div>
+                        <div class="fea-item3">
+                            <a href="https://github.com/shahdevelopment/K8sDefinitions-shahdevelopment">
+                                <img style='height: 100%; width: 100%; object-fit: contain' src="image/k8.png"
+                                    alt="Kubernetes Defintion Files" class=feature />
+                            </a>
+                            <div class="fea-1"><h3>Kubernetes Defintions Code</h3></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer">
+                        <a href="/"><button class="dropbtn">Home</button></a>
+
+                    <div class="footmenu">
+                        <a href="mailto:shahjehan-solehria@hotmail.com"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/outlook.png"/></button></a>
+                        <a href="https://github.com/shahdevelopment/"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/github.png"/></button></a>
+                        <a href="https://fastapi-shah.herokuapp.com/docs"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/fastapi.png"/></button></a>
+                    </div>
+                </div>
+                <script>
+                    document.getElementById('signupForm').addEventListener('submit', async function(e) {
+                        e.preventDefault();
+                        const email = document.getElementById('email').value;
+                        const password = document.getElementById('password').value;
+                        
+                        const response = await fetch('http://${BACK_END}/signup', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ email, password })
+                        });
+                        
+                        const data = await response.json();
+                        
+                        if (response.ok) {
+                            alert('Account Creation Successful!');
+                            window.location.href = '/login' // Redirect after successful login
+                        } else {
+                            alert(data.message);
+                        }
+                    });
+                </script>
+            </body>
+        </html>
+    `
+    res.send(modifiedHTML);
+});
+app.get('/login', (req, res) => {
+    const modifiedHTML = `
+        <html lang="en">
+            <head>
+                <meta charset="utf-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1">
+                <title>Shah's Profile</title>
+                <link rel="stylesheet" href="style/style.css">
+            </head>
+            <body>
+                <div class="topnav">
+                    <div>
+                        <a class="name"><p>Login</p></a>
+                    </div>
+                    <div>
+                        <div id="menu-bar">
+                            <div id="menu-buttons">
+                                <div class="dropdown">
+                                    <button class="dropbtn">Projects</button>
+                                    <div class="dropdown-content">
+                                        <a href="/fastapi">FastAPI Server</a>
+                                        <a href="/geolocate">Geo Location App</a>
+                                        <a href="/shahgpt">ChatGPT Clone</a>
+                                        <a href="/login">My Profile</a>
+                                        <a href="/allPosts">Posts</a>
+                                    </div>
+                                </div>
+                                <button onclick="highlightButton(this)" class="menu"><a href="/contactpage">Contact</a></button>
+                                <button onclick="highlightButton(this)" class="menu"><a href="/form">Email Form</a></button>
+                                <button onclick="highlightButton(this)" class="menu"><a href="Shah_Solehria_Resume.pdf" target="_blank">Resume</a></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ham">
+                        <button class="hamburger-menu">        
+                            <div class="hamburger-line"></div>
+                            <div class="hamburger-line"></div>
+                            <div class="hamburger-line"></div>
+                        </button>
+                    </div>
+                    <script src="js/hamburger.js"></script>
+                </div>
+                <div class="bodymain">
+                    <div class="pictcontPortal">
+                        <div class="shahcont">
+                            <h2>Login Page</h2>
+                        </div>
+                    </div>           
+                    <div class="secdivPortal">
+                        <form id="loginForm">
+                            <label for="email">Email:</label>
+                            <input type="email" id="email" required><br><br>
+                            <label for="password">Password:</label>
+                            <input type="password" id="password" required><br><br>
+                            <button type="submit">Login</button>
+                        </form>
+                    </div>
+                </div>
+                <br>
+                <div class="footer">
+                        <a href="/"><button class="dropbtn">Home</button></a>
+
+                    <div class="footmenu">
+                        <a href="mailto:shahjehan-solehria@hotmail.com"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/outlook.png"/></button></a>
+                        <a href="https://github.com/shahdevelopment/"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/github.png"/></button></a>
+                        <a href="https://fastapi-shah.herokuapp.com/docs"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/fastapi.png"/></button></a>
+                    </div>
+                </div>
+
+                <script>
+                    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+                        e.preventDefault();
+                        const email = document.getElementById('email').value;
+                        const password = document.getElementById('password').value;
+
+                        try {
+                            const response = await fetch('http://${BACK_END}/login', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ email, password })
+                            });
+                            
+                            const data = await response.json();
+                            if (response.ok) {
+                                alert('Login successful!');
+                                
+                                // Set the cookie on the client-side
+                                document.cookie = "authToken=" + data.token + "; path=/; secure";
+
+                                // Redirect after successful login
+                                window.location.href = '/selfie';
+                            } else {
+                                alert(data.message);
+                            }
+                        } catch (error) {
+                            console.error('Error during login:', error);
+                        }
+                    });
+                </script>
+            </body>
+        </html>
+    `;
+    res.send(modifiedHTML);
+});
+app.get('/dashboard', (req, res) => {
+    const token = req.query.token;
+    if (!token) {
+        // console.log(token)
+        return res.status(401).json({ message: 'Access denied, token missing!' });
+    }
+  
+    try {
+        const verified = jwt.verify(token, JWT_SECRET);
+        res.json({ message: 'Welcome to the dashboard!', user: verified });
+    } catch (err) {
+        console.log(JWT_SECRET)
+        console.log(token)
+        res.status(400).json({ message: 'Invalid token' });
+        // console.log(token);
+    }
+});
 app.get('/geolocate', (req, res) => {
     const apiKey = process.env.api_key_new;
     const modifiedHTML = `
@@ -75,10 +325,11 @@ app.get('/geolocate', (req, res) => {
                     <div class="dropdown">
                         <button class="dropbtn">Projects</button>
                         <div class="dropdown-content">
-                        <a href="/fastapi">FastAPI Server</a>
-                        <a href="/geolocate">Geo Location App</a>
-                        <a href="/selfie">Selfie App</a>
-                        <a href="/shahgpt">ChatGPT Clone</a>
+                            <a href="/fastapi">FastAPI Server</a>
+                            <a href="/geolocate">Geo Location App</a>
+                            <a href="/shahgpt">ChatGPT Clone</a>
+                            <a href="/login">My Profile</a>
+                            <a href="/allPosts">Posts</a>
                         </div>
                     </div>
                     <button onclick="highlightButton(this)" class="menu"><a href="/contactpage">Contact</a></button>
@@ -166,6 +417,14 @@ app.get('/shahgpt', (req, res) => {
                 safe to interact with. Your feeback will help us improve.</p>
         </section>
         <script type="application/javascript" src="js/app.js"></script>
+        <script>
+            inputContainer.addEventListener('keypress', function (event) {
+                if (event.keyCode === 13) {
+                    event.preventDefault();
+                    getMessage(${BACK_END});
+                }
+            });
+        </script>
     </body>
     </html>
     `;
@@ -193,8 +452,9 @@ app.get('/contactpage', (req, res) => {
                         <div class="dropdown-content">
                             <a href="/fastapi">FastAPI Server</a>
                             <a href="/geolocate">Geo Location App</a>
-                            <a href="/selfie">Selfie App</a>
                             <a href="/shahgpt">ChatGPT Clone</a>
+                            <a href="/login">My Profile</a>
+                            <a href="/allPosts">Posts</a>
                         </div>
                     </div>
                     <button onclick="highlightButton(this)" class="menu"><a href="/contactpage">Contact</a></button>
@@ -274,8 +534,9 @@ app.get('/fastapi', (req, res) => {
                         <div class="dropdown-content">
                             <a href="/fastapi">FastAPI Server</a>
                             <a href="/geolocate">Geo Location App</a>
-                            <a href="/selfie">Selfie App</a>
                             <a href="/shahgpt">ChatGPT Clone</a>
+                            <a href="/login">My Profile</a>
+                            <a href="/allPosts">Posts</a>
                         </div>
                     </div>
                     <button onclick="highlightButton(this)" class="menu"><a href="/contactpage">Contact</a></button>
@@ -393,8 +654,9 @@ app.get('/', (req, res) => {
                         <div class="dropdown-content">
                             <a href="/fastapi">FastAPI Server</a>
                             <a href="/geolocate">Geo Location App</a>
-                            <a href="/selfie">Selfie App</a>
                             <a href="/shahgpt">ChatGPT Clone</a>
+                            <a href="/login">My Profile</a>
+                            <a href="/allPosts">Posts</a>
                         </div>
                     </div>
                     <button onclick="highlightButton(this)" class="menu"><a href="/contactpage">Contact</a></button>
@@ -586,150 +848,261 @@ app.get('/', (req, res) => {
     res.send(modifiedHTML);
 });
 app.get('/selfie', (req, res) => {
+    const token = req.cookies.authToken;
+    const data = `'${token}'`
     const modifiedHTML = `
     <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>nodeJS and neDB Selfie App</title>
-        <link rel="stylesheet" href="style/style.css">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
-    </head>
-    <div class="topnav">
-        <div>
-            <a class="name" href="/"><p>Shah Solehria</p></a>
-            <h2 class="title">Cloud | DevOps | Data</h2>
-        </div>
-        <div>
-            <div id="menu-bar">
-                <div id="menu-buttons">
-                    <div class="dropdown">
-                        <button class="dropbtn">Projects</button>
-                        <div class="dropdown-content">
-                            <a href="/fastapi">FastAPI Server</a>
-                            <a href="/geolocate">Geo Location App</a>
-                            <a href="/selfie">Selfie App</a>
-                            <a href="/shahgpt">ChatGPT Clone</a>
+        <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>nodeJS and neDB Selfie App</title>
+            <link rel="stylesheet" href="style/style.css">
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+        </head>
+        <div class="topnav">
+            <div>
+                <a class="name" href="/"><p>Shah Solehria</p></a>
+                <h2 class="title">Cloud | DevOps | Data</h2>
+            </div>
+            <div>
+                <div id="menu-bar">
+                    <div id="menu-buttons">
+                        <div class="dropdown">
+                            <button class="dropbtn">Projects</button>
+                            <div class="dropdown-content">
+                                <a href="/fastapi">FastAPI Server</a>
+                                <a href="/geolocate">Geo Location App</a>
+                                <a href="/shahgpt">ChatGPT Clone</a>
+                                <a href="/login">My Profile</a>
+                                <a href="/allPosts">Posts</a>
+                            </div>
                         </div>
+                        <button onclick="highlightButton(this)" class="menu"><a href="/contactpage">Contact</a></button>
+                        <button onclick="highlightButton(this)" class="menu"><a href="/form">Email Form</a></button>
+                        <button onclick="highlightButton(this)" class="menu"><a href="Shah_Solehria_Resume.pdf" target="_blank">Resume</a></button>
                     </div>
-                    <button onclick="highlightButton(this)" class="menu"><a href="/contactpage">Contact</a></button>
-                    <button onclick="highlightButton(this)" class="menu"><a href="/form">Email Form</a></button>
-                    <button onclick="highlightButton(this)" class="menu"><a href="Shah_Solehria_Resume.pdf" target="_blank">Resume</a></button>
                 </div>
             </div>
-        </div>
-        <div class="ham">
-            <button class="hamburger-menu">            
-                <div class="hamburger-line"></div>
-                <div class="hamburger-line"></div>
-                <div class="hamburger-line"></div>
-            </button>
-        </div>
-        <script src="js/hamburger.js"></script>
-    </div>
-    <body>
-        <div class="geoSelfie">
-            <div class="geobuttonDiv">
-                <h1>Selfie App (**Antivirus may block this functionality)</h1>
-                <br />
-                <br />
-                <br />
-                <button onclick="startVideo()" id="startvideo">Turn Camera On</button>
-                <br />
-                <br />
-                <button onclick="stopVideo()" id="stopvideo">Turn Camera Off</button>
-                <br />
-                <br />
-                <input id="mood" value="Enter your mood!" />
-                <br />
-                <br />
-                <button id="submit">Submit</button>
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <div><a href="/data" class="geo">Data Repo</a></div>
+            <div class="ham">
+                <button class="hamburger-menu">            
+                    <div class="hamburger-line"></div>
+                    <div class="hamburger-line"></div>
+                    <div class="hamburger-line"></div>
+                </button>
             </div>
-            <script src="js/camera.js"></script>
-            <div class="cameraDiv"><div id="cameraid"><video id="video" srcObject="MediaStream"></video></div></div>
+            <script src="js/hamburger.js"></script>
         </div>
-    </body>
-    <div class="footer">
-        <a href="/"><button class="dropbtn">Home</button></a>
-        <div class="footmenu">
-            <a href="mailto:shahjehan-solehria@hotmail.com"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/outlook.png"/></button></a>
-            <a href="https://github.com/shahdevelopment/"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/github.png"/></button></a>
-            <a href="https://fastapi-shah.herokuapp.com/docs"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/fastapi.png"/></button></a>
+        <body>
+            <div class="geoSelfie">
+                <div class="geobuttonDiv">
+                    <h1>Selfie App (**Antivirus may block this functionality)</h1>
+                    <br />
+                    <br />
+                    <br />
+                    <button onclick="startVideo()" id="startvideo">Turn Camera On</button>
+                    <br />
+                    <br />
+                    <button onclick="stopVideo()" id="stopvideo">Turn Camera Off</button>
+                    <br />
+                    <br />
+                    <input id="mood" value="Enter your mood!" />
+                    <br />
+                    <br />
+                    <button id="submit">Submit</button>
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <div><a href="/data" class="geo">Data Repo</a></div>
+                </div>
+                <script src="js/camera.js"></script>
+                <div class="cameraDiv"><div id="cameraid"><video id="video" srcObject="MediaStream"></video></div></div>
+            </div>
+        </body>
+        <div class="footer">
+            <a href="/"><button class="dropbtn">Home</button></a>
+            <div class="footmenu">
+                <a href="mailto:shahjehan-solehria@hotmail.com"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/outlook.png"/></button></a>
+                <a href="https://github.com/shahdevelopment/"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/github.png"/></button></a>
+                <a href="https://fastapi-shah.herokuapp.com/docs"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/fastapi.png"/></button></a>
+            </div>
         </div>
-    </div>
+        <script>
+            var startVideo = document.getElementById('startvideo');
+            var stopVideo = document.getElementById('stopvideo');
+            var run = "no"
+            const button = document.getElementById('submit');
+            const token = ${data}
+            const jwtoptions = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ token })  // Correctly stringify the token as an object
+            };
+            button.addEventListener('click', async event => {
+                const jwtdata = await fetch('http://${BACK_END}/jwtDecode', jwtoptions);
+                const datajwt = await jwtdata.json();
+                if (datajwt) {
+                    const mood = document.getElementById('mood').value;
+                    video.loadPixels();
+                    const image64 = video.canvas.toDataURL();
+                    const id = datajwt.id;
+
+                    const data = { mood, image64, id };
+                    const options = {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ data })
+                    };
+                    var response = await fetch('http://${BACK_END}/api', options);
+                    const postRes = await response.json();
+                    alert("Post Submitted!");
+
+                    // const redirecturl = "/selfie?token=";
+                    // const result = redirecturl + token;        
+                    // // Redirect to dashboard
+
+                    // window.location.href = result; // Redirect after successful login
+                } else {
+                    alert(postRes.message);
+                }
+
+            });
+            startVideo.addEventListener('click', function () {
+                console.log(startVideo)
+                if (run === "yes") {
+                    alert("Camera Already Running!");
+                } else {
+                    noCanvas();
+                    video = createCapture(VIDEO);
+                    video.parent("cameraid");
+                    run = "yes";
+                }
+            });
+            stopVideo.addEventListener("click", function () {
+                alert("Camera will be stopped........");
+                video.stop();
+                video.remove();
+                run = "no";
+            });
+        </script>
     </html>
     `;
-    res.send(modifiedHTML);
+    // const token = req.query.token;
+    if (!token) {
+        // res.status(401).json({ message: 'Access denied, token missing!' });
+        res.redirect('/login'); 
+    }
+    try {
+        const verified = jwt.verify(token, JWT_SECRET);
+        // res.json({ message: 'Welcome to the dashboard!', user: verified });
+        res.send(modifiedHTML);
+    } catch (err) {
+        console.log(JWT_SECRET)
+        console.log(token)
+        res.status(400).json({ message: 'Invalid token' });
+        // console.log(token);
+    }
 });
-app.get('/data', (req, res) => {
-    const modifiedHTML = `
-    <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Skill | Project Work</title>
-        <link rel="stylesheet" href="style/style.css">
-    </head>
-    <div class="topnav">
-        <div>
-            <a class="name" href="/"><p>Shah Solehria</p></a>
-            <h2 class="title">Cloud | DevOps | Data</h2>
-        </div>
-        <div>
-            <div id="menu-bar">
-                <div id="menu-buttons">
-                    <div class="dropdown">
-                        <button class="dropbtn">Projects</button>
-                        <div class="dropdown-content">
-                            <a href="/fastapi">FastAPI Server</a>
-                            <a href="/geolocate">Geo Location App</a>
-                            <a href="/selfie">Selfie App</a>
-                            <a href="/shahgpt">ChatGPT Clone</a>
+app.get('/data', async (req, res) => {
+    const token = req.cookies.authToken;
+    console.log(token);
+    // Send a request to check the token validity
+    // const token = req.cookies.authToken;
+    if (!token) {
+        // return res.status(401).json({ message: 'Access denied, token missing!' });
+        res.redirect('/login');
+    }
+    try {
+        const jwtoptions = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ token })  // Correctly stringify the token as an object
+        };
+        const jwtdata = await fetch(`http://${BACK_END}/jwtDecode`, jwtoptions);
+        const datajwt = await jwtdata.json();
+        const userId = datajwt.id;
+        console.log(userId);
+        const modifiedHTML = `
+        <html lang="en">
+        <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>Skill | Project Work</title>
+            <link rel="stylesheet" href="style/style.css">
+        </head>
+        <div class="topnav">
+            <div>
+                <a class="name" href="/"><p>Shah Solehria</p></a>
+                <h2 class="title">Cloud | DevOps | Data</h2>
+            </div>
+            <div>
+                <div id="menu-bar">
+                    <div id="menu-buttons">
+                        <div class="dropdown">
+                            <button class="dropbtn">Projects</button>
+                            <div class="dropdown-content">
+                                <a href="/fastapi">FastAPI Server</a>
+                                <a href="/geolocate">Geo Location App</a>
+                                <a href="/selfie">Selfie App</a>
+                                <a href="/shahgpt">ChatGPT Clone</a>
+                                <a href="/login">My Profile</a>
+                                <a href="/allPosts">Posts</a>
+                            </div>
                         </div>
+                        <button onclick="highlightButton(this)" class="menu"><a href="/contactpage">Contact</a></button>
+                        <button onclick="highlightButton(this)" class="menu"><a href="/form">Email Form</a></button>
+                        <button onclick="highlightButton(this)" class="menu"><a href="Shah_Solehria_Resume.pdf" target="_blank">Resume</a></button>
                     </div>
-                    <button onclick="highlightButton(this)" class="menu"><a href="/contactpage">Contact</a></button>
-                    <button onclick="highlightButton(this)" class="menu"><a href="/form">Email Form</a></button>
-                    <button onclick="highlightButton(this)" class="menu"><a href="Shah_Solehria_Resume.pdf" target="_blank">Resume</a></button>
                 </div>
             </div>
+            <div class="ham">
+                <button class="hamburger-menu">
+                    <div class="hamburger-line"></div>
+                    <div class="hamburger-line"></div>
+                    <div class="hamburger-line"></div>
+                </button>
+            </div>
+            <script src="js/hamburger.js"></script>
         </div>
-        <div class="ham">
-            <button class="hamburger-menu">
-                <div class="hamburger-line"></div>
-                <div class="hamburger-line"></div>
-                <div class="hamburger-line"></div>
-            </button>
-        </div>
-        <script src="js/hamburger.js"></script>
-    </div>
-    <body>
-        <div class="workexp">
-            <div class="workexpc">
-                <h1>Selfie App Logs</h1>
-                <div><a href="/selfie" class="geo">Create Capture</a></div>
-                <script src="js/logs.js"></script>
+        <body>
+            <div class="workexp">
+                <div class="workexpc">
+                    <h1>Selfie App Logs</h1>
+                    <div><a href="/selfie" class="geo">Create Capture</a></div>
+                    <script src="js/logs.js"></script>
+                    <script>
+                        getData(${userId}, ${BACK_END})
+                    </script>
+                </div>
+                <div id="log_div">
+            </div>
+        </body>
+        <div class="footer">
+            <a href="/"><button class="dropbtn">Home</button></a>
+            <div class="footmenu">
+                <a href="mailto:shahjehan-solehria@hotmail.com"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/outlook.png"/></button></a>
+                <a href="https://github.com/shahdevelopment/"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/github.png"/></button></a>
+                <a href="https://fastapi-shah.herokuapp.com/docs"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/fastapi.png"/></button></a>
             </div>
         </div>
-        <div id="log_div">
-    </body>
-    <div class="footer">
-        <a href="/"><button class="dropbtn">Home</button></a>
-        <div class="footmenu">
-            <a href="mailto:shahjehan-solehria@hotmail.com"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/outlook.png"/></button></a>
-            <a href="https://github.com/shahdevelopment/"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/github.png"/></button></a>
-            <a href="https://fastapi-shah.herokuapp.com/docs"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/fastapi.png"/></button></a>
-        </div>
-    </div>
-    </html>
-`;
-    res.send(modifiedHTML);
+        </html>
+        `;
+    
+        const verified = jwt.verify(token, JWT_SECRET);
+        res.send(modifiedHTML);
+    } catch (err) {
+        console.log(JWT_SECRET)
+        console.log(token)
+        res.status(400).json({ message: 'Invalid token' });
+    }
 });
 app.get('/form', (req, res) =>{
     const modifiedHTML = `
@@ -753,8 +1126,9 @@ app.get('/form', (req, res) =>{
                         <div class="dropdown-content">
                             <a href="/fastapi">FastAPI Server</a>
                             <a href="/geolocate">Geo Location App</a>
-                            <a href="/selfie">Selfie App</a>
                             <a href="/shahgpt">ChatGPT Clone</a>
+                            <a href="/login">My Profile</a>
+                            <a href="/allPosts">Posts</a>
                         </div>
                     </div>
                     <button onclick="highlightButton(this)" class="menu"><a href="/contactpage">Contact</a></button>
@@ -792,7 +1166,39 @@ app.get('/form', (req, res) =>{
 
                 <button type="submit">Submit</button>
             </form>
-            <script src="js/email.js"></script>
+            <script>
+                document.getElementById('contactForm').addEventListener('submit', function(event) {
+                    event.preventDefault(); // Prevent form submission
+
+                    const formData = new FormData(this); // Get form data
+
+                    // Convert form data to object
+                    const formDataObject = {};
+                    formData.forEach(function(value, key) {
+                        formDataObject[key] = value;
+                    });
+
+                    console.log(formDataObject)
+                    console.log('Clicked');
+                    alert('Sending email.......');
+                    const baseUrl = 'https://${BACK_END}/email'
+                    const options = {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({formDataObject})
+                    };
+                    fetch(baseUrl, options)
+                        .then(response => {
+                            if (response.ok) {
+                                alert("Appointment Booking Request Sent!")
+                            } else {
+                                throw new Error('Error: ' + response.status);
+                            }
+                        })
+                });
+            </script>
         </div>
     </body>
     <div class="footer">
@@ -805,5 +1211,70 @@ app.get('/form', (req, res) =>{
     </div>    
     </html>
 `;
+    res.send(modifiedHTML);
+});
+app.get('/allPosts', async (req, res) => {
+    const modifiedHTML = `
+        <html lang="en">
+        <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>Skill | Project Work</title>
+            <link rel="stylesheet" href="style/style.css">
+        </head>
+        <div class="topnav">
+            <div>
+                <a class="name" href="/"><p>Shah Solehria</p></a>
+                <h2 class="title">Cloud | DevOps | Data</h2>
+            </div>
+            <div>
+                <div id="menu-bar">
+                    <div id="menu-buttons">
+                        <div class="dropdown">
+                            <button class="dropbtn">Projects</button>
+                            <div class="dropdown-content">
+                                <a href="/fastapi">FastAPI Server</a>
+                                <a href="/geolocate">Geo Location App</a>
+                                <a href="/selfie">Selfie App</a>
+                                <a href="/shahgpt">ChatGPT Clone</a>
+                                <a href="/login">My Profile</a>
+                                <a href="/allPosts">Posts</a>
+                            </div>
+                        </div>
+                        <button onclick="highlightButton(this)" class="menu"><a href="/contactpage">Contact</a></button>
+                        <button onclick="highlightButton(this)" class="menu"><a href="/form">Email Form</a></button>
+                        <button onclick="highlightButton(this)" class="menu"><a href="Shah_Solehria_Resume.pdf" target="_blank">Resume</a></button>
+                    </div>
+                </div>
+            </div>
+            <div class="ham">
+                <button class="hamburger-menu">
+                    <div class="hamburger-line"></div>
+                    <div class="hamburger-line"></div>
+                    <div class="hamburger-line"></div>
+                </button>
+            </div>
+            <script src="js/hamburger.js"></script>
+        </div>
+        <body>
+            <div class="workexp">
+                <div class="workexpc">
+                    <h1>User Posts</h1>
+                    <script src="js/allLogs.js"></script>
+                    <script>getData(${BACK_END})</script>
+                </div>
+                <div id="log_div">
+            </div>
+        </body>
+        <div class="footer">
+            <a href="/"><button class="dropbtn">Home</button></a>
+            <div class="footmenu">
+                <a href="mailto:shahjehan-solehria@hotmail.com"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/outlook.png"/></button></a>
+                <a href="https://github.com/shahdevelopment/"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/github.png"/></button></a>
+                <a href="https://fastapi-shah.herokuapp.com/docs"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/fastapi.png"/></button></a>
+            </div>
+        </div>
+        </html>
+    `;
     res.send(modifiedHTML);
 });

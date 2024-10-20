@@ -27,6 +27,9 @@ pipeline {
         frontend = ""
         backend = ""
         k8 = ""
+
+        // EndPoints
+        app_back_end = ""
         
         // Sonarqube
         SONAR_PROJECT_KEY = ""
@@ -52,6 +55,7 @@ pipeline {
 
         // API Keys
         api_maps_key = ""
+        auth_jwt_secret = ""
         api_chat_key = ""
         api_email_key = ""
 
@@ -90,6 +94,9 @@ pipeline {
         postgres_pass = ""
         postgres_db = ""
         postgres_host = ""
+
+        // Email
+        app_admin_email = ""
     }
     options { skipDefaultCheckout() }
     stages {
@@ -151,12 +158,16 @@ pipeline {
 
                     // ---------- API Keys
                     api_maps_key = parameters['api.maps_key']
+                    auth_jwt_secret = parameters['auth.jwt_secret']
                     api_chat_key = parameters['api.chat_key']
                     api_email_key = parameters['api.email_key']
                     
                     // ---------- SSL
                     // ssl_tls_key = parameters['tls.key']
                     // ssl_tls_crt = parameters['tls.crt']
+
+                    // EndPoints
+                    app_back_end = parameters['app.back_end']
 
 
                     // ---------- Docker Images
@@ -193,6 +204,10 @@ pipeline {
                     postgres_pass = parameters['postgres.pass']
                     postgres_db = parameters['postgres.db']
                     postgres_host = parameters['postgres.host']
+
+                    // Email
+                    app_admin_email = parameters['app.admin_email']
+
 
                     // ---------- Moved to Pipeline Console Config
                     // ssl_tls_crt = params.ssl_tls_crt
@@ -281,28 +296,28 @@ pipeline {
                 }
             }                
         }
-        // stage('Code Sonarqube Analysis') {
-        //     environment {
-        //         scannerHome = tool 'sonar4.7'
-        //     }
-        //     steps {
-        //         withSonarQubeEnv('sonarqube') {
-        //             script {
-        //                 sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${frontend}"
-        //                 sh "sleep 1"
-        //                 sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${backend}"
-        //             }
-        //         }
-        //     }
-        //     post {
-        //         always {
-        //             echo 'Slack Notifications.'
-        //             slackSend channel: "${slack_devops}",
-        //             color: COLOR_MAP[currentBuild.currentResult],
-        //             message: "*Sonarqube Code Analysis Step Result - ${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"                    
-        //         }
-        //     }
-        // }
+        stage('Code Sonarqube Analysis') {
+            environment {
+                scannerHome = tool 'sonar4.7'
+            }
+            steps {
+                withSonarQubeEnv('sonarqube') {
+                    script {
+                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${frontend}"
+                        sh "sleep 1"
+                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${backend}"
+                    }
+                }
+            }
+            post {
+                always {
+                    echo 'Slack Notifications.'
+                    slackSend channel: "${slack_devops}",
+                    color: COLOR_MAP[currentBuild.currentResult],
+                    message: "*Sonarqube Code Analysis Step Result - ${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"                    
+                }
+            }
+        }
         stage('Build Dev Container') {
             steps {
                 dir("${frontend}") {
@@ -401,7 +416,7 @@ pipeline {
                             dockerImage.push("v$BUILD_NUMBER")
                         }  
                         // Backend Server
-                        dockerImage = docker.build("${back_image}", "--build-arg chat_key=${api_chat_key} --build-arg email_key='${api_email_key}' --build-arg pg_user=${postgres_user} --build-arg pg_pass=${postgres_pass} --build-arg pg_db=${postgres_db} --build-arg pg_host='${postgres_host}' .")
+                        dockerImage = docker.build("${back_image}", "--build-arg chat_key=${api_chat_key} --build-arg admin_email=${app_admin_email} --build-arg email_key='${api_email_key}' --build-arg pg_user=${postgres_user} --build-arg pg_pass=${postgres_pass} --build-arg pg_db=${postgres_db} --build-arg pg_host='${postgres_host}' ---build-arg jwt_secret=${auth_jwt_secret} .")
                         sh 'sleep 1'
 
                         docker.withRegistry('', registryCredentials) {
@@ -417,7 +432,7 @@ pipeline {
                     //     echo "| |_) || |__| | _| |_ | |____ | |_/  /    ___)  |  | |   | |____ | |      "
                     //     echo "|____/ |_____/ |_____||______||_____/    |_____/   |_|   |______||_|      "
                     script {
-                        dockerImage = docker.build("${front_image}", "--build-arg map_key=${api_maps_key} .")
+                        dockerImage = docker.build("${front_image}", "--build-arg map_key=${api_maps_key} --build-arg jwt_secret=${auth_jwt_secret} --build-arg back_end=${app_back_end} .")
                         sh 'sleep 1'
                         docker.withRegistry('', registryCredentials) {dockerImage.push("v$BUILD_NUMBER")
                         }

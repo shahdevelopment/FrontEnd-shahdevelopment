@@ -10,10 +10,10 @@ function changeInput(value) {
     inputElement.value = value;
 }
 
-async function getMessage() {
+async function getMessage(backend) {
     console.log('Clicked');
     alert('Sending Chat.......');
-    const baseUrl = 'https://k8-backend.shahsportfolio.online/chat'
+    const baseUrl = `https://${backend}/chat`
     const options = {
         method: 'POST',
         headers: {

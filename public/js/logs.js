@@ -1,6 +1,5 @@
-getData();
-async function getData() {
-  const response = await fetch('https://k8-backend.shahsportfolio.online/api');
+async function getData(userId, backend) {
+  const response = await fetch(`http://${backend}/api/${userId}`);
   const data = await response.json();
 
   for (item of data) {
@@ -35,7 +34,7 @@ async function getData() {
   console.log(data);
 }
 function deletePost(postId) {
-  fetch(`https://k8-backend.shahsportfolio.online/api/${postId}`, {
+  fetch(`http://localhost:9000/api/${postId}`, {
     method: 'DELETE'
   })
     .then(response => {

@@ -2,6 +2,13 @@ FROM node:lts-alpine3.18
 
 ARG map_key
 ENV api_key_new="$map_key"
+
+ARG jwt_secret
+ENV JWT_SECRET="$jwt_secret"
+
+ARG back_end
+ENV BACK_END="$back_end"
+
 ARG ENVIRONMENT
 
 WORKDIR /usr/src/app
