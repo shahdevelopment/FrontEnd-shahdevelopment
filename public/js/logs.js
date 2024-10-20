@@ -1,5 +1,7 @@
 async function getData(userId, backend) {
-  const response = await fetch(`${backend}/api/${userId}`);
+  const url = `${backend}/api/${userId}`
+  console.log(url)
+  const response = await fetch(url);
   const data = await response.json();
 
   for (item of data) {

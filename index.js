@@ -4,6 +4,7 @@ const PORT = 3000;
 const HOST = '0.0.0.0';
 import jwt from 'jsonwebtoken';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 
 // DevTools ------------------------------------------- //
 // import dotenv from 'dotenv';
@@ -14,6 +15,14 @@ import cookieParser from 'cookie-parser';
 const JWT_SECRET = process.env.JWT_SECRET;
 const BACK_END = process.env.BACK_END;
 const SITE_DOMAIN = process.env.SITE_DOMAIN;
+
+
+// CORS configuration
+const corsOptions = {
+    origin: BACK_END,  // Replace with your frontend domain
+    credentials: true  // Allows credentials (cookies, HTTP authentication)
+};
+app.use(cors(corsOptions));
 
 // Set the MIME type for JavaScript files
 app.set('view engine', 'js');
@@ -274,12 +283,11 @@ app.get('/login', (req, res) => {
                                 // Set the cookie on the client-side
 
                                 // Production // ---------------------------------- //
+                                document.cookie = "authToken=" + data.token + "; path=/;" + " secure;" + " samesite=None;";
 
-                                const isSecure = window.location.protocol === 'https:';
-                                document.cookie = "authToken=" + data.token + "; path=/; domain=" + "${SITE_DOMAIN}" + ";" + (isSecure ? " secure;" : "") + " samesite=None;";
                                 // ------------------------------------------------ //
                                 // Development // --------------------------------- //
-                                // document.cookie = "authToken=" + data.token + "; path=/;" + " secure;" + " samesite=None;";
+                                // document.cookie = "authToken=" + data.token + "; path=/;" + " samesite=None;";
                                 // ------------------------------------------------ //
                                 
                                 // Redirect after successful login
@@ -1079,100 +1087,96 @@ app.get('/selfie', (req, res) => {
         // console.log(token);
     }
 });
-app.get('/data', async (req, res) => {
+app.get('/data', (req, res) => {
     const token = req.cookies.authToken;
-    if (!token) {
-        // res.status(401).json({ message: 'Access denied, token missing!' });
-        res.redirect('/login'); 
-    }
-    try {
-        const jwtoptions = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ token })  // Correctly stringify the token as an object
-        };
-        const jwtdata = await fetch(`${BACK_END}/jwtDecode`, jwtoptions);
-        const datajwt = await jwtdata.json();
-        const userId = datajwt.id;
-        console.log(userId);
-        const modifiedHTML = `
-        <html lang="en">
-            <head>
-                <meta charset="utf-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1">
-                <title>Skill | Project Work</title>
-                <link rel="stylesheet" href="style/style.css">
-            </head>
-            <div class="topnav">
-                <div>
-                    <a class="name" href="/"><p>Shah Solehria</p></a>
-                    <h2 class="title">Cloud | DevOps | Data</h2>
-                </div>
-                <div>
-                    <div id="menu-bar">
-                        <div id="menu-buttons">
-                            <div class="dropdown">
-                                <button class="dropbtn">Projects</button>
-                                <div class="dropdown-content">
-                                    <a href="/fastapi">FastAPI Server</a>
-                                    <a href="/geolocate">Geo Location App</a>
-                                    <a href="/selfie">Selfie App</a>
-                                    <a href="/shahgpt">ChatGPT Clone</a>
-                                    <a href="/login">My Profile</a>
-                                    <a href="/allPosts">Posts</a>
-                                </div>
+    const url = `'${BACK_END}/jwtDecode'`
+    const data = `'${token}'`
+    const modifiedHTML = `
+    <html lang="en">
+        <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>Skill | Project Work</title>
+            <link rel="stylesheet" href="style/style.css">
+        </head>
+        <div class="topnav">
+            <div>
+                <a class="name" href="/"><p>Shah Solehria</p></a>
+                <h2 class="title">Cloud | DevOps | Data</h2>
+            </div>
+            <div>
+                <div id="menu-bar">
+                    <div id="menu-buttons">
+                        <div class="dropdown">
+                            <button class="dropbtn">Projects</button>
+                            <div class="dropdown-content">
+                                <a href="/fastapi">FastAPI Server</a>
+                                <a href="/geolocate">Geo Location App</a>
+                                <a href="/selfie">Selfie App</a>
+                                <a href="/shahgpt">ChatGPT Clone</a>
+                                <a href="/login">My Profile</a>
+                                <a href="/allPosts">Posts</a>
                             </div>
-                            <button onclick="highlightButton(this)" class="menu"><a href="/contactpage">Contact</a></button>
-                            <button onclick="highlightButton(this)" class="menu"><a href="/form">Email Form</a></button>
-                            <button onclick="highlightButton(this)" class="menu"><a href="Shah_Solehria_Resume.pdf" target="_blank">Resume</a></button>
                         </div>
+                        <button onclick="highlightButton(this)" class="menu"><a href="/contactpage">Contact</a></button>
+                        <button onclick="highlightButton(this)" class="menu"><a href="/form">Email Form</a></button>
+                        <button onclick="highlightButton(this)" class="menu"><a href="Shah_Solehria_Resume.pdf" target="_blank">Resume</a></button>
                     </div>
                 </div>
-                <div class="ham">
-                    <button class="hamburger-menu">
-                        <div class="hamburger-line"></div>
-                        <div class="hamburger-line"></div>
-                        <div class="hamburger-line"></div>
-                    </button>
-                </div>
-                <script src="js/hamburger.js"></script>
             </div>
-            <body>
-                <div class="workexp">
-                    <div class="workexpc">
-                        <h1>Selfie App Logs</h1>
-                        <div><a href="/selfie" class="geo">Create Capture</a></div>
-                        <script src="js/logs.js"></script>
-                        <script>
-                            getData(${userId}, '${BACK_END}')
-                        </script>
-                    </div>
-                    <div id="log_div">
-                </div>
-            </body>
-            <div class="footer">
-                <a href="/"><button class="dropbtn">Home</button></a>
-                <div class="footmenu">
-                    <a href="mailto:shahjehan-solehria@hotmail.com"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/outlook.png"/></button></a>
-                    <a href="https://github.com/shahdevelopment/"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/github.png"/></button></a>
-                    <a href="https://fastapi-shah.herokuapp.com/docs"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/fastapi.png"/></button></a>
-                </div>
+            <div class="ham">
+                <button class="hamburger-menu">
+                    <div class="hamburger-line"></div>
+                    <div class="hamburger-line"></div>
+                    <div class="hamburger-line"></div>
+                </button>
             </div>
-        </html>
-        `;
-        const verified = jwt.verify(token, JWT_SECRET);
-        console.log(verified)
-        // res.json({ message: 'Welcome to the dashboard!', user: verified });
-        res.send(modifiedHTML);
-    } catch (err) {
-        console.log(JWT_SECRET)
-        console.log(token)
+            <script src="js/hamburger.js"></script>
+        </div>
+        <body>
+            <div class="workexp">
+                <div class="workexpc">
+                    <h1>Selfie App Logs</h1>
+                    <div><a href="/selfie" class="geo">Create Capture</a></div>
+                    <script src="js/logs.js"></script>
+                    <script>
 
-        res.status(400).json({ message: 'Invalid token' });
-        // console.log(token);
-    }
+                        async function getId() {
+                            const token = ${data}
+                            const url = ${url}
+                            const jwtoptions = {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                credentials: 'include',
+                                body: JSON.stringify({ token }),  // Correctly stringify the token as an object
+                            };
+                            const jwtdata = await fetch(url, jwtoptions);
+                            const datajwt = await jwtdata.json();
+                            const userId = datajwt.id;
+                            getData(userId, '${BACK_END}')
+                        }
+                        getId()
+
+
+                    </script>
+                </div>
+                <div id="log_div">
+            </div>
+        </body>
+        <div class="footer">
+            <a href="/"><button class="dropbtn">Home</button></a>
+            <div class="footmenu">
+                <a href="mailto:shahjehan-solehria@hotmail.com"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/outlook.png"/></button></a>
+                <a href="https://github.com/shahdevelopment/"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/github.png"/></button></a>
+                <a href="https://fastapi-shah.herokuapp.com/docs"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/fastapi.png"/></button></a>
+            </div>
+        </div>
+    </html>
+    `;
+    const verified = jwt.verify(token, JWT_SECRET);
+    res.send(modifiedHTML);
 });
 app.get('/form', (req, res) =>{
     const modifiedHTML = `
