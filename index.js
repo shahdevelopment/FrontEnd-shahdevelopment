@@ -237,18 +237,16 @@ app.get('/login', (req, res) => {
                             <button type="submit">Login</button>
                         </form>
                     </div>
+                    <a href="/signup"><button class="dropbtn">Create An Account</button></a>
                 </div>
-                <br>
                 <div class="footer">
                         <a href="/"><button class="dropbtn">Home</button></a>
-
                     <div class="footmenu">
                         <a href="mailto:shahjehan-solehria@hotmail.com"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/outlook.png"/></button></a>
                         <a href="https://github.com/shahdevelopment/"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/github.png"/></button></a>
                         <a href="https://fastapi-shah.herokuapp.com/docs"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/fastapi.png"/></button></a>
                     </div>
                 </div>
-
                 <script>
                     document.getElementById('loginForm').addEventListener('submit', async function(e) {
                         e.preventDefault();
@@ -267,8 +265,11 @@ app.get('/login', (req, res) => {
                                 alert('Login successful!');
                                 
                                 // Set the cookie on the client-side
-                                document.cookie = "authToken=" + data.token + "; path=/; secure";
-
+                                document.cookie = "authToken=" + data.token + 
+                                    "; path=/;" + 
+                                    " secure;" + 
+                                    " samesite=None;" + 
+                                    " domain=shahsportfolio.online;";
                                 // Redirect after successful login
                                 window.location.href = '/selfie';
                             } else {
@@ -1095,8 +1096,8 @@ app.get('/data', async (req, res) => {
         </div>
         </html>
         `;
-    
         const verified = jwt.verify(token, JWT_SECRET);
+        console.log(verified);
         res.send(modifiedHTML);
     } catch (err) {
         console.log(JWT_SECRET)
