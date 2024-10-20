@@ -17,7 +17,6 @@ pipeline {
     //     ws("/opt/jenkins-slave/workspace/profile-site-build")
     // }
     environment {
-        environment = 'prod' // Change this value as needed
         // Docker Registry Info
         registry_front = ""
         registry_back = ""
