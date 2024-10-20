@@ -5,8 +5,15 @@ const HOST = '0.0.0.0';
 import jwt from 'jsonwebtoken';
 import cookieParser from 'cookie-parser';
 
+// DevTools ------------------------------------------- //
+// import dotenv from 'dotenv';
+// dotenv.config();
+// ---------------------------------------------------- //
+// ---------------------------------------------------- //
+
 const JWT_SECRET = process.env.JWT_SECRET;
 const BACK_END = process.env.BACK_END;
+const SITE_DOMAIN = porcess.env.SITE_DOMAIN;
 
 // Set the MIME type for JavaScript files
 app.set('view engine', 'js');
@@ -265,11 +272,19 @@ app.get('/login', (req, res) => {
                                 alert('Login successful!');
                                 
                                 // Set the cookie on the client-side
+
+                                // Production // ---------------------------------- //
                                 document.cookie = "authToken=" + data.token + 
                                     "; path=/;" + 
                                     " secure;" + 
                                     " samesite=None;" + 
-                                    " domain=shahsportfolio.online;";
+                                    " domain=${SITE_DOMAIN};";
+                                // ------------------------------------------------ //
+
+                                // Development // --------------------------------- //
+                                // document.cookie = "authToken=" + data.token + "; path=/; secure";
+                                // ------------------------------------------------ //
+                                
                                 // Redirect after successful login
                                 window.location.href = '/selfie';
                             } else {
@@ -390,43 +405,98 @@ app.get('/geolocate', (req, res) => {
 app.get('/shahgpt', (req, res) => {
     const modifiedHTML = `
     <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>JavaScript ChatGPT Clone</title>
-        <link rel="stylesheet" href="style/chat_style.css">
-    </head>
-    <body>
-        <section class="side-bar">
-            <button><a href="/">Home</a></button>
-            <button class="new_chat">New chat</button>
-            <div class="history"></div>
-            <div class="nav">
-                <p>Made by Shah</p>
-            </div>
-        </section>
-        <section class="main">
-            <h1>ShahGPT</h1>
-            <p id="output"></p>
-            <div class="bottom-section">
-                <div class="input-container">
-                    <input />
-                    <div id="submit">➢</div>
+        <head>
+            <meta charset="UTF-8">
+            <title>JavaScript ChatGPT Clone</title>
+            <link rel="stylesheet" href="style/chat_style.css">
+        </head>
+        <body>
+            <section class="side-bar">
+                <button><a href="/">Home</a></button>
+                <button class="new_chat">New chat</button>
+                <div class="history"></div>
+                <div class="nav">
+                    <p>Made by Shah</p>
                 </div>
-            </div>
-            <p class="info">Chat GPT March 14 Version. Free Research Preview. Our goal is to make AI systems more natural
-                and
-                safe to interact with. Your feeback will help us improve.</p>
-        </section>
-        <script type="application/javascript" src="js/app.js"></script>
+            </section>
+            <section class="main">
+                <h1>ShahGPT</h1>
+                <p id="output"></p>
+                <div class="bottom-section">
+                    <div class="input-container">
+                        <input />
+                        <div id="submit">➢</div>
+                    </div>
+                </div>
+                <p class="info">Chat GPT March 14 Version. Free Research Preview. Our goal is to make AI systems more natural
+                    and
+                    safe to interact with. Your feeback will help us improve.</p>
+            </section>
+        </body>
         <script>
+            const submitButton = document.querySelector('#submit');
+            const outPutElement = document.querySelector('#output');
+            const inputElement = document.querySelector('input');
+            const historyElement = document.querySelector('.history');
+            const buttonElement = document.querySelector('.new_chat');
+            const inputContainer = document.querySelector('.input-container');
+
+            function changeInput(value) {
+                const inputElement = document.querySelector('input');
+                inputElement.value = value;
+            }
+
+            async function getMessage() {
+                console.log('Clicked');
+                alert('Sending Chat.......');
+                const baseUrl = '${BACK_END}/chat'
+                const options = {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        model: 'gpt-3.5-turbo',
+                        messages: [{ role: 'user', content: inputElement.value }],
+                        max_tokens: 100
+                    })
+                };
+                fetch(baseUrl, options)
+                    .then(response => {
+                        if (response.ok) {
+                            return response.json();
+                        } else {
+                            throw new Error('Error: ' + response.status);
+                        }
+                    })
+                    .then(data => {
+                        outPutElement.textContent = data.choices[0].message.content
+                        if (data.choices[0].message.content && inputElement.value) {
+                            const pElement = document.createElement('p')
+                            pElement.textContent = inputElement.value
+                            pElement.addEventListener('click', () => changeInput(pElement.textContent))
+                            historyElement.append(pElement)
+                        }
+                    })
+                    .catch(error => {
+                        console.error(error)
+                    })
+            }
+
             inputContainer.addEventListener('keypress', function (event) {
                 if (event.keyCode === 13) {
                     event.preventDefault();
-                    getMessage(${BACK_END});
+                    getMessage();
                 }
             });
+            submitButton.addEventListener('click', getMessage);
+
+            function clearInput() {
+                inputElement.value = '';
+            }
+
+            buttonElement.addEventListener('click', clearInput);
         </script>
-    </body>
     </html>
     `;
     res.send(modifiedHTML);
@@ -1012,12 +1082,9 @@ app.get('/selfie', (req, res) => {
 });
 app.get('/data', async (req, res) => {
     const token = req.cookies.authToken;
-    console.log(token);
-    // Send a request to check the token validity
-    // const token = req.cookies.authToken;
     if (!token) {
-        // return res.status(401).json({ message: 'Access denied, token missing!' });
-        res.redirect('/login');
+        // res.status(401).json({ message: 'Access denied, token missing!' });
+        res.redirect('/login'); 
     }
     try {
         const jwtoptions = {
@@ -1033,76 +1100,79 @@ app.get('/data', async (req, res) => {
         console.log(userId);
         const modifiedHTML = `
         <html lang="en">
-        <head>
-            <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1">
-            <title>Skill | Project Work</title>
-            <link rel="stylesheet" href="style/style.css">
-        </head>
-        <div class="topnav">
-            <div>
-                <a class="name" href="/"><p>Shah Solehria</p></a>
-                <h2 class="title">Cloud | DevOps | Data</h2>
-            </div>
-            <div>
-                <div id="menu-bar">
-                    <div id="menu-buttons">
-                        <div class="dropdown">
-                            <button class="dropbtn">Projects</button>
-                            <div class="dropdown-content">
-                                <a href="/fastapi">FastAPI Server</a>
-                                <a href="/geolocate">Geo Location App</a>
-                                <a href="/selfie">Selfie App</a>
-                                <a href="/shahgpt">ChatGPT Clone</a>
-                                <a href="/login">My Profile</a>
-                                <a href="/allPosts">Posts</a>
+            <head>
+                <meta charset="utf-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1">
+                <title>Skill | Project Work</title>
+                <link rel="stylesheet" href="style/style.css">
+            </head>
+            <div class="topnav">
+                <div>
+                    <a class="name" href="/"><p>Shah Solehria</p></a>
+                    <h2 class="title">Cloud | DevOps | Data</h2>
+                </div>
+                <div>
+                    <div id="menu-bar">
+                        <div id="menu-buttons">
+                            <div class="dropdown">
+                                <button class="dropbtn">Projects</button>
+                                <div class="dropdown-content">
+                                    <a href="/fastapi">FastAPI Server</a>
+                                    <a href="/geolocate">Geo Location App</a>
+                                    <a href="/selfie">Selfie App</a>
+                                    <a href="/shahgpt">ChatGPT Clone</a>
+                                    <a href="/login">My Profile</a>
+                                    <a href="/allPosts">Posts</a>
+                                </div>
                             </div>
+                            <button onclick="highlightButton(this)" class="menu"><a href="/contactpage">Contact</a></button>
+                            <button onclick="highlightButton(this)" class="menu"><a href="/form">Email Form</a></button>
+                            <button onclick="highlightButton(this)" class="menu"><a href="Shah_Solehria_Resume.pdf" target="_blank">Resume</a></button>
                         </div>
-                        <button onclick="highlightButton(this)" class="menu"><a href="/contactpage">Contact</a></button>
-                        <button onclick="highlightButton(this)" class="menu"><a href="/form">Email Form</a></button>
-                        <button onclick="highlightButton(this)" class="menu"><a href="Shah_Solehria_Resume.pdf" target="_blank">Resume</a></button>
                     </div>
                 </div>
-            </div>
-            <div class="ham">
-                <button class="hamburger-menu">
-                    <div class="hamburger-line"></div>
-                    <div class="hamburger-line"></div>
-                    <div class="hamburger-line"></div>
-                </button>
-            </div>
-            <script src="js/hamburger.js"></script>
-        </div>
-        <body>
-            <div class="workexp">
-                <div class="workexpc">
-                    <h1>Selfie App Logs</h1>
-                    <div><a href="/selfie" class="geo">Create Capture</a></div>
-                    <script src="js/logs.js"></script>
-                    <script>
-                        getData(${userId}, ${BACK_END})
-                    </script>
+                <div class="ham">
+                    <button class="hamburger-menu">
+                        <div class="hamburger-line"></div>
+                        <div class="hamburger-line"></div>
+                        <div class="hamburger-line"></div>
+                    </button>
                 </div>
-                <div id="log_div">
+                <script src="js/hamburger.js"></script>
             </div>
-        </body>
-        <div class="footer">
-            <a href="/"><button class="dropbtn">Home</button></a>
-            <div class="footmenu">
-                <a href="mailto:shahjehan-solehria@hotmail.com"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/outlook.png"/></button></a>
-                <a href="https://github.com/shahdevelopment/"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/github.png"/></button></a>
-                <a href="https://fastapi-shah.herokuapp.com/docs"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/fastapi.png"/></button></a>
+            <body>
+                <div class="workexp">
+                    <div class="workexpc">
+                        <h1>Selfie App Logs</h1>
+                        <div><a href="/selfie" class="geo">Create Capture</a></div>
+                        <script src="js/logs.js"></script>
+                        <script>
+                            getData(${userId}, '${BACK_END}')
+                        </script>
+                    </div>
+                    <div id="log_div">
+                </div>
+            </body>
+            <div class="footer">
+                <a href="/"><button class="dropbtn">Home</button></a>
+                <div class="footmenu">
+                    <a href="mailto:shahjehan-solehria@hotmail.com"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/outlook.png"/></button></a>
+                    <a href="https://github.com/shahdevelopment/"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/github.png"/></button></a>
+                    <a href="https://fastapi-shah.herokuapp.com/docs"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/fastapi.png"/></button></a>
+                </div>
             </div>
-        </div>
         </html>
         `;
         const verified = jwt.verify(token, JWT_SECRET);
-        console.log(verified);
+        console.log(verified)
+        // res.json({ message: 'Welcome to the dashboard!', user: verified });
         res.send(modifiedHTML);
     } catch (err) {
         console.log(JWT_SECRET)
         console.log(token)
+
         res.status(400).json({ message: 'Invalid token' });
+        // console.log(token);
     }
 });
 app.get('/form', (req, res) =>{
@@ -1182,7 +1252,7 @@ app.get('/form', (req, res) =>{
                     console.log(formDataObject)
                     console.log('Clicked');
                     alert('Sending email.......');
-                    const baseUrl = 'https://${BACK_END}/email'
+                    const baseUrl = '${BACK_END}/email'
                     const options = {
                         method: 'POST',
                         headers: {
