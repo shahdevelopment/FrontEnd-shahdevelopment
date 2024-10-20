@@ -274,15 +274,12 @@ app.get('/login', (req, res) => {
                                 // Set the cookie on the client-side
 
                                 // Production // ---------------------------------- //
-                                document.cookie = "authToken=" + data.token + 
-                                    "; path=/;" + 
-                                    " secure;" + 
-                                    " samesite=None;" + 
-                                    " domain=${SITE_DOMAIN};";
-                                // ------------------------------------------------ //
 
+                                const isSecure = window.location.protocol === 'https:';
+                                document.cookie = "authToken=" + data.token + "; path=/; domain=" + "${SITE_DOMAIN}" + ";" + (isSecure ? " secure;" : "") + " samesite=None;";
+                                // ------------------------------------------------ //
                                 // Development // --------------------------------- //
-                                // document.cookie = "authToken=" + data.token + "; path=/; secure";
+                                // document.cookie = "authToken=" + data.token + "; path=/;" + " secure;" + " samesite=None;";
                                 // ------------------------------------------------ //
                                 
                                 // Redirect after successful login
@@ -988,7 +985,7 @@ app.get('/selfie', (req, res) => {
                     <br />
                     <div><a href="/data" class="geo">Data Repo</a></div>
                 </div>
-                <script src="js/camera.js"></script>
+                // <script src="js/camera.js"></script>
                 <div class="cameraDiv"><div id="cameraid"><video id="video" srcObject="MediaStream"></video></div></div>
             </div>
         </body>
@@ -1001,6 +998,7 @@ app.get('/selfie', (req, res) => {
             </div>
         </div>
         <script>
+        function setup() {
             var startVideo = document.getElementById('startvideo');
             var stopVideo = document.getElementById('stopvideo');
             var run = "no"
@@ -1061,6 +1059,7 @@ app.get('/selfie', (req, res) => {
                 video.remove();
                 run = "no";
             });
+        }
         </script>
     </html>
     `;
@@ -1332,7 +1331,7 @@ app.get('/allPosts', async (req, res) => {
                 <div class="workexpc">
                     <h1>User Posts</h1>
                     <script src="js/allLogs.js"></script>
-                    <script>getData(${BACK_END})</script>
+                    <script>getData('${BACK_END}')</script>
                 </div>
                 <div id="log_div">
             </div>
