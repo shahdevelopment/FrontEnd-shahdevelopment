@@ -171,7 +171,7 @@ pipeline {
                     // EndPoints
                     app_back_end = parameters['app.back_end']
                     app_domain = parameters['app.domain']
-                    app_front_url = parameters('app.front_domain')
+                    app_front_url = parameters['app.front_domain']
 
                     // ---------- Docker Images
                     back_image = "${registry_back}:v${BUILD_NUMBER}"
