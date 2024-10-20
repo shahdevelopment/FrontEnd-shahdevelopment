@@ -4,7 +4,7 @@ const PORT = 3000;
 const HOST = '0.0.0.0';
 import jwt from 'jsonwebtoken';
 import cookieParser from 'cookie-parser';
-import cors from 'cors';
+// import cors from 'cors';
 
 // DevTools ------------------------------------------- //
 // import dotenv from 'dotenv';
@@ -14,15 +14,13 @@ import cors from 'cors';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 const BACK_END = process.env.BACK_END;
-const SITE_DOMAIN = process.env.SITE_DOMAIN;
-
 
 // CORS configuration
-const corsOptions = {
-    origin: BACK_END,  // Replace with your frontend domain
-    credentials: true  // Allows credentials (cookies, HTTP authentication)
-};
-app.use(cors(corsOptions));
+// const corsOptions = {
+//     origin: BACK_END,  // Replace with your frontend domain
+//     credentials: true  // Allows credentials (cookies, HTTP authentication)
+// };
+// app.use(cors(corsOptions));
 
 // Set the MIME type for JavaScript files
 app.set('view engine', 'js');

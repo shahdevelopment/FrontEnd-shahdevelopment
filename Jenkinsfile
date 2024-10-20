@@ -30,7 +30,6 @@ pipeline {
 
         // EndPoints
         app_back_end = ""
-        app_domain = ""
         
         // Sonarqube
         SONAR_PROJECT_KEY = ""
@@ -169,7 +168,6 @@ pipeline {
 
                     // EndPoints
                     app_back_end = parameters['app.back_end']
-                    app_domain = parameters['app.domain']
 
                     // ---------- Docker Images
                     back_image = "${registry_back}:v${BUILD_NUMBER}"
@@ -431,7 +429,7 @@ pipeline {
                     //     echo "| |_) || |__| | _| |_ | |____ | |_/  /    ___)  |  | |   | |____ | |      "
                     //     echo "|____/ |_____/ |_____||______||_____/    |_____/   |_|   |______||_|      "
                     script {
-                        dockerImage = docker.build("${front_image}", "--build-arg map_key=${api_maps_key} --build-arg site_domain=${app_domain} --build-arg jwt_secret=${auth_jwt_secret} --build-arg back_end=${app_back_end} .")
+                        dockerImage = docker.build("${front_image}", "--build-arg map_key=${api_maps_key} --build-arg jwt_secret=${auth_jwt_secret} --build-arg back_end=${app_back_end} .")
                         sh 'sleep 1'
                         docker.withRegistry('', registryCredentials) {dockerImage.push("v$BUILD_NUMBER")
                         }
