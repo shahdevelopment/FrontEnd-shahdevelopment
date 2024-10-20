@@ -198,7 +198,6 @@ pipeline {
                     slack_devops = parameters['slack.devops']
                     slack_cluster = parameters['slack.cluster']
 
-
                     // ---------- Postgres
                     postgres_user = parameters['postgres.user']                    
                     postgres_pass = parameters['postgres.pass']
@@ -207,7 +206,6 @@ pipeline {
 
                     // Email
                     app_admin_email = parameters['app.admin_email']
-
 
                     // ---------- Moved to Pipeline Console Config
                     // ssl_tls_crt = params.ssl_tls_crt
@@ -416,7 +414,7 @@ pipeline {
                             dockerImage.push("v$BUILD_NUMBER")
                         }  
                         // Backend Server
-                        dockerImage = docker.build("${back_image}", "--build-arg chat_key=${api_chat_key} --build-arg admin_email=${app_admin_email} --build-arg email_key='${api_email_key}' --build-arg pg_user=${postgres_user} --build-arg pg_pass=${postgres_pass} --build-arg pg_db=${postgres_db} --build-arg pg_host='${postgres_host}' ---build-arg jwt_secret=${auth_jwt_secret} .")
+                        dockerImage = docker.build("${back_image}", "--build-arg chat_key=${api_chat_key} --build-arg admin_email=${app_admin_email} --build-arg email_key='${api_email_key}' --build-arg pg_user=${postgres_user} --build-arg pg_pass=${postgres_pass} --build-arg pg_db=${postgres_db} --build-arg pg_host='${postgres_host}' --build-arg jwt_secret=${auth_jwt_secret} .")
                         sh 'sleep 1'
 
                         docker.withRegistry('', registryCredentials) {
