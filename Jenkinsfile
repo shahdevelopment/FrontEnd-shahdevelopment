@@ -103,16 +103,6 @@ pipeline {
     }
     options { skipDefaultCheckout() }
     stages {
-        // stage('Check Environment') {
-        //     steps {
-        //         script {
-        //             // Fail the build if not in the prod environment
-        //             if (env.environment != 'prod') {
-        //                 error "Build aborted: Environment is not 'prod'."
-        //             }
-        //         }
-        //     }
-        // }
         stage('File Param WA') {
             steps {
                 cleanWs()
