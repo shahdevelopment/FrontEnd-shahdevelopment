@@ -13,7 +13,7 @@ import cookieParser from 'cookie-parser';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 const BACK_END = process.env.BACK_END;
-const SITE_DOMAIN = porcess.env.SITE_DOMAIN;
+const SITE_DOMAIN = process.env.SITE_DOMAIN;
 
 // Set the MIME type for JavaScript files
 app.set('view engine', 'js');
