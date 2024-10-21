@@ -37,7 +37,9 @@ async function getData(userId, backend) {
   console.log(data);
 }
 function deletePost(postId, backEnd) {
-  fetch(`${backEnd}/api/${postId}`, {
+  const idPost = userId;
+  const backEnd = backend;  
+  fetch(`${backEnd}/api/${idPost}`, {
     method: 'DELETE'
   })
     .then(response => {
