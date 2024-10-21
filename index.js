@@ -1,21 +1,17 @@
 import express from 'express';
+import jwt from 'jsonwebtoken';
+import cookieParser from 'cookie-parser';
+
 const app = express();
 const PORT = 3000;
 const HOST = '0.0.0.0';
-import jwt from 'jsonwebtoken';
-import cookieParser from 'cookie-parser';
+const JWT_SECRET = process.env.JWT_SECRET;
+const BACK_END = process.env.BACK_END;
 
 // DevTools ------------------------------------------- //
 // import cors from 'cors';
 // import dotenv from 'dotenv';
 // dotenv.config();
-// ---------------------------------------------------- //
-// ---------------------------------------------------- //
-
-const JWT_SECRET = process.env.JWT_SECRET;
-const BACK_END = process.env.BACK_END;
-
-// DevTools ------------------------------------------- //
 // const FRONT_END = process.env.FRONT_END;
 // const corsOptions = {
 //     origin: FRONT_END,  // Replace with your frontend domain
