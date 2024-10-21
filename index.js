@@ -4,9 +4,9 @@ const PORT = 3000;
 const HOST = '0.0.0.0';
 import jwt from 'jsonwebtoken';
 import cookieParser from 'cookie-parser';
-// import cors from 'cors';
 
 // DevTools ------------------------------------------- //
+// import cors from 'cors';
 // import dotenv from 'dotenv';
 // dotenv.config();
 // ---------------------------------------------------- //
@@ -15,12 +15,15 @@ import cookieParser from 'cookie-parser';
 const JWT_SECRET = process.env.JWT_SECRET;
 const BACK_END = process.env.BACK_END;
 
-// CORS configuration
+// DevTools ------------------------------------------- //
+// const FRONT_END = process.env.FRONT_END;
 // const corsOptions = {
-//     origin: BACK_END,  // Replace with your frontend domain
-//     credentials: true  // Allows credentials (cookies, HTTP authentication)
+//     origin: FRONT_END,  // Replace with your frontend domain
+//     credentials: true,  // Allows credentials (cookies, HTTP authentication)
 // };
 // app.use(cors(corsOptions));
+// ---------------------------------------------------- //
+// ---------------------------------------------------- //
 
 // Set the MIME type for JavaScript files
 app.set('view engine', 'js');
@@ -485,7 +488,6 @@ app.get('/shahgpt', (req, res) => {
                         console.error(error)
                     })
             }
-
             inputContainer.addEventListener('keypress', function (event) {
                 if (event.keyCode === 13) {
                     event.preventDefault();
@@ -493,11 +495,9 @@ app.get('/shahgpt', (req, res) => {
                 }
             });
             submitButton.addEventListener('click', getMessage);
-
             function clearInput() {
                 inputElement.value = '';
             }
-
             buttonElement.addEventListener('click', clearInput);
         </script>
     </html>
@@ -1138,7 +1138,6 @@ app.get('/data', (req, res) => {
                     <div><a href="/selfie" class="geo">Create Capture</a></div>
                     <script src="js/logs.js"></script>
                     <script>
-
                         async function getId() {
                             const token = ${data}
                             const url = ${url}
@@ -1177,112 +1176,120 @@ app.get('/data', (req, res) => {
     res.send(modifiedHTML);
 });
 app.get('/form', (req, res) =>{
+    const url = `'${BACK_END}/email'`;
+    console.log(url);
+    if (!BACK_END) {
+        // res.status(401).json({ message: 'Access denied, token missing!' });
+        return res.status(400).json({ message: 'Back Endpoint Not Loaded!' });
+    }
+    console.log(url);
     const modifiedHTML = `
-    <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Skill | Project Work</title>
-        <link rel="stylesheet" href="style/style.css">
-    </head>
-    <div class="topnav">
-        <div>
-            <a class="name" href="/"><p>Shah Solehria</p></a>
-            <h2 class="title">Cloud | DevOps | Data</h2>
-        </div>
-        <div>
-            <div id="menu-bar">
-                <div id="menu-buttons">
-                    <div class="dropdown">
-                        <button class="dropbtn">Projects</button>
-                        <div class="dropdown-content">
-                            <a href="/fastapi">FastAPI Server</a>
-                            <a href="/geolocate">Geo Location App</a>
-                            <a href="/shahgpt">ChatGPT Clone</a>
-                            <a href="/login">My Profile</a>
-                            <a href="/allPosts">Posts</a>
+        <html lang="en">
+        <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>Skill | Project Work</title>
+            <link rel="stylesheet" href="style/style.css">
+        </head>
+        <div class="topnav">
+            <div>
+                <a class="name" href="/"><p>Shah Solehria</p></a>
+                <h2 class="title">Cloud | DevOps | Data</h2>
+            </div>
+            <div>
+                <div id="menu-bar">
+                    <div id="menu-buttons">
+                        <div class="dropdown">
+                            <button class="dropbtn">Projects</button>
+                            <div class="dropdown-content">
+                                <a href="/fastapi">FastAPI Server</a>
+                                <a href="/geolocate">Geo Location App</a>
+                                <a href="/shahgpt">ChatGPT Clone</a>
+                                <a href="/login">My Profile</a>
+                                <a href="/allPosts">Posts</a>
+                            </div>
                         </div>
+                        <button onclick="highlightButton(this)" class="menu"><a href="/contactpage">Contact</a></button>
+                        <button onclick="highlightButton(this)" class="menu"><a href="Shah_Solehria_Resume.pdf" target="_blank">Resume</a></button>
                     </div>
-                    <button onclick="highlightButton(this)" class="menu"><a href="/contactpage">Contact</a></button>
-                    <button onclick="highlightButton(this)" class="menu"><a href="Shah_Solehria_Resume.pdf" target="_blank">Resume</a></button>
                 </div>
             </div>
+            <div class="ham">
+                <button class="hamburger-menu">
+                    <div class="hamburger-line"></div>
+                    <div class="hamburger-line"></div>
+                    <div class="hamburger-line"></div>
+                </button>
+            </div>
+            <script src="js/hamburger.js"></script>
         </div>
-        <div class="ham">
-            <button class="hamburger-menu">
-                <div class="hamburger-line"></div>
-                <div class="hamburger-line"></div>
-                <div class="hamburger-line"></div>
-            </button>
-        </div>
-        <script src="js/hamburger.js"></script>
-    </div>
-    <body>
-        <div class="submit-form">
-            <h1>Appointment Booking</h1>
-            <form id="contactForm">
-                <label for="name">Name:</label>
-                <input type="text" id="name" name="name" required><br><br>
-
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required><br><br>
-
-                <label for="date">Date:</label>
-                <input type="date" id="date" name="date" required><br><br>
-
-                <label for="time">Time:</label>
-                <input type="time" id="time" name="time" required><br><br>
-
-                <label for="message">Message:</label><br>
-                <textarea id="message" name="message" rows="4" cols="50" required></textarea><br><br>
-
-                <button type="submit">Submit</button>
-            </form>
-            <script>
-                document.getElementById('contactForm').addEventListener('submit', function(event) {
-                    event.preventDefault(); // Prevent form submission
-
-                    const formData = new FormData(this); // Get form data
-
-                    // Convert form data to object
-                    const formDataObject = {};
-                    formData.forEach(function(value, key) {
-                        formDataObject[key] = value;
+        <body>
+            <div class="submit-form">
+                <h1>Appointment Booking</h1>
+                <form id="contactForm">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" required><br><br>
+    
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required><br><br>
+    
+                    <label for="date">Date:</label>
+                    <input type="date" id="date" name="date" required><br><br>
+    
+                    <label for="time">Time:</label>
+                    <input type="time" id="time" name="time" required><br><br>
+    
+                    <label for="message">Message:</label><br>
+                    <textarea id="message" name="message" rows="4" cols="50" required></textarea><br><br>
+    
+                    <button type="submit">Submit</button>
+                </form>
+                <script>
+                    document.getElementById('contactForm').addEventListener('submit', function(event) {
+                        event.preventDefault(); // Prevent form submission
+    
+                        const formData = new FormData(this); // Get form data
+    
+                        // Convert form data to object
+                        const formDataObject = {};
+                        formData.forEach(function(value, key) {
+                            formDataObject[key] = value;
+                        });
+    
+                        console.log(formDataObject);
+                        console.log('Clicked');
+                        alert('Sending email.......');
+                        const baseUrl = ${url};
+                        console.log(baseUrl);
+                        const options = {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({formDataObject})
+                        };
+                        fetch(baseUrl, options)
+                            .then(response => {
+                                if (response.ok) {
+                                    alert("Appointment Booking Request Sent!")
+                                } else {
+                                    throw new Error('Error: ' + response.status);
+                                }
+                            })
                     });
-
-                    console.log(formDataObject)
-                    console.log('Clicked');
-                    alert('Sending email.......');
-                    const baseUrl = '${BACK_END}/email'
-                    const options = {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({formDataObject})
-                    };
-                    fetch(baseUrl, options)
-                        .then(response => {
-                            if (response.ok) {
-                                alert("Appointment Booking Request Sent!")
-                            } else {
-                                throw new Error('Error: ' + response.status);
-                            }
-                        })
-                });
-            </script>
-        </div>
-    </body>
-    <div class="footer">
-        <a href="/"><button class="dropbtn">Home</button></a>
-        <div class="footmenu">
-            <a href="mailto:shahjehan-solehria@hotmail.com"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/outlook.png"/></button></a>
-            <a href="https://github.com/shahdevelopment/"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/github.png"/></button></a>
-            <a href="https://fastapi-shah.herokuapp.com/docs"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/fastapi.png"/></button></a>
-        </div>
-    </div>    
-    </html>
-`;
+                </script>
+            </div>
+        </body>
+        <div class="footer">
+            <a href="/"><button class="dropbtn">Home</button></a>
+            <div class="footmenu">
+                <a href="mailto:shahjehan-solehria@hotmail.com"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/outlook.png"/></button></a>
+                <a href="https://github.com/shahdevelopment/"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/github.png"/></button></a>
+                <a href="https://fastapi-shah.herokuapp.com/docs"><button><img style='max-height: 50px; max-width: 50px; object-fit: contain' src="image/fastapi.png"/></button></a>
+            </div>
+        </div>    
+        </html>
+    `;
     res.send(modifiedHTML);
 });
 app.get('/allPosts', async (req, res) => {
