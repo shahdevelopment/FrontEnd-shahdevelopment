@@ -1,6 +1,7 @@
 async function getData(userId, backend) {
-  const url = `${backend}/api/${userId}`
-  console.log(url)
+  const idUser = userId;
+  const backEnd = backend;
+  const url = `${backEnd}/api/${idUser}`
   const response = await fetch(url);
   const data = await response.json();
 
@@ -29,14 +30,14 @@ async function getData(userId, backend) {
 
     button.addEventListener('click', () => {
       const postId = button.dataset.id
-      deletePost(postId);
+      deletePost(postId, backEnd);
       // Call the deletePost function passing the post ID
     });
   }
   console.log(data);
 }
-function deletePost(postId) {
-  fetch(`${backend}/api/${postId}`, {
+function deletePost(postId, backEnd) {
+  fetch(`${backEnd}/api/${postId}`, {
     method: 'DELETE'
   })
     .then(response => {
