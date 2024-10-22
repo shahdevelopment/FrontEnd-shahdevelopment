@@ -5,13 +5,11 @@ import cookieParser from 'cookie-parser';
 const app = express();
 const PORT = 3000;
 const HOST = '0.0.0.0';
-const JWT_SECRET = process.env.JWT_SECRET;
-const BACK_END = process.env.BACK_END;
 
 // DevTools ------------------------------------------- //
 // import cors from 'cors';
-// import dotenv from 'dotenv';
-// dotenv.config();
+import dotenv from 'dotenv';
+dotenv.config();
 // const FRONT_END = process.env.FRONT_END;
 // const corsOptions = {
 //     origin: FRONT_END,  // Replace with your frontend domain
@@ -21,11 +19,8 @@ const BACK_END = process.env.BACK_END;
 // ---------------------------------------------------- //
 // ---------------------------------------------------- //
 
-// Set the MIME type for JavaScript files
-app.set('view engine', 'js');
-app.engine('js', (_, options, callback) => {
-    callback(null, options.source);
-});
+const JWT_SECRET = process.env.JWT_SECRET;
+const BACK_END = process.env.BACK_END;
 
 app.use(express.static('public', {
     setHeaders: (response, path, stat) => {
@@ -36,13 +31,17 @@ app.use(express.static('public', {
 }));
 app.use(express.json({ limit: '1mb' }));
 app.use(cookieParser());
+
+// Set the MIME type for JavaScript files
+app.set('view engine', 'js');
+app.engine('js', (_, options, callback) => {
+    callback(null, options.source);
+});
+
 app.listen(PORT, HOST, () => {
     console.log(`Server is running on http://${HOST}:${PORT}`);
 });
-// #######################################################################
-// app.get('/', (req, res) => {
-//     res.redirect('/index');
-// });
+
 app.get('/health', (req, res) => {
     const message = "Healthy!";
     res.status(200).json({ info: message })
@@ -1146,13 +1145,13 @@ app.get('/data', (req, res) => {
                                 body: JSON.stringify({ token }),  // Correctly stringify the token as an object
                             };
                             const jwtdata = await fetch(url, jwtoptions);
+
                             const datajwt = await jwtdata.json();
+                            console.log(datajwt)
                             const userId = datajwt.id;
                             getData(userId, '${BACK_END}')
                         }
                         getId()
-
-
                     </script>
                 </div>
                 <div id="log_div">
