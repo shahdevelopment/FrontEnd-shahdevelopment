@@ -8,8 +8,8 @@ const HOST = '0.0.0.0';
 
 // DevTools ------------------------------------------- //
 // import cors from 'cors';
-import dotenv from 'dotenv';
-dotenv.config();
+// import dotenv from 'dotenv';
+// dotenv.config();
 // const FRONT_END = process.env.FRONT_END;
 // const corsOptions = {
 //     origin: FRONT_END,  // Replace with your frontend domain
