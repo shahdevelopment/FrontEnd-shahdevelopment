@@ -7,15 +7,8 @@ const PORT = 3000;
 const HOST = '0.0.0.0';
 
 // DevTools ------------------------------------------- //
-// import cors from 'cors';
 // import dotenv from 'dotenv';
 // dotenv.config();
-// const FRONT_END = process.env.FRONT_END;
-// const corsOptions = {
-//     origin: FRONT_END,  // Replace with your frontend domain
-//     credentials: true,  // Allows credentials (cookies, HTTP authentication)
-// };
-// app.use(cors(corsOptions));
 // ---------------------------------------------------- //
 // ---------------------------------------------------- //
 
@@ -1172,12 +1165,10 @@ app.get('/data', (req, res) => {
 });
 app.get('/form', (req, res) =>{
     const url = `'${BACK_END}/email'`;
-    console.log(url);
     if (!BACK_END) {
         // res.status(401).json({ message: 'Access denied, token missing!' });
         return res.status(400).json({ message: 'Back Endpoint Not Loaded!' });
     }
-    console.log(url);
     const modifiedHTML = `
         <html lang="en">
         <head>
@@ -1250,12 +1241,8 @@ app.get('/form', (req, res) =>{
                         formData.forEach(function(value, key) {
                             formDataObject[key] = value;
                         });
-    
-                        console.log(formDataObject);
-                        console.log('Clicked');
                         alert('Sending email.......');
                         const baseUrl = ${url};
-                        console.log(baseUrl);
                         const options = {
                             method: 'POST',
                             headers: {
@@ -1271,6 +1258,9 @@ app.get('/form', (req, res) =>{
                                     throw new Error('Error: ' + response.status);
                                 }
                             })
+                            .catch(error => {
+                                console.error('There was a problem with the fetch operation:', error);
+                            });
                     });
                 </script>
             </div>
