@@ -312,7 +312,7 @@ pipeline {
                         sh """
                             POD_NAME=$(kubectl get pods -n ${NAMESPACE} -l ${POD_LABEL} -o jsonpath='{.items[0].metadata.name}')
 
-                            if [ -z "${POD_NAME}" ]; then
+                            if [ -z '${POD_NAME}' ]; then
                             echo 'No PostgreSQL pod found in namespace ${NAMESPACE}'
                             exit 1
                             fi
@@ -592,7 +592,7 @@ pipeline {
                             POD_NAME=$(kubectl get pods -n ${NAMESPACE} -l ${POD_LABEL} -o jsonpath='{.items[0].metadata.name}')
                             echo '------------------------------------'
 
-                            if [ -z "${POD_NAME}" ]; then
+                            if [ -z '${POD_NAME}' ]; then
                             echo 'No new PostgreSQL pod found in namespace ${NAMESPACE}'
                             exit 1
                             fi
