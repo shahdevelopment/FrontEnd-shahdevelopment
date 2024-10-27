@@ -97,6 +97,12 @@ pipeline {
 
         // Email
         app_admin_email = ""
+
+        // PG Backup
+        NAMESPACE = ""
+        BACKUP_FILE = ""
+        POD_LABEL = ""
+        LOCAL_BACKUP_DIR = ""
     }
     options { skipDefaultCheckout() }
     stages {
@@ -206,6 +212,12 @@ pipeline {
                     // Email
                     app_admin_email = parameters['app.admin_email']
 
+                    // PG Backup
+                    NAMESPACE = parameters['app.namespace']
+                    BACKUP_FILE = parameters['db.backup']
+                    POD_LABEL = parameters['db.label']
+                    LOCAL_BACKUP_DIR = parameters['db.dir']
+
                     // ---------- Moved to Pipeline Console Config
                     // ssl_tls_crt = params.ssl_tls_crt
                     // docker_config_json = params.docker_config_json
@@ -292,6 +304,63 @@ pipeline {
                     message: "*GitHub Repo Clone Step with Result - ${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"                    
                 }
             }                
+        }
+        stage('PG Backup') {
+            steps {
+                dir("${backend}") {
+                    script {
+                        sh """
+                            POD_NAME=$(kubectl get pods -n ${NAMESPACE} -l ${POD_LABEL} -o jsonpath="{.items[0].metadata.name}")
+
+                            if [ -z "$POD_NAME" ]; then
+                            echo "No PostgreSQL pod found in namespace ${NAMESPACE}"
+                            exit 1
+                            fi
+
+                            echo "PostgreSQL Pod found: $POD_NAME"
+
+                            kubectl exec -n ${NAMESPACE} $POD_NAME -- \
+                            /bin/bash rm -rf /tmp/${BACKUP_FILE}
+
+                            kubectl exec -n ${NAMESPACE} $POD_NAME -- \
+                            pg_dump -U ${postgres_user} -d ${postgres_db} -F c -f /tmp/${BACKUP_FILE}
+
+                            if [ $? -ne 0 ]; then
+                            echo "Failed to create PostgreSQL backup"
+                            exit 1
+                            fi
+
+                            echo "PostgreSQL backup created: /tmp/${BACKUP_FILE} in pod $POD_NAME"
+
+                            ls ${LOCAL_BACKUP_DIR} 2>/dev/null
+                            if [ $? -eq 0 ]; then
+                            rm -rf ${LOCAL_BACKUP_DIR}/*
+                            echo "Cleaning up old backup........"
+                            else
+                            mkdir -p ${LOCAL_BACKUP_DIR}
+                            echo "Creating backup dir ............"
+                            fi
+
+                            kubectl cp ${NAMESPACE}/$POD_NAME:/tmp/${BACKUP_FILE} ${LOCAL_BACKUP_DIR}/${BACKUP_FILE}
+
+                            if [ $? -ne 0 ]; then
+                            echo "Failed to copy backup file to local machine"
+                            exit 1
+                            fi
+
+                            echo "Backup file copied to ${LOCAL_BACKUP_DIR}/${BACKUP_FILE}"
+                        """
+                    }
+                }
+            }
+            post {
+                always {
+                    echo '########## Postgres DB Notification ##########'
+                    slackSend channel: "${slack_cluster}",
+                    color: COLOR_MAP[currentBuild.currentResult],
+                    message: "*DB backed up with Result - ${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
+                }
+            }
         }
         stage('Code Sonarqube Analysis') {
             environment {
@@ -498,7 +567,7 @@ pipeline {
                         sh 'echo ------------------------------------'
                         sh 'echo ------------------------------------'
 
-                        sh "helm upgrade my-app ./helm/profilecharts --set backimage=${back_image} --set frontimage=${front_image} --set pgimage=${db_image} --set docker_configjson=${docker_config_json} --set tls_crt=${ssl_tls_crt} --set tls_key=${ssl_tls_key} && sleep 30"
+                        sh "helm upgrade my-app ./helm/profilecharts --set backimage=${back_image} --set frontimage=${front_image} --set pgimage=${db_image} --set docker_configjson=${docker_config_json} --set tls_crt=${ssl_tls_crt} --set tls_key=${ssl_tls_key} --set back_end=${app_back_end} && sleep 30"
                     }
                 }
             }
@@ -510,6 +579,57 @@ pipeline {
                         color: COLOR_MAP[currentBuild.currentResult],
                         message: "*Build Completed with Result - ${currentBuild.currentResult}:* \n Job ${env.JOB_NAME} \n build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL} \n *Logs:* \n ${currentBuild.rawBuild.getLog(1000)}"
                     }
+                }
+            }
+        }
+        stage('PG Restore') {
+            steps {
+                dir("${backend}") {
+                    script {
+                        sh """
+                            POD_NAME=$(kubectl get pods -n ${NAMESPACE} -l ${POD_LABEL} -o jsonpath="{.items[0].metadata.name}")
+
+                            if [ -z "$POD_NAME" ]; then
+                            echo "No new PostgreSQL pod found in namespace ${NAMESPACE}"
+                            exit 1
+                            fi
+
+                            echo "New PostgreSQL Pod found: $POD_NAME"
+
+                            ls ${LOCAL_BACKUP_DIR} 2>/dev/null
+                            if [ $? -eq 0 ]; then
+                                echo "Restoring Backup Now........"
+                                kubectl cp ${LOCAL_BACKUP_DIR}/${BACKUP_FILE} ${NAMESPACE}/$POD_NAME:/tmp/${BACKUP_FILE}
+
+                                if [ $? -ne 0 ]; then
+                                echo "Failed to copy backup file to the new PostgreSQL pod"
+                                exit 1
+                                fi
+
+                                echo "Backup file copied to /tmp/${BACKUP_FILE} in pod $POD_NAME"
+
+                                # Step 3: Restore the database using pg_restore
+                                kubectl exec -n ${NAMESPACE} $POD_NAME -- \
+                                pg_restore -U ${postgres_user} -d $DB_NAME -F c --clean /tmp/${BACKUP_FILE}
+
+                                if [ $? -ne 0 ]; then
+                                    echo "Failed to restore PostgreSQL database"
+                                    exit 1
+                                fi
+                                    echo "Database successfully restored in pod $POD_NAME"
+                            else
+                            echo "No Backup Exists"
+                            fi                        
+                        """
+                    }
+                }
+            }
+            post {
+                always {
+                    echo '########## Postgres DB Notification ##########'
+                    slackSend channel: "${slack_cluster}",
+                    color: COLOR_MAP[currentBuild.currentResult],
+                    message: "*DB restored with Result - ${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
                 }
             }
         }
