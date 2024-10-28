@@ -310,21 +310,26 @@ pipeline {
                 dir("${backend}") {
                     retry(4) {
                         script {
-                            sh "POD_NAME=\$(kubectl get pods -n ${NAMESPACE} -l ${POD_LABEL} -o jsonpath='{.items[0].metadata.name}')"
+                            // Run shell command and capture output in a Groovy variable
+                            def podName = sh(
+                                script: "kubectl get pods -n ${NAMESPACE} -l ${POD_LABEL} -o jsonpath='{.items[0].metadata.name}'",
+                                returnStdout: true
+                            ).trim()  // Use .trim() to remove any trailing newline characters
+
+                            // Use the variable in Groovy string interpolation
+                            echo "Pod Name retrieved: ${podName}"
                             
-                            sh '''
-                                if [ -z '${POD_NAME}' ]; then
-                                    echo 'No PostgreSQL pod found in namespace ${NAMESPACE}'
+                            sh """
+                                if [ -z "${podName}" ]; then
+                                    echo 'No PostgreSQL pod found'
                                     exit 1
                                 fi
-                            '''
-
-
-                            sh """
-                                kubectl exec -n ${NAMESPACE} ${POD_NAME} -- /bin/bash rm -rf /tmp/\${BACKUP_FILE}
                             """
                             sh """
-                                kubectl exec -n ${NAMESPACE} $POD_NAME -- pg_dump -U ${postgres_user} -d \${postgres_db} -F c -f /tmp/\${BACKUP_FILE}
+                                kubectl exec -n ${NAMESPACE} ${podName} -- /bin/bash rm -rf /tmp/${BACKUP_FILE}
+                            """
+                            sh """
+                                kubectl exec -n ${NAMESPACE} ${podName} -- pg_dump -U ${postgres_user} -d ${postgres_db} -F c -f /tmp/${BACKUP_FILE}
 
                                 if [ $? -ne 0 ]; then
                                 echo 'Failed to create PostgreSQL backup'
@@ -589,40 +594,54 @@ pipeline {
             steps {
                 dir("${backend}") {
                     script {
+                            // Run shell command and capture output in a Groovy variable
+                            def podName = sh(
+                                script: "kubectl get pods -n ${NAMESPACE} -l ${POD_LABEL} -o jsonpath='{.items[0].metadata.name}'",
+                                returnStdout: true
+                            ).trim()  // Use .trim() to remove any trailing newline characters
+
+                            // Use the variable in Groovy string interpolation
+                            echo "Pod Name retrieved: ${podName}"
+                            
+                            sh """
+                                if [ -z "${podName}" ]; then
+                                    echo 'No PostgreSQL pod found'
+                                    exit 1
+                                fi
+                            """
                         sh """
                             echo '------------------------------------'
                             echo '------------------------------------'
-                            POD_NAME=$(kubectl get pods -n ${NAMESPACE} -l ${POD_LABEL} -o jsonpath='{.items[0].metadata.name}')
                             echo '------------------------------------'
 
-                            if [ -z '${POD_NAME}' ]; then
+                            if [ -z '${podName}' ]; then
                             echo 'No new PostgreSQL pod found in namespace ${NAMESPACE}'
                             exit 1
                             fi
 
-                            echo 'New PostgreSQL Pod found: ${POD_NAME}'
+                            echo 'New PostgreSQL Pod found: ${podName}'
 
                             ls ${LOCAL_BACKUP_DIR} 2>/dev/null
                             if [ $? -eq 0 ]; then
                                 echo 'Restoring Backup Now........'
-                                kubectl cp ${LOCAL_BACKUP_DIR}/${BACKUP_FILE} ${NAMESPACE}/${POD_NAME}:/tmp/${BACKUP_FILE}
+                                kubectl cp ${LOCAL_BACKUP_DIR}/${BACKUP_FILE} ${NAMESPACE}/${podName}:/tmp/${BACKUP_FILE}
 
                                 if [ $? -ne 0 ]; then
                                 echo 'Failed to copy backup file to the new PostgreSQL pod'
                                 exit 1
                                 fi
 
-                                echo 'Backup file copied to /tmp/${BACKUP_FILE} in pod ${POD_NAME}'
+                                echo 'Backup file copied to /tmp/${BACKUP_FILE} in pod ${podName}'
 
                                 # Step 3: Restore the database using pg_restore
-                                kubectl exec -n ${NAMESPACE} ${POD_NAME} -- \
+                                kubectl exec -n ${NAMESPACE} ${podName} -- \
                                 pg_restore -U ${postgres_user} -d ${postgres_db} -F c --clean /tmp/${BACKUP_FILE}
 
                                 if [ $? -ne 0 ]; then
                                     echo 'Failed to restore PostgreSQL database'
                                     exit 1
                                 fi
-                                    echo 'Database successfully restored in pod ${POD_NAME}'
+                                    echo 'Database successfully restored in pod ${podName}'
                             else
                             echo 'No Backup Exists'
                             fi                        
