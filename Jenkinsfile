@@ -321,7 +321,7 @@ pipeline {
 
 
                             sh """
-                                kubectl exec -n ${NAMESPACE} ${POD_NAME} -- /bin/bash rm -rf /tmp/${BACKUP_FILE}
+                                kubectl exec -n ${NAMESPACE} ${POD_NAME} -- /bin/bash rm -rf /tmp/\${BACKUP_FILE}
                             """
                             sh """
                                 kubectl exec -n ${NAMESPACE} $POD_NAME -- pg_dump -U ${postgres_user} -d ${postgres_db} -F c -f /tmp/${BACKUP_FILE}
