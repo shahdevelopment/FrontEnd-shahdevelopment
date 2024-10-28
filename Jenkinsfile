@@ -310,7 +310,7 @@ pipeline {
                 dir("${backend}") {
                     retry(4) {
                         script {
-                            sh "POD_NAME=$(kubectl get pods -n ${NAMESPACE} -l ${POD_LABEL} -o jsonpath='{.items[0].metadata.name}')"
+                            sh "POD_NAME=\$(kubectl get pods -n ${NAMESPACE} -l ${POD_LABEL} -o jsonpath='{.items[0].metadata.name}')"
                             
                             sh '''
                                 if [ -z '${POD_NAME}' ]; then
