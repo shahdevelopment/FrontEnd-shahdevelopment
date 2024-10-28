@@ -326,10 +326,10 @@ pipeline {
                                 fi
                             """
                             sh """
-                                kubectl exec -n ${NAMESPACE} ${podName} -- /bin/bash rm -rf /tmp/${BACKUP_FILE}
+                                kubectl exec -n ${NAMESPACE} ${podName} -- /bin/bash rm -rf /tmp/'${BACKUP_FILE}'
                             """
                             sh """
-                                kubectl exec -n ${NAMESPACE} ${podName} -- pg_dump -U ${postgres_user} -d ${postgres_db} -F c -f /tmp/${BACKUP_FILE}
+                                kubectl exec -n ${NAMESPACE} ${podName} -- pg_dump -U ${postgres_user} -d ${postgres_db} -F c -f /tmp/'${BACKUP_FILE}'
 
                                 if [ $? -ne 0 ]; then
                                 echo 'Failed to create PostgreSQL backup'
@@ -349,7 +349,7 @@ pipeline {
                                 fi
                             """
                             sh """
-                                kubectl cp ${NAMESPACE}/${podName}:/tmp/${BACKUP_FILE} ${LOCAL_BACKUP_DIR}/${BACKUP_FILE}
+                                kubectl cp ${NAMESPACE}/${podName}:/tmp/'${BACKUP_FILE}' ${LOCAL_BACKUP_DIR}/'${BACKUP_FILE}'
 
                                 if [ $? -ne 0 ]; then
                                 echo "Failed to copy backup file to local machine"
@@ -624,7 +624,7 @@ pipeline {
                             ls ${LOCAL_BACKUP_DIR} 2>/dev/null
                             if [ $? -eq 0 ]; then
                                 echo 'Restoring Backup Now........'
-                                kubectl cp ${LOCAL_BACKUP_DIR}/${BACKUP_FILE} ${NAMESPACE}/${podName}:/tmp/${BACKUP_FILE}
+                                kubectl cp ${LOCAL_BACKUP_DIR}/'${BACKUP_FILE}' ${NAMESPACE}/${podName}:/tmp/'${BACKUP_FILE}'
 
                                 if [ $? -ne 0 ]; then
                                 echo 'Failed to copy backup file to the new PostgreSQL pod'
@@ -635,7 +635,7 @@ pipeline {
 
                                 # Step 3: Restore the database using pg_restore
                                 kubectl exec -n ${NAMESPACE} ${podName} -- \
-                                pg_restore -U ${postgres_user} -d ${postgres_db} -F c --clean /tmp/${BACKUP_FILE}
+                                pg_restore -U ${postgres_user} -d ${postgres_db} -F c --clean /tmp/'${BACKUP_FILE}'
 
                                 if [ $? -ne 0 ]; then
                                     echo 'Failed to restore PostgreSQL database'
