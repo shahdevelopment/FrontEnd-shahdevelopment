@@ -337,7 +337,7 @@ pipeline {
                                 fi
                             """
 
-                            sh "echo 'PostgreSQL backup created: /tmp/\\${BACKUP_FILE} in pod ${POD_NAME}'"
+                            sh "echo 'PostgreSQL backup created: /tmp/\\${BACKUP_FILE} in pod ${podName}'"
                             sh """
                                 ls ${LOCAL_BACKUP_DIR} 2>/dev/null
                                 if [ $? -eq 0 ]; then
@@ -349,7 +349,7 @@ pipeline {
                                 fi
                             """
                             sh """
-                                kubectl cp ${NAMESPACE}/${POD_NAME}:/tmp/${BACKUP_FILE} ${LOCAL_BACKUP_DIR}/${BACKUP_FILE}
+                                kubectl cp ${NAMESPACE}/${podName}:/tmp/${BACKUP_FILE} ${LOCAL_BACKUP_DIR}/${BACKUP_FILE}
 
                                 if [ $? -ne 0 ]; then
                                 echo "Failed to copy backup file to local machine"
