@@ -305,82 +305,82 @@ pipeline {
                 }
             }                
         }
-        // stage('PG Backup') {
-        //     steps {
-        //         dir("${backend}") {
-        //             retry(4) {
-        //                 script {
-        //                     // Run shell command and capture output in a Groovy variable
-        //                     def podName = sh(
-        //                         script: "kubectl get pods -n ${NAMESPACE} -l ${POD_LABEL} -o jsonpath='{.items[0].metadata.name}'",
-        //                         returnStdout: true
-        //                     ).trim()  // Use .trim() to remove any trailing newline characters
+        stage('PG Backup') {
+            steps {
+                dir("${backend}") {
+                    retry(4) {
+                        script {
+                            // Run shell command and capture output in a Groovy variable
+                            def podName = sh(
+                                script: "kubectl get pods -n ${NAMESPACE} -l ${POD_LABEL} -o jsonpath='{.items[0].metadata.name}'",
+                                returnStdout: true
+                            ).trim()  // Use .trim() to remove any trailing newline characters
 
-        //                     def backupFilepath = sh(
-        //                         script: "echo '/tmp/${BACKUP_FILE}'",
-        //                         returnStdout: true
-        //                     ).trim()  // Use .trim() to remove any trailing newline characters
+                            def backupFilepath = sh(
+                                script: "echo '/tmp/${BACKUP_FILE}'",
+                                returnStdout: true
+                            ).trim()  // Use .trim() to remove any trailing newline characters
 
-        //                     def localPath = sh(
-        //                         script: "echo '${LOCAL_BACKUP_DIR}/${BACKUP_FILE}'",
-        //                         returnStdout: true
-        //                     ).trim()  // Use .trim() to remove any trailing newline characters
+                            def localPath = sh(
+                                script: "echo '${LOCAL_BACKUP_DIR}/${BACKUP_FILE}'",
+                                returnStdout: true
+                            ).trim()  // Use .trim() to remove any trailing newline characters
 
-        //                     // Use the variable in Groovy string interpolation
-        //                     echo "Pod Name retrieved: ${podName}"
+                            // Use the variable in Groovy string interpolation
+                            echo "Pod Name retrieved: ${podName}"
                             
-        //                     sh """
-        //                         if [ -z "${podName}" ]; then
-        //                             echo 'No PostgreSQL pod found'
-        //                             exit 1
-        //                         fi
-        //                     """
+                            sh """
+                                if [ -z "${podName}" ]; then
+                                    echo 'No PostgreSQL pod found'
+                                    exit 1
+                                fi
+                            """
 
-        //                     sh """
-        //                         kubectl exec -n ${NAMESPACE} ${podName} -- /bin/bash rm -rf ${backupFilepath}
-        //                     """
-        //                     sh """
-        //                         kubectl exec -n ${NAMESPACE} ${podName} -- pg_dump -U ${postgres_user} -d ${postgres_db} -F c -f ${backupFilepath}
+                            sh """
+                                kubectl exec -n ${NAMESPACE} ${podName} -- /bin/bash rm -rf ${backupFilepath}
+                            """
+                            sh """
+                                kubectl exec -n ${NAMESPACE} ${podName} -- pg_dump -U ${postgres_user} -d ${postgres_db} -F c -f ${backupFilepath}
 
-        //                         if [ $? -ne 0 ]; then
-        //                         echo 'Failed to create PostgreSQL backup'
-        //                         exit 1
-        //                         fi
-        //                     """
+                                if [ $? -ne 0 ]; then
+                                echo 'Failed to create PostgreSQL backup'
+                                exit 1
+                                fi
+                            """
 
-        //                     sh "echo 'PostgreSQL backup created: ${backupFilepath} in pod ${podName}'"
-        //                     sh """
-        //                         ls ${LOCAL_BACKUP_DIR} 2>/dev/null
-        //                         if [ $? -eq 0 ]; then
-        //                         rm -rf ${LOCAL_BACKUP_DIR}/*
-        //                         echo 'Cleaning up old backup........'
-        //                         else
-        //                         mkdir -p ${LOCAL_BACKUP_DIR}
-        //                         echo 'Creating backup dir ............'
-        //                         fi
-        //                     """
-        //                     sh """
-        //                         kubectl cp ${NAMESPACE}/${podName}:${backupFilepath} ${localPath}
+                            sh "echo 'PostgreSQL backup created: ${backupFilepath} in pod ${podName}'"
+                            sh """
+                                ls ${LOCAL_BACKUP_DIR} 2>/dev/null
+                                if [ $? -eq 0 ]; then
+                                rm -rf ${LOCAL_BACKUP_DIR}/*
+                                echo 'Cleaning up old backup........'
+                                else
+                                mkdir -p ${LOCAL_BACKUP_DIR}
+                                echo 'Creating backup dir ............'
+                                fi
+                            """
+                            sh """
+                                kubectl cp ${NAMESPACE}/${podName}:${backupFilepath} ${localPath}
 
-        //                         if [ $? -ne 0 ]; then
-        //                         echo "Failed to copy backup file to local machine"
-        //                         exit 1
-        //                         fi
-        //                     """
-        //                     sh "echo 'Backup file copied to ${localPath}'"
-        //                 }
-        //             }
-        //         }
-        //     }
-        //     post {
-        //         always {
-        //             echo '########## Postgres DB Notification ##########'
-        //             slackSend channel: "${slack_cluster}",
-        //             color: COLOR_MAP[currentBuild.currentResult],
-        //             message: "*DB backed up with Result - ${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
-        //         }
-        //     }
-        // }
+                                if [ $? -ne 0 ]; then
+                                echo "Failed to copy backup file to local machine"
+                                exit 1
+                                fi
+                            """
+                            sh "echo 'Backup file copied to ${localPath}'"
+                        }
+                    }
+                }
+            }
+            post {
+                always {
+                    echo '########## Postgres DB Notification ##########'
+                    slackSend channel: "${slack_cluster}",
+                    color: COLOR_MAP[currentBuild.currentResult],
+                    message: "*DB backed up with Result - ${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
+                }
+            }
+        }
         stage('Code Sonarqube Analysis') {
             environment {
                 scannerHome = tool 'sonar4.7'
@@ -601,83 +601,80 @@ pipeline {
                 }
             }
         }
-        // stage('PG Restore') {
-        //     steps {
-        //         dir("${backend}") {
-        //             script {
-        //                 // Run shell command and capture output in a Groovy variable
-        //                 def podName = sh(
-        //                     script: "kubectl get pods -n ${NAMESPACE} -l ${POD_LABEL} -o jsonpath='{.items[0].metadata.name}'",
-        //                     returnStdout: true
-        //                 ).trim()  // Use .trim() to remove any trailing newline characters
+        stage('PG Restore') {
+            steps {
+                dir("${backend}") {
+                    script {
+                        // Run shell command and capture output in a Groovy variable
+                        def podName = sh(
+                            script: "kubectl get pods -n ${NAMESPACE} -l ${POD_LABEL} -o jsonpath='{.items[0].metadata.name}'",
+                            returnStdout: true
+                        ).trim()  // Use .trim() to remove any trailing newline characters
 
-        //                 // Use the variable in Groovy string interpolation
-        //                 echo "Pod Name retrieved: ${podName}"
+                        // Use the variable in Groovy string interpolation
+                        echo "Pod Name retrieved: ${podName}"
                         
-        //                 sh """
-        //                     if [ -z "${podName}" ]; then
-        //                         echo 'No PostgreSQL pod found'
-        //                         exit 1
-        //                     fi
-        //                 """
-        //                 def backfilepath = sh(
-        //                     script: "echo '/tmp/${BACKUP_FILE}'",
-        //                     returnStdout: true
-        //                 ).trim()
+                        sh """
+                            if [ -z "${podName}" ]; then
+                                echo 'No PostgreSQL pod found'
+                                exit 1
+                            fi
+                        """
+                        def backfilepath = sh(
+                            script: "echo '/tmp/${BACKUP_FILE}'",
+                            returnStdout: true
+                        ).trim()
 
-        //                 def locfilepath = sh(
-        //                     script: "echo '${LOCAL_BACKUP_DIR}/${BACKUP_FILE}'",
-        //                     returnStdout: true
-        //                 ).trim()
+                        def locfilepath = sh(
+                            script: "echo '${LOCAL_BACKUP_DIR}/${BACKUP_FILE}'",
+                            returnStdout: true
+                        ).trim()
 
-        //                 sh """
-        //                     echo '------------------------------------'
-        //                     echo '------------------------------------'
-        //                     echo '------------------------------------'
+                        sh """
+                            echo '------------------------------------'
+                            if [ -z '${podName}' ]; then
+                            echo 'No new PostgreSQL pod found in namespace ${NAMESPACE}'
+                            exit 1
+                            fi
+                            echo '------------------------------------'
+                            echo 'New PostgreSQL Pod found: ${podName}'
+                            echo '------------------------------------'
+                            ls ${LOCAL_BACKUP_DIR} 2>/dev/null
+                            if [ $? -eq 0 ]; then
+                                echo 'Restoring Backup Now........'
+                                kubectl cp ${locfilepath} ${NAMESPACE}/${podName}:${backfilepath}
 
-        //                     if [ -z '${podName}' ]; then
-        //                     echo 'No new PostgreSQL pod found in namespace ${NAMESPACE}'
-        //                     exit 1
-        //                     fi
+                                if [ $? -ne 0 ]; then
+                                echo 'Failed to copy backup file to the new PostgreSQL pod'
+                                exit 1
+                                fi
 
-        //                     echo 'New PostgreSQL Pod found: ${podName}'
+                                echo 'Backup file copied to ${backfilepath} in pod ${podName}'
 
-        //                     ls ${LOCAL_BACKUP_DIR} 2>/dev/null
-        //                     if [ $? -eq 0 ]; then
-        //                         echo 'Restoring Backup Now........'
-        //                         kubectl cp '${locfilepath}' ${NAMESPACE}/${podName}:${backfilepath}
+                                # Step 3: Restore the database using pg_restore
+                                kubectl exec -n ${NAMESPACE} ${podName} -- \
+                                pg_restore -U ${postgres_user} -d ${postgres_db} -F c --clean ${backfilepath}
 
-        //                         if [ $? -ne 0 ]; then
-        //                         echo 'Failed to copy backup file to the new PostgreSQL pod'
-        //                         exit 1
-        //                         fi
-
-        //                         echo 'Backup file copied to ${backfilepath} in pod ${podName}'
-
-        //                         # Step 3: Restore the database using pg_restore
-        //                         kubectl exec -n ${NAMESPACE} ${podName} -- \
-        //                         pg_restore -U ${postgres_user} -d ${postgres_db} -F c --clean ${backfilepath}
-
-        //                         if [ $? -ne 0 ]; then
-        //                             echo 'Failed to restore PostgreSQL database'
-        //                             exit 1
-        //                         fi
-        //                             echo 'Database successfully restored in pod ${podName}'
-        //                     else
-        //                     echo 'No Backup Exists'
-        //                     fi                        
-        //                 """
-        //             }
-        //         }
-        //     }
-        //     post {
-        //         always {
-        //             echo '########## Postgres DB Notification ##########'
-        //             slackSend channel: "${slack_cluster}",
-        //             color: COLOR_MAP[currentBuild.currentResult],
-        //             message: "*DB restored with Result - ${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
-        //         }
-        //     }
-        // }
+                                if [ $? -ne 0 ]; then
+                                    echo 'Failed to restore PostgreSQL database'
+                                    exit 1
+                                fi
+                                    echo 'Database successfully restored in pod ${podName}'
+                            else
+                            echo 'No Backup Exists'
+                            fi                        
+                        """
+                    }
+                }
+            }
+            post {
+                always {
+                    echo '########## Postgres DB Notification ##########'
+                    slackSend channel: "${slack_cluster}",
+                    color: COLOR_MAP[currentBuild.currentResult],
+                    message: "*DB restored with Result - ${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
+                }
+            }
+        }
     }
 }
