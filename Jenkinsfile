@@ -317,7 +317,7 @@ pipeline {
                             ).trim()  // Use .trim() to remove any trailing newline characters
 
                             def backupFilepath = sh(
-                                script: "echo '/tmp/${BACKUP_FILE}'",
+                                script: "echo /tmp/${BACKUP_FILE}",
                                 returnStdout: true
                             ).trim()  // Use .trim() to remove any trailing newline characters
 
