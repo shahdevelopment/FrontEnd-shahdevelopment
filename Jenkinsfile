@@ -98,11 +98,8 @@ pipeline {
         // Email
         app_admin_email = ""
 
-        // PG Backup
         NAMESPACE = ""
-        BACKUP_FILE = ""
         POD_LABEL = ""
-        LOCAL_BACKUP_DIR = ""
     }
     options { skipDefaultCheckout() }
     stages {
@@ -214,9 +211,7 @@ pipeline {
 
                     // PG Backup
                     NAMESPACE = parameters['app.namespace']
-                    BACKUP_FILE = parameters['db.backup']
                     POD_LABEL = parameters['db.label']
-                    LOCAL_BACKUP_DIR = parameters['db.dir']
 
                     // ---------- Moved to Pipeline Console Config
                     // ssl_tls_crt = params.ssl_tls_crt
@@ -316,16 +311,6 @@ pipeline {
                                 returnStdout: true
                             ).trim()  // Use .trim() to remove any trailing newline characters
 
-                            def backupFilepath = sh(
-                                script: "echo /tmp/${BACKUP_FILE}",
-                                returnStdout: true
-                            ).trim()  // Use .trim() to remove any trailing newline characters
-
-                            def localPath = sh(
-                                script: "echo '${LOCAL_BACKUP_DIR}/${BACKUP_FILE}'",
-                                returnStdout: true
-                            ).trim()  // Use .trim() to remove any trailing newline characters
-
                             // Use the variable in Groovy string interpolation
                             echo "Pod Name retrieved: ${podName}"
                             
@@ -337,10 +322,10 @@ pipeline {
                             """
 
                             sh """
-                                kubectl exec -n ${NAMESPACE} ${podName} -- /bin/bash rm -rf ${backupFilepath}
+                                kubectl exec -n ${NAMESPACE} ${podName} -- /bin/bash rm -rf /tmp/db_backup.dump
                             """
                             sh """
-                                kubectl exec -n ${NAMESPACE} ${podName} -- pg_dump -U ${postgres_user} -d ${postgres_db} -F c -f ${backupFilepath}
+                                kubectl exec -n ${NAMESPACE} ${podName} -- pg_dump -U ${postgres_user} -d ${postgres_db} -F c -f /tmp/db_backup.dump
 
                                 if [ $? -ne 0 ]; then
                                 echo 'Failed to create PostgreSQL backup'
@@ -348,26 +333,26 @@ pipeline {
                                 fi
                             """
 
-                            sh "echo 'PostgreSQL backup created: ${backupFilepath} in pod ${podName}'"
+                            sh "echo 'PostgreSQL backup created: /tmp/db_backup.dump in pod ${podName}'"
                             sh """
-                                ls ${LOCAL_BACKUP_DIR} 2>/dev/null
+                                ls backup 2>/dev/null
                                 if [ $? -eq 0 ]; then
-                                rm -rf ${LOCAL_BACKUP_DIR}/*
+                                rm -rf backup/*
                                 echo 'Cleaning up old backup........'
                                 else
-                                mkdir -p ${LOCAL_BACKUP_DIR}
+                                mkdir -p backup
                                 echo 'Creating backup dir ............'
                                 fi
                             """
                             sh """
-                                kubectl cp ${NAMESPACE}/${podName}:${backupFilepath} ${localPath}
+                                kubectl cp ${NAMESPACE}/${podName}:/tmp/db_backup.dump backup/db_backup.dump
 
                                 if [ $? -ne 0 ]; then
                                 echo "Failed to copy backup file to local machine"
                                 exit 1
                                 fi
                             """
-                            sh "echo 'Backup file copied to ${localPath}'"
+                            sh "echo 'Backup file copied to backup/db_backup.dump'"
                         }
                     }
                 }
@@ -620,15 +605,6 @@ pipeline {
                                 exit 1
                             fi
                         """
-                        def backfilepath = sh(
-                            script: "echo '/tmp/${BACKUP_FILE}'",
-                            returnStdout: true
-                        ).trim()
-
-                        def locfilepath = sh(
-                            script: "echo '${LOCAL_BACKUP_DIR}/${BACKUP_FILE}'",
-                            returnStdout: true
-                        ).trim()
 
                         sh """
                             echo '------------------------------------'
@@ -639,21 +615,21 @@ pipeline {
                             echo '------------------------------------'
                             echo 'New PostgreSQL Pod found: ${podName}'
                             echo '------------------------------------'
-                            ls ${LOCAL_BACKUP_DIR} 2>/dev/null
+                            ls backup 2>/dev/null
                             if [ $? -eq 0 ]; then
                                 echo 'Restoring Backup Now........'
-                                kubectl cp ${locfilepath} ${NAMESPACE}/${podName}:${backfilepath}
+                                kubectl cp backup/db_backup.dump ${NAMESPACE}/${podName}:/tmp/db_backup.dump
 
                                 if [ $? -ne 0 ]; then
                                 echo 'Failed to copy backup file to the new PostgreSQL pod'
                                 exit 1
                                 fi
 
-                                echo 'Backup file copied to ${backfilepath} in pod ${podName}'
+                                echo 'Backup file copied to /tmp/db_backup.dump in pod ${podName}'
 
                                 # Step 3: Restore the database using pg_restore
                                 kubectl exec -n ${NAMESPACE} ${podName} -- \
-                                pg_restore -U ${postgres_user} -d ${postgres_db} -F c --clean ${backfilepath}
+                                pg_restore -U ${postgres_user} -d ${postgres_db} -F c --clean /tmp/db_backup.dump
 
                                 if [ $? -ne 0 ]; then
                                     echo 'Failed to restore PostgreSQL database'
