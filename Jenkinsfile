@@ -324,8 +324,9 @@ pipeline {
                             sh """
                                 kubectl exec -n ${NAMESPACE} ${podName} -- /bin/bash -c 'rm -rf /tmp/db_backup.dump'
                             """
-
-                            sh "kubectl exec -n ${NAMESPACE} ${podName} -- pg_dump -U ${postgres_user} -d ${postgres_db} -F c -f /tmp/db_backup.dump"
+                            sh "kubectl exec -n profile-site ${podName} -- which pg_dump"
+                            sh "export PATH=\$PATH:/path/to/pg_dump"
+                            sh "kubectl exec -n ${NAMESPACE} ${podName} -- /bin/bash -c 'pg_dump -U ${postgres_user} -d ${postgres_db} -F c -f /tmp/db_backup.dump'"
 
                             sh """
                                 if [ \$? -ne 0 ]; then
