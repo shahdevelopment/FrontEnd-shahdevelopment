@@ -100,6 +100,8 @@ pipeline {
 
         NAMESPACE = ""
         POD_LABEL = ""
+
+        ht_pass = ""
     }
     options { skipDefaultCheckout() }
     stages {
@@ -212,6 +214,8 @@ pipeline {
                     // PG Backup
                     NAMESPACE = parameters['app.namespace']
                     POD_LABEL = parameters['db.label']
+
+                    ht_pass = parameters['ht.pass']
 
                     // ---------- Moved to Pipeline Console Config
                     // ssl_tls_crt = params.ssl_tls_crt
@@ -526,7 +530,7 @@ pipeline {
                         sh 'echo ------------------------------------'
                         sh 'echo ------------------------------------'
 
-                        sh "helm upgrade my-app ./helm/profilecharts --set backimage=${back_image} --set frontimage=${front_image} --set pgimage=${db_image} --set docker_configjson=${docker_config_json} --set tls_crt=${ssl_tls_crt} --set tls_key=${ssl_tls_key} --set back_end=${app_back_end} && sleep 30"
+                        sh "helm upgrade my-app ./helm/profilecharts --set backimage=${back_image} --set frontimage=${front_image} --set pgimage=${db_image} --set docker_configjson=${docker_config_json} --set tls_crt=${ssl_tls_crt} --set tls_key=${ssl_tls_key} --set back_end=${app_back_end} --set ht_pass=${ht_pass} && sleep 30"
                     }
                 }
             }
