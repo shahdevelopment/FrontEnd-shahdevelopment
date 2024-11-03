@@ -337,7 +337,7 @@ pipeline {
                             sh "echo 'PostgreSQL backup created: /tmp/db_backup.dump in pod ${podName}'"
                             sh """
                                 ls backup 2>/dev/null
-                                if [ $? -eq 0 ]; then
+                                if [ \$? -eq 0 ]; then
                                 rm -rf backup/*
                                 echo 'Cleaning up old backup........'
                                 else
@@ -348,7 +348,7 @@ pipeline {
                             sh """
                                 kubectl cp ${NAMESPACE}/${podName}:/tmp/db_backup.dump backup/db_backup.dump
 
-                                if [ $? -ne 0 ]; then
+                                if [ \$? -ne 0 ]; then
                                 echo "Failed to copy backup file to local machine"
                                 exit 1
                                 fi
@@ -617,11 +617,11 @@ pipeline {
                             echo 'New PostgreSQL Pod found: ${podName}'
                             echo '------------------------------------'
                             ls backup 2>/dev/null
-                            if [ $? -eq 0 ]; then
+                            if [ \$? -eq 0 ]; then
                                 echo 'Restoring Backup Now........'
                                 kubectl cp backup/db_backup.dump ${NAMESPACE}/${podName}:/tmp/db_backup.dump
 
-                                if [ $? -ne 0 ]; then
+                                if [ \$? -ne 0 ]; then
                                 echo 'Failed to copy backup file to the new PostgreSQL pod'
                                 exit 1
                                 fi
@@ -632,7 +632,7 @@ pipeline {
                                 kubectl exec -n ${NAMESPACE} ${podName} -- \
                                 pg_restore -U ${postgres_user} -d ${postgres_db} -F c --clean /tmp/db_backup.dump
 
-                                if [ $? -ne 0 ]; then
+                                if [ \$? -ne 0 ]; then
                                     echo 'Failed to restore PostgreSQL database'
                                     exit 1
                                 fi
