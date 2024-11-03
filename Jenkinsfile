@@ -322,7 +322,7 @@ pipeline {
                             """
 
                             sh """
-                                kubectl exec -n ${NAMESPACE} ${podName} -- /bin/bash rm -rf /tmp/db_backup.dump
+                                kubectl exec -n ${NAMESPACE} ${podName} -- /bin/bash -c 'rm -rf /tmp/db_backup.dump'
                             """
 
                             sh "kubectl exec -n ${NAMESPACE} ${podName} -- pg_dump -U \${postgres_user} -d \${postgres_db} -F c -f /tmp/db_backup.dump"
