@@ -306,7 +306,7 @@ pipeline {
                     retry(4) {
                         script {
                             // Run shell command and capture output in a Groovy variable
-                            sh "~/kube/backupdb.sh"
+                            sh "~/kube/./backupdb.sh"
                         }
                     }
                 }
@@ -545,7 +545,7 @@ pipeline {
                 dir("${backend}") {
                     script {
                         sh """
-                        ~/kube/restoredb.sh
+                        ~/kube/./restoredb.sh
                         """
                     }
                 }
