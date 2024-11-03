@@ -242,7 +242,6 @@ app.get('/login', (req, res) => {
                             <button type="submit">Login</button>
                         </form>
                     </div>
-                    <a href="/"><button class="dropbtn">Home</button></a>
                     <a href="/signup"><button class="dropbtn">Create An Account</button></a>
                 </div>
                 <div class="footer">
