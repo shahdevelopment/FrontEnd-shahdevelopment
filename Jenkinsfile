@@ -100,8 +100,6 @@ pipeline {
 
         NAMESPACE = ""
         POD_LABEL = ""
-
-        ht_pass = ""
     }
     options { skipDefaultCheckout() }
     stages {
@@ -215,11 +213,10 @@ pipeline {
                     NAMESPACE = parameters['app.namespace']
                     POD_LABEL = parameters['db.label']
 
-                    ht_pass = parameters['ht.pass']
-
                     // ---------- Moved to Pipeline Console Config
                     // ssl_tls_crt = params.ssl_tls_crt
                     // docker_config_json = params.docker_config_json
+
                     echo "------------------------------------"
                     echo "------------------------------------"
                     echo "-------------------------------------"
@@ -524,13 +521,13 @@ pipeline {
             steps {
                 dir("${k8}") {
                     script {
-                        echo "helm install my-app ./helm/profilecharts --set backimage=${back_image} --set frontimage=${front_image} --set pgimage=${db_image} --set docker_configjson=${docker_config_json} --set tls_crt=${ssl_tls_crt} --set tls_key=${ssl_tls_key} && sleep 30"
+                        echo "helm install my-app ./helm/profilecharts --set backimage=${back_image} --set frontimage=${front_image} --set pgimage=${db_image} --set docker_configjson=${docker_config_json} --set tls_crt=${ssl_tls_crt} --set tls_key=${ssl_tls_key} --set back_end=${app_back_end} --set ht_pass=${ht_pass} --set ca_crt=${ca_cert} --set client_cert=${client_cert} --set client_key=${client_key} && sleep 30"
                         sh 'echo ------------------------------------'
                         sh '/bin/bash move.sh'
                         sh 'echo ------------------------------------'
                         sh 'echo ------------------------------------'
 
-                        sh "helm upgrade my-app ./helm/profilecharts --set backimage=${back_image} --set frontimage=${front_image} --set pgimage=${db_image} --set docker_configjson=${docker_config_json} --set tls_crt=${ssl_tls_crt} --set tls_key=${ssl_tls_key} --set back_end=${app_back_end} --set ht_pass=${ht_pass} && sleep 30"
+                        sh "helm upgrade my-app ./helm/profilecharts --set backimage=${back_image} --set frontimage=${front_image} --set pgimage=${db_image} --set docker_configjson=${docker_config_json} --set tls_crt=${ssl_tls_crt} --set tls_key=${ssl_tls_key} --set back_end=${app_back_end} --set ht_pass=${ht_pass} --set ca_crt=${ca_cert} --set client_cert=${client_cert} --set client_key=${client_key} && sleep 30"
                     }
                 }
             }

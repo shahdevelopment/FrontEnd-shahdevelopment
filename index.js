@@ -1,19 +1,34 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import cookieParser from 'cookie-parser';
+import client from 'prom-client';
 
 const app = express();
 const PORT = 3000;
 const HOST = '0.0.0.0';
 
 // DevTools ------------------------------------------- //
-// import dotenv from 'dotenv';
-// dotenv.config();
+import dotenv from 'dotenv';
+dotenv.config();
 // ---------------------------------------------------- //
 // ---------------------------------------------------- //
 
 const JWT_SECRET = process.env.JWT_SECRET;
 const BACK_END = process.env.BACK_END;
+
+// Register a default metrics registry
+const register = new client.Registry();
+client.collectDefaultMetrics({ register });
+
+// Create a custom gauge metric example (modify as needed)
+const requestCounter = new client.Counter({
+  name: 'http_requests_total',
+  help: 'Total number of HTTP requests',
+});
+app.use((req, res, next) => {
+  requestCounter.inc();
+  next();
+});
 
 app.use(express.static('public', {
     setHeaders: (response, path, stat) => {
@@ -35,6 +50,10 @@ app.listen(PORT, HOST, () => {
     console.log(`Server is running on http://${HOST}:${PORT}`);
 });
 
+app.get('/metrics', async (req, res) => {
+    res.set('Content-Type', register.contentType);
+    res.end(await register.metrics());
+});  
 app.get('/health', (req, res) => {
     const message = "Healthy!";
     res.status(200).json({ info: message })
