@@ -8,8 +8,8 @@ const PORT = 3000;
 const HOST = '0.0.0.0';
 
 // DevTools ------------------------------------------- //
-import dotenv from 'dotenv';
-dotenv.config();
+// import dotenv from 'dotenv';
+// dotenv.config();
 // ---------------------------------------------------- //
 // ---------------------------------------------------- //
 
