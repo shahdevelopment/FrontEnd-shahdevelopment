@@ -97,10 +97,15 @@ pipeline {
 
         // Email
         app_admin_email = ""
+
         NAMESPACE = ""
+
         ebs_id = ""
         gf_user = ""
         gf_pass = ""
+        api_ip= ""
+        postgres_exporter= ""
+        prometheus_url= ""
     }
     options { skipDefaultCheckout() }
     stages {
@@ -219,6 +224,10 @@ pipeline {
                     ebs_id = parameters['ebs.id']
                     gf_user = parameters['gf.user']
                     gf_pass = parameters['gf.pass']
+
+                    api_ip = parameters['api.ip']
+                    postgres_exporter = parameters['postgres.exporter']
+                    prometheus_url = parameters['prometheus.url']
 
                     echo "------------------------------------"
                     echo "------------------------------------"
@@ -526,10 +535,13 @@ pipeline {
                     script {
                         echo "helm install my-app ./helm/profilecharts --set backimage=${back_image} --set frontimage=${front_image} --set pgimage=${db_image} --set docker_configjson=${docker_config_json} --set tls_crt=${ssl_tls_crt} --set tls_key=${ssl_tls_key} --set back_end=${app_back_end} --set ht_pass=${ht_pass} --set ca_crt=${ca_cert} --set client_cert=${client_cert} --set client_key=${client_key} --set gfUser=${gf_user} --set gfPass=${gf_pass} --set ebsId=${ebs_id} && sleep 30"
                         sh 'echo ------------------------------------'
+                        sh "export API_IP=${api_ip}"
+                        sh "export DATA_SOURCE=${postgres_exporter}"
+                        sh "export PROM_URL=${prometheus_url}"
+                        sh "envsubst < ./templates-envsubst/deployment.yaml > ./deployment.yaml"
                         sh '/bin/bash move.sh'
                         sh 'echo ------------------------------------'
                         sh 'echo ------------------------------------'
-
                         sh "helm upgrade my-app ./helm/profilecharts --set backimage=${back_image} --set frontimage=${front_image} --set pgimage=${db_image} --set docker_configjson=${docker_config_json} --set tls_crt=${ssl_tls_crt} --set tls_key=${ssl_tls_key} --set back_end=${app_back_end} --set ht_pass=${ht_pass} --set ca_crt=${ca_cert} --set client_cert=${client_cert} --set client_key=${client_key} --set gfUser=${gf_user} --set gfPass=${gf_pass} --set ebsId=${ebs_id} && sleep 30"
                     }
                 }
