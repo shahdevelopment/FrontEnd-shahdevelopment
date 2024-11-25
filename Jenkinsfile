@@ -285,7 +285,7 @@ pipeline {
                     sh "echo '${envFileContent}' | sudo tee ${envFile}"
 
                     // Reload the environment file
-                    sh "sleep 2 && source ${envFile}"
+                    sh ". ${envFile}"
                 }
             }
         }
