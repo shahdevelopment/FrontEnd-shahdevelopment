@@ -257,7 +257,7 @@ pipeline {
                         "clientCert": "${client_cert}",
                         "clientKey": "${client_key}",
                         "gfUser": "${gf_user}",
-                        "gfPass": "${gf_pass}"
+                        "gfPass": "${gf_pass}",
                         "ebsId": "${ebs_id}"
                     ]
                     
