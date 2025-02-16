@@ -271,54 +271,6 @@ pipeline {
                 }
             }
         }
-        stage('Set Local Environment Variables') {
-            steps {
-                script {
-                    def envVars = [
-                        "buildNumber": "${env.BUILD_NUMBER}",
-                        "dockerConfigJson": "${docker_config_json}",
-                        "tlsCert": "${ssl_tls_crt}",
-                        "tlsKey": "${ssl_tls_key}",
-                        "backEnd": "${app_back_end}",
-                        "htPass": "${ht_pass}",
-                        "caCert": "${ca_cert}",
-                        "clientCert": "${client_cert}",
-                        "clientKey": "${client_key}",
-                        "gfUser": "${gf_user}",
-                        "gfPass": "${gf_pass}",
-                        "ebsId": "${ebs_id}",
-                        "rabUser": "${rab_user}",
-                        "rabPass": "${rab_pass}"
-                    ]
-                    
-                    // Path to the environment file to modify
-                    def envFile = "/etc/environment"
-
-                    // Backup the file for safety
-                    sh "sudo cp ${envFile} ${envFile}.bak"
-
-                    // Read the current environment file
-                    def envFileContent = sh(script: "sudo cat ${envFile}", returnStdout: true).trim()
-
-                    // Update or add environment variables
-                    envVars.each { key, value ->
-                        if (envFileContent.contains("${key}=")) {
-                            // Replace existing variable
-                            envFileContent = envFileContent.replaceAll(/(?m)^${key}=.*$/, "${key}=${value}")
-                        } else {
-                            // Add new variable
-                            envFileContent += "\n${key}=${value}"
-                        }
-                    }
-
-                    // Write the updated environment file
-                    sh "echo '${envFileContent}' | sudo tee ${envFile}"
-
-                    // Reload the environment file
-                    sh ". ${envFile}"
-                }
-            }
-        }
         stage('System Check') {
             steps {
                 sh '''
@@ -629,7 +581,9 @@ pipeline {
                         "clientKey": "${client_key}",
                         "gfUser": "${gf_user}",
                         "gfPass": "${gf_pass}",
-                        "ebsId": "${ebs_id}"
+                        "ebsId": "${ebs_id}",
+                        "rabUser": "${rab_user}",
+                        "rabPass": "${rab_pass}"
                     ]
                     
                     // Path to the environment file to modify
