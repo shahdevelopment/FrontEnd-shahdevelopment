@@ -2,7 +2,13 @@ async function getData(backend) {
   const response = await fetch(`${backend}/allPosts/`);
   const data = await response.json();
 
-  for (item of data) {
+  const userDataArray = Array.isArray(data) ? data : [data];
+
+  const userData = userDataArray[0].data;
+  console.log(userData);
+  // console.log(userDataArray[0].message);
+
+  for (item of userData) {
     const logDiv = document.getElementById('log_div');
     const root = document.createElement('p');
     const mood = document.createElement('div');
@@ -23,5 +29,5 @@ async function getData(backend) {
 
     button.dataset.id = item._id;
   }
-  console.log(data);
+  // console.log(data);
 }

@@ -4,7 +4,7 @@
 // -------------------------------------------------------------- >>
 // Shah's Portfolio Web Application
 // ~
-// NPM | Node.JS | Kubernetes | AWS Cloud | Helm | Docker Hub | Jenkins | Sonarqube | GIT | GitHub | KOPS | Bash | Groovy | Slack | Linux Ubuntu | NEDB | Microservices Design 
+// NPM | Node.JS | Kubernetes | AWS Cloud | Helm | Docker Hub | Jenkins | Sonarqube | GIT | GitHub | KOPS | Bash | Groovy | Slack | Linux Ubuntu | Microservices Design | Authentication | Prometheus | Grafana | RabbitMQ | PostgreSQL | AWS 
 // -------------------------------------------------------------->>>
 def COLOR_MAP = [
     'SUCCESS': 'good', 
@@ -106,6 +106,20 @@ pipeline {
         api_ip= ""
         postgres_exporter= ""
         prometheus_url= ""
+
+        rabbitmq_url=""
+        login_queue=""
+        signup_queue=""
+        jwt_queue=""
+        chat_queue=""
+        user_queue=""
+        email_queue=""
+        posts_queue=""
+        delete_queue=""
+        allposts_queue=""
+        rab_user""
+        rab_pass=""
+
     }
     options { skipDefaultCheckout() }
     stages {
@@ -229,6 +243,20 @@ pipeline {
                     postgres_exporter = parameters['postgres.exporter']
                     prometheus_url = parameters['prometheus.url']
 
+                    rabbitmq_url = parameters['rabbitmq.url']
+                    login_queue = parameters['login.queue']
+                    signup_queue = parameters['signup.queue']
+                    jwt_queue = parameters['jwt.queue']
+                    chat_queue = parameters['chat.queue']
+                    user_queue = parameters['user.queue']
+                    email_queue = parameters['email.queue']
+                    posts_queue = parameters['posts.queue']
+                    delete_queue = parameters['delete.queue']
+                    allposts_queue = parameters['allposts.queue']
+
+                    rab_user = parameters['rab.user']
+                    rab_pass = parameters['rab.pass']
+
                     echo "------------------------------------"
                     echo "------------------------------------"
                     echo "-------------------------------------"
@@ -258,7 +286,9 @@ pipeline {
                         "clientKey": "${client_key}",
                         "gfUser": "${gf_user}",
                         "gfPass": "${gf_pass}",
-                        "ebsId": "${ebs_id}"
+                        "ebsId": "${ebs_id}",
+                        "rabUser": "${rab_user}",
+                        "rabPass": "${rab_pass}"
                     ]
                     
                     // Path to the environment file to modify
@@ -500,7 +530,7 @@ pipeline {
                             dockerImage.push("v$BUILD_NUMBER")
                         }  
                         // Backend Server
-                        dockerImage = docker.build("${back_image}", "--build-arg chat_key=${api_chat_key} --build-arg admin_email=${app_admin_email} --build-arg email_key='${api_email_key}' --build-arg pg_user=${postgres_user} --build-arg pg_pass=${postgres_pass} --build-arg pg_db=${postgres_db} --build-arg pg_host='${postgres_host}' --build-arg jwt_secret=${auth_jwt_secret} .")
+                        dockerImage = docker.build("${back_image}", "--build-arg chat_key=${api_chat_key} --build-arg admin_email=${app_admin_email} --build-arg email_key='${api_email_key}' --build-arg pg_user=${postgres_user} --build-arg pg_pass=${postgres_pass} --build-arg pg_db=${postgres_db} --build-arg pg_host='${postgres_host}' --build-arg jwt_secret=${auth_jwt_secret} --build-arg rabbitmq_url=${rabbitmq_url} --build-arg login_queue=${login_queue} --build-arg signup_queue=${signup_queue} --build-arg jwt_queue=${jwt_queue} --build-arg chat_queue=${chat_queue} --build-arg user_queue=${user_queue} --build-arg email_queue=${email_queue} --build-arg posts_queue=${posts_queue} --build-arg delete_queue=${delete_queue} --build-arg allposts_queue=${allposts_queue} .")
                         sh 'sleep 1'
 
                         docker.withRegistry('', registryCredentials) {
@@ -569,7 +599,7 @@ pipeline {
                         sh '/bin/bash move.sh'
                         sh 'echo ------------------------------------'
                         sh 'echo ------------------------------------'
-                        sh "helm upgrade my-app ./helm/profilecharts --set backimage=${back_image} --set frontimage=${front_image} --set pgimage=${db_image} --set docker_configjson=${docker_config_json} --set tls_crt=${ssl_tls_crt} --set tls_key=${ssl_tls_key} --set back_end=${app_back_end} --set ht_pass=${ht_pass} --set ca_crt=${ca_cer} --set client_cert=${cl_cer} --set client_key=${cl_key} --set gfUser=${gf_user} --set gfPass=${gf_pass} --set ebsId=${ebs_id}"
+                        sh "helm upgrade my-app ./helm/profilecharts --set backimage=${back_image} --set frontimage=${front_image} --set pgimage=${db_image} --set docker_configjson=${docker_config_json} --set tls_crt=${ssl_tls_crt} --set tls_key=${ssl_tls_key} --set back_end=${app_back_end} --set ht_pass=${ht_pass} --set ca_crt=${ca_cer} --set client_cert=${cl_cer} --set client_key=${cl_key} --set gfUser=${gf_user} --set gfPass=${gf_pass} --set ebsId=${ebs_id} --set rabUser=${rab_user} --set rabPass=${rab_pass}"
                     }
                 }
             }
@@ -581,6 +611,52 @@ pipeline {
                         color: COLOR_MAP[currentBuild.currentResult],
                         message: "*Build Completed with Result - ${currentBuild.currentResult}:* \n Job ${env.JOB_NAME} \n build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL} \n *Logs:* \n ${currentBuild.rawBuild.getLog(1000)}"
                     }
+                }
+            }
+        }
+        stage('Set Local Environment Variables') {
+            steps {
+                script {
+                    def envVars = [
+                        "buildNumber": "${env.BUILD_NUMBER}",
+                        "dockerConfigJson": "${docker_config_json}",
+                        "tlsCert": "${ssl_tls_crt}",
+                        "tlsKey": "${ssl_tls_key}",
+                        "backEnd": "${app_back_end}",
+                        "htPass": "${ht_pass}",
+                        "caCert": "${ca_cert}",
+                        "clientCert": "${client_cert}",
+                        "clientKey": "${client_key}",
+                        "gfUser": "${gf_user}",
+                        "gfPass": "${gf_pass}",
+                        "ebsId": "${ebs_id}"
+                    ]
+                    
+                    // Path to the environment file to modify
+                    def envFile = "/etc/environment"
+
+                    // Backup the file for safety
+                    sh "sudo cp ${envFile} ${envFile}.bak"
+
+                    // Read the current environment file
+                    def envFileContent = sh(script: "sudo cat ${envFile}", returnStdout: true).trim()
+
+                    // Update or add environment variables
+                    envVars.each { key, value ->
+                        if (envFileContent.contains("${key}=")) {
+                            // Replace existing variable
+                            envFileContent = envFileContent.replaceAll(/(?m)^${key}=.*$/, "${key}=${value}")
+                        } else {
+                            // Add new variable
+                            envFileContent += "\n${key}=${value}"
+                        }
+                    }
+
+                    // Write the updated environment file
+                    sh "echo '${envFileContent}' | sudo tee ${envFile}"
+
+                    // Reload the environment file
+                    sh ". ${envFile}"
                 }
             }
         }

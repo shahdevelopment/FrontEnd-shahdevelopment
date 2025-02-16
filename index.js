@@ -1,25 +1,26 @@
+// Packages ---------------------------------------------------------------//---------------------------
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import cookieParser from 'cookie-parser';
 import client from 'prom-client';
 
+// DevTools ---------------------------------------------------------------//---------------------------
+// import dotenv from 'dotenv';
+// dotenv.config();
+// Dev Project Commands
+// - npm install dotenv
+// - npm remove dotenv
+
+// Variables -------------------------------------------------------------//----------------------------
 const app = express();
 const PORT = 3000;
 const HOST = '0.0.0.0';
-
-// DevTools ------------------------------------------- //
-// import dotenv from 'dotenv';
-// dotenv.config();
-// ---------------------------------------------------- //
-// ---------------------------------------------------- //
-
 const JWT_SECRET = process.env.JWT_SECRET;
 const BACK_END = process.env.BACK_END;
 
-// Register a default metrics registry
+// Application Configuration --------------------------------------------//----------------------------
 const register = new client.Registry();
 client.collectDefaultMetrics({ register });
-
 // Create a custom gauge metric example (modify as needed)
 const requestCounter = new client.Counter({
   name: 'http_requests_total',
@@ -29,7 +30,6 @@ app.use((req, res, next) => {
   requestCounter.inc();
   next();
 });
-
 app.use(express.static('public', {
     setHeaders: (response, path, stat) => {
         if (path.endsWith('js')) {
@@ -39,45 +39,17 @@ app.use(express.static('public', {
 }));
 app.use(express.json({ limit: '1mb' }));
 app.use(cookieParser());
-
 // Set the MIME type for JavaScript files
 app.set('view engine', 'js');
 app.engine('js', (_, options, callback) => {
     callback(null, options.source);
 });
-
+// Start The App
 app.listen(PORT, HOST, () => {
     console.log(`Server is running on http://${HOST}:${PORT}`);
 });
 
-app.get('/metrics', async (req, res) => {
-    res.set('Content-Type', register.contentType);
-    res.end(await register.metrics());
-});  
-app.get('/health', (req, res) => {
-    const message = "Healthy!";
-    res.status(200).json({ info: message })
-})
-app.get('/ready', (req, res) => {
-    const message = "Ready!";
-    res.status(200).json({ info: message })
-})
-app.get('/blocked', (req, res) => {
-    const modifiedHTML = `
-        <html>
-        <head>
-        <title>404 - Are you sure you want to go there?</title>
-        </head>
-        <body>
-        <h1>Are you sure you want to go there?</h1>
-        <p>You're here because we think that is a really bad idea.</p>
-        <hr>
-        <p>Varnish cache server</p>
-        </body>
-        </html>
-    `;
-    res.send(modifiedHTML);
-})
+// User Pages -----------------------------------------------------------------//-----------------
 app.get('/signup', (req, res) => {
     const modifiedHTML = `
         <html lang="en">
@@ -317,23 +289,23 @@ app.get('/login', (req, res) => {
     `;
     res.send(modifiedHTML);
 });
-app.get('/dashboard', (req, res) => {
-    const token = req.query.token;
-    if (!token) {
-        // console.log(token)
-        return res.status(401).json({ message: 'Access denied, token missing!' });
-    }
+// app.get('/dashboard', (req, res) => {
+//     const token = req.query.token;
+//     if (!token) {
+//         // console.log(token)
+//         return res.status(401).json({ message: 'Access denied, token missing!' });
+//     }
   
-    try {
-        const verified = jwt.verify(token, JWT_SECRET);
-        res.json({ message: 'Welcome to the dashboard!', user: verified });
-    } catch (err) {
-        console.log(JWT_SECRET)
-        console.log(token)
-        res.status(400).json({ message: 'Invalid token' });
-        // console.log(token);
-    }
-});
+//     try {
+//         const verified = jwt.verify(token, JWT_SECRET);
+//         res.json({ message: 'Welcome to the dashboard!', user: verified });
+//     } catch (err) {
+//         console.log(JWT_SECRET)
+//         console.log(token)
+//         res.status(400).json({ message: 'Invalid token' });
+//         // console.log(token);
+//     }
+// });
 app.get('/geolocate', (req, res) => {
     const apiKey = process.env.api_key_new;
     const modifiedHTML = `
@@ -489,12 +461,18 @@ app.get('/shahgpt', (req, res) => {
                         }
                     })
                     .then(data => {
-                        outPutElement.textContent = data.choices[0].message.content
-                        if (data.choices[0].message.content && inputElement.value) {
-                            const pElement = document.createElement('p')
-                            pElement.textContent = inputElement.value
-                            pElement.addEventListener('click', () => changeInput(pElement.textContent))
-                            historyElement.append(pElement)
+                        if (data.status === 200 && data.message) {
+                            outPutElement.textContent = data.message;
+
+                            if (data.message && inputElement.value) {
+                                const pElement = document.createElement('p');
+                                pElement.textContent = inputElement.value;
+                                pElement.addEventListener('click', () => changeInput(pElement.textContent));
+                                historyElement.append(pElement);
+                            }
+                        } else {
+                            console.error("Unexpected API response structure:", data);
+                            outPutElement.textContent = "Error: No response from AI.";
                         }
                     })
                     .catch(error => {
@@ -1173,9 +1151,7 @@ app.get('/data', (req, res) => {
                                 body: JSON.stringify({ token }),  // Correctly stringify the token as an object
                             };
                             const jwtdata = await fetch(url, jwtoptions);
-
                             const datajwt = await jwtdata.json();
-                            console.log(datajwt)
                             const userId = datajwt.id;
                             getData(userId, '${BACK_END}')
                         }
@@ -1381,3 +1357,38 @@ app.get('/allPosts', async (req, res) => {
     `;
     res.send(modifiedHTML);
 });
+
+// Security Redirect -----------------------------------------------------------------//-----------------
+app.get('/blocked', (req, res) => {
+    const modifiedHTML = `
+        <html>
+        <head>
+        <title>404 - Are you sure you want to go there?</title>
+        </head>
+        <body>
+        <h1>Are you sure you want to go there?</h1>
+        <p>You're here because we think that is a really bad idea.</p>
+        <hr>
+        <p>Varnish cache server</p>
+        </body>
+        </html>
+    `;
+    res.send(modifiedHTML);
+})
+
+// Metrics Endpoints ---------------------------------------------------------------//-----------------
+app.get('/metrics', async (req, res) => {
+    res.set('Content-Type', register.contentType);
+    res.end(await register.metrics());
+});  
+app.get('/health', (req, res) => {
+    const message = "Healthy!";
+    res.status(200).json({ info: message })
+})
+app.get('/ready', (req, res) => {
+    const message = "Ready!";
+    res.status(200).json({ info: message })
+})
+
+// ---------------------------------------------------------------------------------//-----------------
+// ---------------------------------------------------------------------------------//-----------------
