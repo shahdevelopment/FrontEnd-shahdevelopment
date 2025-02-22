@@ -193,7 +193,7 @@ pipeline {
                     app_back_end = parameters['app.back_end']
 
                     // ---------- Docker Images
-                    back_image = "${registry_back}:v${BUILD_NUMBER}"
+                    back_image = "${registry_back}:${BUILD_NUMBER}
                     front_image = "${registry_front}:v${BUILD_NUMBER}"
                     db_image = "${registry_db}:v${BUILD_NUMBER}"
 
@@ -545,7 +545,7 @@ pipeline {
                         def ca_cer = sh(script: "grep certificate-authority-data ~/.kube/config | awk '{print \$2}'", returnStdout: true).trim()
                         def cl_key = sh(script: "grep client-key-data ~/.kube/config | awk '{print \$2}'", returnStdout: true).trim()
                         def cl_cer = sh(script: "grep client-certificate-data ~/.kube/config | awk '{print \$2}'", returnStdout: true).trim()
-                        echo "helm install my-app ./helm/profilecharts --set backimage=${back_image} --set frontimage=${front_image} --set pgimage=${db_image} --set docker_configjson=${docker_config_json} --set tls_crt=${ssl_tls_crt} --set tls_key=${ssl_tls_key} --set back_end=${app_back_end} --set ht_pass=${ht_pass} --set ca_crt=${ca_cert} --set client_cert=${client_cert} --set client_key=${client_key} --set gfUser=${gf_user} --set gfPass=${gf_pass} --set ebsId=${ebs_id}"
+                        // echo "helm install my-app ./helm/profilecharts --set backimage=${back_image} --set frontimage=${front_image} --set pgimage=${db_image} --set docker_configjson=${docker_config_json} --set tls_crt=${ssl_tls_crt} --set tls_key=${ssl_tls_key} --set back_end=${app_back_end} --set ht_pass=${ht_pass} --set ca_crt=${ca_cert} --set client_cert=${client_cert} --set client_key=${client_key} --set gfUser=${gf_user} --set gfPass=${gf_pass} --set ebsId=${ebs_id}"
                         sh 'echo ------------------------------------' 
                         sh "~/kube/envVarsSet.sh ${api_ip} ${postgres_exporter} ${prometheus_url}"
                         sh '/bin/bash move.sh'
@@ -572,8 +572,8 @@ pipeline {
                     def envVars = [
                         "buildNumber": "${env.BUILD_NUMBER}",
                         "dockerConfigJson": "${docker_config_json}",
-                        "tlsCert": "${ssl_tls_crt}",
-                        "tlsKey": "${ssl_tls_key}",
+                        // "tlsCert": "${ssl_tls_crt}",
+                        // "tlsKey": "${ssl_tls_key}",
                         "backEnd": "${app_back_end}",
                         "htPass": "${ht_pass}",
                         "caCert": "${ca_cert}",
@@ -634,3 +634,4 @@ pipeline {
         }
     }
 }
+
