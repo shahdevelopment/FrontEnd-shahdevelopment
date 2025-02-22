@@ -17,6 +17,8 @@ pipeline {
     //     ws("/opt/jenkins-slave/workspace/profile-site-build")
     // }
     environment {
+        nameSpace = ""
+
         // Docker Registry Info
         registry_front = ""
         registry_back = ""
@@ -146,6 +148,7 @@ pipeline {
                     }
                     echo "------------------------------------"
                     // ---------- Docker Configuration
+                    nameSpace = parameters['name.space']
                     registry_front = parameters['registry.front']
                     registry_back = parameters['registry.back']
                     registry_db = parameters['registry.db']
@@ -551,7 +554,7 @@ pipeline {
                         sh '/bin/bash move.sh'
                         sh 'echo ------------------------------------'
                         sh 'echo ------------------------------------'
-                        sh "helm upgrade my-app ./helm/profilecharts --set backimage=${back_image} --set frontimage=${front_image} --set pgimage=${db_image} --set docker_configjson=${docker_config_json} --set tls_crt=${ssl_tls_crt} --set tls_key=${ssl_tls_key} --set back_end=${app_back_end} --set ht_pass=${ht_pass} --set ca_crt=${ca_cer} --set client_cert=${cl_cer} --set client_key=${cl_key} --set gfUser=${gf_user} --set gfPass=${gf_pass} --set ebsId=${ebs_id} --set rabUser=${rab_user} --set rabPass=${rab_pass}"
+                        sh "helm upgrade my-app ./helm/profilecharts --namespace ${nameSpace} --create-namespace --set backimage=${back_image} --set frontimage=${front_image} --set pgimage=${db_image} --set docker_configjson=${docker_config_json} --set tls_crt=${ssl_tls_crt} --set tls_key=${ssl_tls_key} --set back_end=${app_back_end} --set ht_pass=${ht_pass} --set ca_crt=${ca_cer} --set client_cert=${cl_cer} --set client_key=${cl_key} --set gfUser=${gf_user} --set gfPass=${gf_pass} --set ebsId=${ebs_id} --set rabUser=${rab_user} --set rabPass=${rab_pass}"
                     }
                 }
             }
@@ -607,7 +610,7 @@ pipeline {
                     }
 
                     // Write the updated environment file
-                    sh "echo '${envFileContent}' | sudo tee ${envFile}"
+                    sh "sudo tee ${envFile}"
 
                     // Reload the environment file
                     sh ". ${envFile}"
