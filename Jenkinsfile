@@ -193,7 +193,7 @@ pipeline {
                     app_back_end = parameters['app.back_end']
 
                     // ---------- Docker Images
-                    back_image = "${registry_back}:${BUILD_NUMBER}
+                    back_image = "${registry_back}:${BUILD_NUMBER}"
                     front_image = "${registry_front}:v${BUILD_NUMBER}"
                     db_image = "${registry_db}:v${BUILD_NUMBER}"
 
