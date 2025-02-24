@@ -528,26 +528,26 @@ pipeline {
                 }
             }
         }
-        stage('Kube Cluster Scale/Connect') {
-            steps {
-                dir("${k8}") {
-                    script {
-                        sh """
-                            echo "------------------------------------"
-                            ~/kube/default-scale
-                        """
-                    }
-                }
-            }
-            post {
-                always {
-                    echo '########## Cluster Health Notification ##########'
-                    slackSend channel: "${slack_cluster}",
-                    color: COLOR_MAP[currentBuild.currentResult],
-                    message: "*Cluster Scaled with Result - ${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
-                }
-            }
-        }
+        // stage('Kube Cluster Scale/Connect') {
+        //     steps {
+        //         dir("${k8}") {
+        //             script {
+        //                 sh """
+        //                     echo "------------------------------------"
+        //                     ~/kube/default-scale
+        //                 """
+        //             }
+        //         }
+        //     }
+        //     post {
+        //         always {
+        //             echo '########## Cluster Health Notification ##########'
+        //             slackSend channel: "${slack_cluster}",
+        //             color: COLOR_MAP[currentBuild.currentResult],
+        //             message: "*Cluster Scaled with Result - ${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
+        //         }
+        //     }
+        // }
         stage('Application-Deployment') {
             steps {
                 dir("${k8}") {
