@@ -127,9 +127,7 @@ pipeline {
     stages {
         stage('Clean Workspace') {
             steps {
-                script {
-                    deleteDir() // Deletes all files in the current workspace
-                }
+                cleanWs()  // Cleans up the workspace before the build starts
             }
         }
         stage('File Param WA') {
