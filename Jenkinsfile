@@ -629,7 +629,7 @@ pipeline {
             steps {
                 dir("${backend}") {
                     script {
-                        sh 'sleep 6'
+                        sh 'sleep 60'
                         sh "~/kube/./restorepg.sh"
                     }
                 }
