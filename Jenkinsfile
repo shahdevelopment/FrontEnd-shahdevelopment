@@ -16,6 +16,10 @@ pipeline {
     //     Reuse the workspace from previous builds
     //     ws("/opt/jenkins-slave/workspace/profile-site-build")
     // }
+        // Clean the workspace completely
+    deleteDir()  // This deletes all files and folders in the current workspace
+
+    echo "Workspace after cleanup: ${pwd()}"
     environment {
         nameSpace = ""
 
@@ -127,7 +131,7 @@ pipeline {
     stages {
         stage('File Param WA') {
             steps {
-                cleanWs()
+                // cleanWs()
                 script {
                     echo "------------------------------------"
                     echo "------------------------------------"
