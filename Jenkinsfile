@@ -125,11 +125,6 @@ pipeline {
     }
     options { skipDefaultCheckout() }
     stages {
-        stage('Clean Workspace') {
-            steps {
-                cleanWs()  // Cleans up the workspace before the build starts
-            }
-        }
         stage('File Param WA') {
             steps {
                 cleanWs()
