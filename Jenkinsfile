@@ -621,7 +621,7 @@ pipeline {
                     sh "sudo tee ${envFile}"
 
                     // Reload the environment file
-                    sh ". ${envFile}"
+                    sh ". .${envFile}"
                 }
             }
         }
