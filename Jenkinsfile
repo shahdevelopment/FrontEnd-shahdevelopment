@@ -618,7 +618,7 @@ pipeline {
                     }
 
                     // Write the updated environment file
-                    sh "sudo tee ${envFile}"
+                    sh "echo '${envFileContent}' | sudo tee ${envFile}"
 
                     // Reload the environment file
                     sh ". .${envFile}"
