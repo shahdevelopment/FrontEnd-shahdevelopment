@@ -22,6 +22,8 @@ async function getData(backend) {
     const dateString = new Date(item.timestamp).toLocaleString();
     date.textContent = dateString;
     image.src = item.image64;
+    console.log(image); // Should log an <img> element
+
     image.alt = 'Alt text for the image';
 
     root.append(mood, date, image);
