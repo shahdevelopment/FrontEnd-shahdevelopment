@@ -5,7 +5,7 @@ async function getData(backend) {
   const userDataArray = Array.isArray(data) ? data : [data];
 
   const userData = userDataArray[0].data;
-  console.log(userData);
+  // console.log(userData);
   // console.log(userDataArray[0].message);
 
   for (item of userData) {

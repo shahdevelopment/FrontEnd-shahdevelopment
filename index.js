@@ -5,8 +5,8 @@ import cookieParser from 'cookie-parser';
 import client from 'prom-client';
 
 // DevTools ---------------------------------------------------------------//---------------------------
-// import dotenv from 'dotenv';
-// dotenv.config();
+import dotenv from 'dotenv';
+dotenv.config();
 // Dev Project Commands
 // - npm install dotenv
 // - npm remove dotenv
@@ -990,7 +990,6 @@ app.get('/selfie', (req, res) => {
                     <br />
                     <div><a href="/data" class="geo">Data Repo</a></div>
                 </div>
-                // <script src="js/camera.js"></script>
                 <div class="cameraDiv"><div id="cameraid"><video id="video" srcObject="MediaStream"></video></div></div>
             </div>
         </body>
