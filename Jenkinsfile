@@ -621,7 +621,7 @@ pipeline {
                     sh "echo '${envFileContent}' | sudo tee ${envFile}"
 
                     // Reload the environment file
-                    sh ". .${envFile}"
+                    sh ". ${envFile}"
                 }
             }
         }
