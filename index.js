@@ -5,8 +5,8 @@ import cookieParser from 'cookie-parser';
 import client from 'prom-client';
 
 // DevTools ---------------------------------------------------------------//---------------------------
-//import dotenv from 'dotenv';
-// dotenv.config();
+import dotenv from 'dotenv';
+dotenv.config();
 // Dev Project Commands
 // - npm install dotenv
 // - npm remove dotenv
@@ -289,23 +289,6 @@ app.get('/login', (req, res) => {
     `;
     res.send(modifiedHTML);
 });
-// app.get('/dashboard', (req, res) => {
-//     const token = req.query.token;
-//     if (!token) {
-//         // console.log(token)
-//         return res.status(401).json({ message: 'Access denied, token missing!' });
-//     }
-  
-//     try {
-//         const verified = jwt.verify(token, JWT_SECRET);
-//         res.json({ message: 'Welcome to the dashboard!', user: verified });
-//     } catch (err) {
-//         console.log(JWT_SECRET)
-//         console.log(token)
-//         res.status(400).json({ message: 'Invalid token' });
-//         // console.log(token);
-//     }
-// });
 app.get('/geolocate', (req, res) => {
     const apiKey = process.env.api_key_new;
     const modifiedHTML = `
@@ -1003,17 +986,14 @@ app.get('/selfie', (req, res) => {
             let video;
             let canvas;
             let sketch = function(p) {
-                // let video; // Assuming you have a video variable
-
                 p.setup = function() {
                     // Create canvas and attach it to the div
-                    canvas = p.createCanvas(400, 350); // Set your desired width and height
+                    canvas = p.createCanvas(300, 250); // Set your desired width and height
                     canvas.parent('cameraid'); // Attach to div with id="sketch-container"
                     
                     // Assuming you're using a video capture (common with p5.js)
                     video = p.createCapture(p.VIDEO);
-                    video.size(400, 400);
-                    // video.parent('cameraid')
+                    video.size(300, 250);
                     video.hide(); // Hide the default video element
                 };
 
@@ -1039,8 +1019,7 @@ app.get('/selfie', (req, res) => {
                 if (datajwt) {
                     const mood = document.getElementById('mood').value;
 
-                    const image64 = canvas.canvas.toDataURL('image/png');
-                    console.log(image64);
+                    const image64 = canvas.canvas.toDataURL();
                     const id = datajwt.id;
 
                     const data = { mood, image64, id };
@@ -1078,10 +1057,7 @@ app.get('/selfie', (req, res) => {
         // res.json({ message: 'Welcome to the dashboard!', user: verified });
         res.send(modifiedHTML);
     } catch (err) {
-        console.log(JWT_SECRET)
-        console.log(token)
         res.status(400).json({ message: 'Invalid token' });
-        // console.log(token);
     }
 });
 app.get('/data', (req, res) => {
