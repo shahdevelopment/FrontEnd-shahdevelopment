@@ -5,8 +5,7 @@ import cookieParser from 'cookie-parser';
 import client from 'prom-client';
 
 // DevTools ---------------------------------------------------------------//---------------------------
-import dotenv from 'dotenv';
-dotenv.config();
+
 // Dev Project Commands
 // - npm install dotenv
 // - npm remove dotenv
