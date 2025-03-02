@@ -21,7 +21,7 @@ async function getData(backend) {
     // geo.textContent = `${item.lat}°, ${item.lon}°`;
     const dateString = new Date(item.timestamp).toLocaleString();
     date.textContent = dateString;
-    image.src = `data:image/png;base64,${item.image64.split(",")[1] || item.image64}`;
+    image.src = item.image64;
     image.alt = 'Alt text for the image';
 
     root.append(mood, date, image);
