@@ -5,7 +5,7 @@ import cookieParser from 'cookie-parser';
 import client from 'prom-client';
 
 // DevTools ---------------------------------------------------------------//---------------------------
-// import dotenv from 'dotenv';
+//import dotenv from 'dotenv';
 // dotenv.config();
 // Dev Project Commands
 // - npm install dotenv
@@ -928,8 +928,7 @@ app.get('/selfie', (req, res) => {
             <meta name="viewport" content="width=device-width, initial-scale=1">
             <title>nodeJS and neDB Selfie App</title>
             <link rel="stylesheet" href="style/style.css">
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/p5.min.js"></script>
         </head>
         <div class="topnav">
             <div>
@@ -973,10 +972,8 @@ app.get('/selfie', (req, res) => {
                     <br />
                     <br />
                     <br />
-                    <button onclick="startVideo()" id="startvideo">Turn Camera On</button>
                     <br />
                     <br />
-                    <button onclick="stopVideo()" id="stopvideo">Turn Camera Off</button>
                     <br />
                     <br />
                     <input id="mood" value="Enter your mood!" />
@@ -990,7 +987,8 @@ app.get('/selfie', (req, res) => {
                     <br />
                     <div><a href="/data" class="geo">Data Repo</a></div>
                 </div>
-                <div class="cameraDiv"><div id="cameraid"><video id="video" srcObject="MediaStream"></video></div></div>
+                // <script src="js/camera.js"></script>
+                <div class="cameraDiv"><div id="cameraid"></div></div>
             </div>
         </body>
         <div class="footer">
@@ -1002,10 +1000,30 @@ app.get('/selfie', (req, res) => {
             </div>
         </div>
         <script>
-        function setup() {
-            var startVideo = document.getElementById('startvideo');
-            var stopVideo = document.getElementById('stopvideo');
-            var run = "no"
+            let video;
+            let canvas;
+            let sketch = function(p) {
+                // let video; // Assuming you have a video variable
+
+                p.setup = function() {
+                    // Create canvas and attach it to the div
+                    canvas = p.createCanvas(400, 350); // Set your desired width and height
+                    canvas.parent('cameraid'); // Attach to div with id="sketch-container"
+                    
+                    // Assuming you're using a video capture (common with p5.js)
+                    video = p.createCapture(p.VIDEO);
+                    video.size(400, 400);
+                    // video.parent('cameraid')
+                    video.hide(); // Hide the default video element
+                };
+
+                p.draw = function() {
+                    p.background(220);
+                    p.image(video, 0, 0, p.width, p.height);
+                };
+            };
+            new p5(sketch);
+
             const button = document.getElementById('submit');
             const token = ${data}
             const jwtoptions = {
@@ -1020,8 +1038,9 @@ app.get('/selfie', (req, res) => {
                 const datajwt = await jwtdata.json();
                 if (datajwt) {
                     const mood = document.getElementById('mood').value;
-                    video.loadPixels();
-                    const image64 = video.canvas.toDataURL();
+
+                    const image64 = canvas.canvas.toDataURL('image/png');
+                    console.log(image64);
                     const id = datajwt.id;
 
                     const data = { mood, image64, id };
@@ -1046,24 +1065,6 @@ app.get('/selfie', (req, res) => {
                 }
 
             });
-            startVideo.addEventListener('click', function () {
-                console.log(startVideo)
-                if (run === "yes") {
-                    alert("Camera Already Running!");
-                } else {
-                    noCanvas();
-                    video = createCapture(VIDEO);
-                    video.parent("cameraid");
-                    run = "yes";
-                }
-            });
-            stopVideo.addEventListener("click", function () {
-                alert("Camera will be stopped........");
-                video.stop();
-                video.remove();
-                run = "no";
-            });
-        }
         </script>
     </html>
     `;
