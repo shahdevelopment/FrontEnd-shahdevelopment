@@ -580,6 +580,39 @@ pipeline {
             steps {
                 dir("${k8}") {
                     script {
+                        sh '''
+                            aws iam put-role-policy --role-name masters.kubecluster.shah-kubernetes.ca --policy-name EBS-Permissions --policy-document '{
+                            "Version": "2012-10-17",
+                            "Statement": [
+                                {
+                                "Effect": "Allow",
+                                "Action": [
+                                    "ec2:AttachVolume",
+                                    "ec2:DetachVolume",
+                                    "ec2:DescribeVolumes",
+                                    "ec2:DescribeInstances"
+                                ],
+                                "Resource": "*"
+                                }
+                            ]
+                            }'
+
+                            aws iam put-role-policy --role-name masters.kubecluster.shah-kubernetes.ca --policy-name EBS-Permissions --policy-document '{
+                            "Version": "2012-10-17",
+                            "Statement": [
+                                {
+                                "Effect": "Allow",
+                                "Action": [
+                                    "ec2:AttachVolume",
+                                    "ec2:DetachVolume",
+                                    "ec2:DescribeVolumes",
+                                    "ec2:DescribeInstances"
+                                ],
+                                "Resource": "*"
+                                }
+                            ]
+                            }'
+                        '''
                         def ca_cer = sh(script: "grep certificate-authority-data ~/.kube/config | awk '{print \$2}'", returnStdout: true).trim()
                         def cl_key = sh(script: "grep client-key-data ~/.kube/config | awk '{print \$2}'", returnStdout: true).trim()
                         def cl_cer = sh(script: "grep client-certificate-data ~/.kube/config | awk '{print \$2}'", returnStdout: true).trim()
@@ -589,86 +622,86 @@ pipeline {
                         sh '/bin/bash move.sh'
                         sh 'echo ------------------------------------'
 
-                        sh"""
-                            control=\$(kubectl get nodes | grep control-plane | awk '{print \$1}')
-                            kubectl label nodes \$control node-group=master
-                            kubectl taint nodes \$control node-role.kubernetes.io/control-plane:NoSchedule- || true
+                        sh'''
+                            control=$(kubectl get nodes | grep control-plane | awk '{print \$1}')
+                            kubectl label nodes $control node-group=master
+                            kubectl taint nodes $control node-role.kubernetes.io/control-plane:NoSchedule- || true
 
-                            slave_nodes=\$(kubectl get nodes | grep node | awk '{print \$1}')
+                            slave_nodes=$(kubectl get nodes | grep node | awk '{print \$1}')
 
-                            for node in \$slave_nodes; do
-                            echo "Labeling node: \$node"
-                            kubectl label nodes "\$node" node-group=group1 --overwrite
+                            for node in $slave_nodes; do
+                            echo "Labeling node: $node"
+                            kubectl label nodes "$node" node-group=group1 --overwrite
                             done
 
                             kubectl rollout restart DaemonSet/aws-cloud-controller-manager -n kube-system
 
                             kops rolling-update cluster --config=/home/ansible/.kube/config --name=kubecluster.shah-kubernetes.ca --state=s3://kubedevops001 --cloudonly
-                            mastersg=\$(aws ec2 describe-instances --filters "Name=tag:Name,Values=*master*" --query "Reservations[].Instances[].[InstanceId, SecurityGroups[0].GroupId]" --output text | grep sg | awk '{print \$2}') && echo \$mastersg
+                            mastersg=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=*master*" --query "Reservations[].Instances[].[InstanceId, SecurityGroups[0].GroupId]" --output text | grep sg | awk '{print $2}') && echo $mastersg
 
-                            nodesg=\$(aws ec2 describe-instances --query "Reservations[].Instances[].[InstanceId, Tags[?Key=='Name'].Value | [0], SecurityGroups[0].GroupId]" --output text | grep node | grep -v None | grep -m 1 nodes | awk '{print \$3}') && echo \$nodesg
+                            nodesg=$(aws ec2 describe-instances --query "Reservations[].Instances[].[InstanceId, Tags[?Key=='Name'].Value | [0], SecurityGroups[0].GroupId]" --output text | grep node | grep -v None | grep -m 1 nodes | awk '{print $3}') && echo $nodesg
 
-                            SG_A=\$mastersg   # Security Group A
-                            SG_B=\$nodesg   # Security Group B
+                            SG_A=$mastersg   # Security Group A
+                            SG_B=$nodesg   # Security Group B
 
                             set +e
                             # remove port 10250
                             PORT=10250           # Change this to the port you want to delete
 
-                            echo "Fetching ingress rules for Security Group \$SG_A on port \$PORT..."
+                            echo "Fetching ingress rules for Security Group $SG_A on port $PORT..."
 
                             # Get the current security group rules for the specified port
-                            RULES=\$(aws ec2 describe-security-groups --group-ids \$SG_A --query "SecurityGroups[*].IpPermissions[?ToPort==\`\$PORT\`][]" --output json)
+                            RULES=$(aws ec2 describe-security-groups --group-ids $SG_A --query "SecurityGroups[*].IpPermissions[?ToPort==\`$PORT\`][]" --output json)
 
                             # Check if there are any rules to delete
-                            if [[ "\$RULES" == "[]" ]]; then
-                                echo "No rules found for port \$PORT in security group \$SG_A."
+                            if [[ "$RULES" == "[]" ]]; then
+                                echo "No rules found for port $PORT in security group $SG_A."
                             fi
 
                             # Revoke all rules matching the port
-                            aws ec2 revoke-security-group-ingress --group-id \$SG_A --ip-permissions "\$RULES"
+                            aws ec2 revoke-security-group-ingress --group-id $SG_A --ip-permissions "$RULES"
 
-                            echo "Successfully removed all ingress rules for port \$PORT in security group \$SG_A."
+                            echo "Successfully removed all ingress rules for port $PORT in security group $SG_A."
 
                             # NodeSG remove port 10250
-                            echo "Fetching ingress rules for Security Group \$SG_B on port \$PORT..."
+                            echo "Fetching ingress rules for Security Group $SG_B on port $PORT..."
 
                             # Get the current security group rules for the specified port
-                            RULES=\$(aws ec2 describe-security-groups --group-ids \$SG_B --query "SecurityGroups[*].IpPermissions[?ToPort==\`\$PORT\`][]" --output json)
+                            RULES=$(aws ec2 describe-security-groups --group-ids $SG_B --query "SecurityGroups[*].IpPermissions[?ToPort==\`$PORT\`][]" --output json)
 
                             # Check if there are any rules to delete
-                            if [[ "\$RULES" == "[]" ]]; then
-                                echo "No rules found for port \$PORT in security group \$SG_B."
+                            if [[ "$RULES" == "[]" ]]; then
+                                echo "No rules found for port $PORT in security group $SG_B."
                             fi
 
                             # Revoke all rules matching the port
-                            aws ec2 revoke-security-group-ingress --group-id \$SG_B --ip-permissions "\$RULES"
+                            aws ec2 revoke-security-group-ingress --group-id $SG_B --ip-permissions "$RULES"
 
-                            echo "Successfully removed all ingress rules for port \$PORT in security group \$SG_B."
+                            echo "Successfully removed all ingress rules for port $PORT in security group $SG_B."
 
                             set -e
                             # --------------------------------------------------------------------------------------------------------------------------------
 
                             PORT=10250
 
-                            echo "Fetching public IPs for Security Group A (\$SG_A)..."
-                            IPS_A=\$(aws ec2 describe-instances --filters "Name=instance.group-id,Values=\$SG_A" --query "Reservations[*].Instances[*].PublicIpAddress" --output text)
+                            echo "Fetching public IPs for Security Group A ($SG_A)..."
+                            IPS_A=$(aws ec2 describe-instances --filters "Name=instance.group-id,Values=$SG_A" --query "Reservations[*].Instances[*].PublicIpAddress" --output text)
 
-                            echo "Fetching public IPs for Security Group B (\$SG_B)..."
-                            IPS_B=\$(aws ec2 describe-instances --filters "Name=instance.group-id,Values=\$SG_B" --query "Reservations[*].Instances[*].PublicIpAddress" --output text)
+                            echo "Fetching public IPs for Security Group B ($SG_B)..."
+                            IPS_B=$(aws ec2 describe-instances --filters "Name=instance.group-id,Values=$SG_B" --query "Reservations[*].Instances[*].PublicIpAddress" --output text)
 
                             # Function to add a rule for each IP
                             add_rule() {
-                                local SG_ID=\$1
-                                local IP_LIST=\$2
-                                for IP in \$IP_LIST; do
-                                    if [ ! -z "\$IP" ]; then
-                                        echo "Allowing \$IP to access \$SG_ID on port \$PORT..."
+                                local SG_ID=$1
+                                local IP_LIST=$2
+                                for IP in $IP_LIST; do
+                                    if [ ! -z "$IP" ]; then
+                                        echo "Allowing $IP to access $SG_ID on port $PORT..."
                                         aws ec2 authorize-security-group-ingress \
-                                            --group-id \$SG_ID \
+                                            --group-id $SG_ID \
                                             --protocol tcp \
-                                            --port \$PORT \
-                                            --cidr "\$IP/32" \
+                                            --port $PORT \
+                                            --cidr "$IP/32" \
                                             --output text
                                     fi
                                 done
@@ -676,24 +709,24 @@ pipeline {
 
                             # Allow Security Group A instances to communicate among themselves
                             echo "Allowing communication within Security Group A..."
-                            add_rule \$SG_A "\$IPS_A"
+                            add_rule $SG_A "$IPS_A"
 
                             # Allow Security Group B instances to communicate among themselves
                             echo "Allowing communication within Security Group B..."
-                            add_rule \$SG_B "\$IPS_B"
+                            add_rule $SG_B "$IPS_B"
 
                             # Allow Security Group A to talk to Security Group B
                             echo "Allowing Security Group A to access Security Group B..."
-                            add_rule \$SG_B "\$IPS_A"
+                            add_rule $SG_B "$IPS_A"
 
                             # Allow Security Group B to talk to Security Group A
                             echo "Allowing Security Group B to access Security Group A..."
-                            add_rule \$SG_A "\$IPS_B"
+                            add_rule $SG_A "$IPS_B"
 
                             echo "All rules applied successfully!"
 
 
-                        """
+                        '''
                         sh "kubectl delete all --all -n ${nameSpace}"
                         sh 'echo ------------------------------------'
                         retry(3) { // Retry up to 3 times
@@ -766,7 +799,7 @@ pipeline {
                 dir("${k8}") {
                     script {
                         sh """
-                            ELB=\$(aws elbv2 describe-load-balancers --query "LoadBalancers[0].DNSName" --output text) && echo \$ELB
+                            ELB=\$(aws elbv2 describe-load-balancers | grep DNSName) && echo \$ELB
 
                             curl https://api.cloudflare.com/client/v4/zones/${zone_id}/dns_records/${cloudflare_grafana_id} \
                                 -X PATCH \
