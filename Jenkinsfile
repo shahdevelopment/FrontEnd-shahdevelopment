@@ -658,37 +658,92 @@ pipeline {
         stage('Update DNS') {
             steps {
                 script {
-                    sh '''
-                        # Get ELB DNS name using jq
-                        ELB=$(aws elbv2 describe-load-balancers --query "LoadBalancers[0].DNSName" --output text)
-                        echo "Resolved ELB DNS: $ELB"
+                    sh """
+                        ELB=$(aws elbv2 describe-load-balancers | grep DNSName) && echo $ELB
 
-                        for record_id in ${cloudflare_grafana_id} ${cloudflare_backend_id} ${cloudflare_db_id} ${cloudflare_frontend_id} ${cloudflare_prometheus_id} ${cloudflare_queue_id}; do
-                            case $record_id in
-                                ${cloudflare_grafana_id}) record_name="${cloudflare_grafana}" ;;
-                                ${cloudflare_backend_id}) record_name="${cloudflare_backend}" ;;
-                                ${cloudflare_db_id}) record_name="${cloudflare_db}" ;;
-                                ${cloudflare_frontend_id}) record_name="${cloudflare_frontend}" ;;
-                                ${cloudflare_prometheus_id}) record_name="${cloudflare_prometheus}" ;;
-                                ${cloudflare_queue_id}) record_name="${cloudflare_queue}" ;;
-                            esac
+                        curl https://api.cloudflare.com/client/v4/zones/${zone_id}/dns_records/${cloudflare_grafana_id} \
+                            -X PATCH \
+                            -H "Authorization: Bearer ${cloudflare_api}" \
+                            -H "Content-Type: application/json" \
+                            -d '{
+                            "name": "'${cloudflare_grafana}'",
+                            "ttl": 3600,
+                            "type": "CNAME",
+                            "comment": "Domain verification record",
+                            "content": "'$ELB'",
+                            "proxied": false
+                            }'
 
-                            echo "Updating $record_name ($record_id) to $ELB"
+                        
 
-                            curl -s https://api.cloudflare.com/client/v4/zones/${zone_id}/dns_records/$record_id \
-                                -X PATCH \
-                                -H "Authorization: Bearer ${cloudflare_api}" \
-                                -H "Content-Type: application/json" \
-                                --data '{
-                                    "name": "'$record_name'",
-                                    "ttl": 3600,
-                                    "type": "CNAME",
-                                    "comment": "Updated by Jenkins",
-                                    "content": "'$ELB'",
-                                    "proxied": false
-                                }'
-                        done
-                    '''
+                        curl https://api.cloudflare.com/client/v4/zones/${zone_id}/dns_records/${cloudflare_backend_id} \
+                            -X PATCH \
+                            -H "Authorization: Bearer ${cloudflare_api}" \
+                            -H "Content-Type: application/json" \
+                            -d '{
+                            "name": "'${cloudflare_backend}'",
+                            "ttl": 3600,
+                            "type": "CNAME",
+                            "comment": "Domain verification record",
+                            "content": "'$ELB'",
+                            "proxied": false
+                            }'
+
+
+                        curl https://api.cloudflare.com/client/v4/zones/${zone_id}/dns_records/${cloudflare_db_id} \
+                            -X PATCH \
+                            -H "Authorization: Bearer ${cloudflare_api}" \
+                            -H "Content-Type: application/json" \
+                            -d '{
+                            "name": "'${cloudflare_db}'",
+                            "ttl": 3600,
+                            "type": "CNAME",
+                            "comment": "Domain verification record",
+                            "content": "'$ELB'",
+                            "proxied": false
+                            }'
+
+                        
+                        curl https://api.cloudflare.com/client/v4/zones/${zone_id}/dns_records/${cloudflare_frontend_id} \
+                            -X PATCH \
+                            -H "Authorization: Bearer ${cloudflare_api}" \
+                            -H "Content-Type: application/json" \
+                            -d '{
+                            "name": "'${cloudflare_frontend}'",
+                            "ttl": 3600,
+                            "type": "CNAME",
+                            "comment": "Domain verification record",
+                            "content": "'$ELB'",
+                            "proxied": false
+                            }'
+
+
+                        curl https://api.cloudflare.com/client/v4/zones/${zone_id}/dns_records/${cloudflare_prometheus_id} \
+                            -X PATCH \
+                            -H "Authorization: Bearer ${cloudflare_api}" \
+                            -H "Content-Type: application/json" \
+                            -d '{
+                            "name": "'${cloudflare_prometheus}'",
+                            "ttl": 3600,
+                            "type": "CNAME",
+                            "comment": "Domain verification record",
+                            "content": "'$ELB'",
+                            "proxied": false
+                            }'
+
+                        curl https://api.cloudflare.com/client/v4/zones/${zone_id}/dns_records/${cloudflare_queue_id} \
+                            -X PATCH \
+                            -H "Authorization: Bearer ${cloudflare_api}" \
+                            -H "Content-Type: application/json" \
+                            -d '{
+                            "name": "'${cloudflare_queue}'",
+                            "ttl": 3600,
+                            "type": "CNAME",
+                            "comment": "Domain verification record",
+                            "content": "'$ELB'",
+                            "proxied": false
+                            }'
+                    """
                 }
             }
         }
