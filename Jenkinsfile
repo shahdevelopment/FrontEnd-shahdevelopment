@@ -682,7 +682,7 @@ pipeline {
                                 --data '{
                                     "name": "'$record_name'",
                                     "ttl": 3600,
-                                    "type": "A",
+                                    "type": "CNAME",
                                     "comment": "Updated by Jenkins",
                                     "content": "'$ELB'",
                                     "proxied": false
