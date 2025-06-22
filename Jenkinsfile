@@ -590,7 +590,7 @@ pipeline {
                         sh 'echo ------------------------------------'
 
                         sh"""
-                            control=$(kubectl get nodes | grep control-plane | awk '{print \$1}')
+                            control=\$(kubectl get nodes | grep control-plane | awk '{print \$1}')
                             kubectl label nodes \$control node-group=master
                             kubectl taint nodes \$control node-role.kubernetes.io/control-plane:NoSchedule- || true
 
