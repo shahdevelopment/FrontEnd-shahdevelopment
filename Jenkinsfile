@@ -657,93 +657,95 @@ pipeline {
         }
         stage('Update DNS') {
             steps {
-                script {
-                    sh """
-                        ELB=$(aws elbv2 describe-load-balancers | grep DNSName) && echo $ELB
+                dir("${k8}") {
+                    script {
+                        sh """
+                            ELB=$(aws elbv2 describe-load-balancers | grep DNSName) && echo $ELB
 
-                        curl https://api.cloudflare.com/client/v4/zones/${zone_id}/dns_records/${cloudflare_grafana_id} \
-                            -X PATCH \
-                            -H "Authorization: Bearer ${cloudflare_api}" \
-                            -H "Content-Type: application/json" \
-                            -d '{
-                            "name": "'${cloudflare_grafana}'",
-                            "ttl": 3600,
-                            "type": "CNAME",
-                            "comment": "Domain verification record",
-                            "content": "'$ELB'",
-                            "proxied": false
-                            }'
+                            curl https://api.cloudflare.com/client/v4/zones/${zone_id}/dns_records/${cloudflare_grafana_id} \
+                                -X PATCH \
+                                -H "Authorization: Bearer ${cloudflare_api}" \
+                                -H "Content-Type: application/json" \
+                                -d '{
+                                "name": "'${cloudflare_grafana}'",
+                                "ttl": 3600,
+                                "type": "CNAME",
+                                "comment": "Domain verification record",
+                                "content": "'$ELB'",
+                                "proxied": false
+                                }'
 
-                        
+                            
 
-                        curl https://api.cloudflare.com/client/v4/zones/${zone_id}/dns_records/${cloudflare_backend_id} \
-                            -X PATCH \
-                            -H "Authorization: Bearer ${cloudflare_api}" \
-                            -H "Content-Type: application/json" \
-                            -d '{
-                            "name": "'${cloudflare_backend}'",
-                            "ttl": 3600,
-                            "type": "CNAME",
-                            "comment": "Domain verification record",
-                            "content": "'$ELB'",
-                            "proxied": false
-                            }'
-
-
-                        curl https://api.cloudflare.com/client/v4/zones/${zone_id}/dns_records/${cloudflare_db_id} \
-                            -X PATCH \
-                            -H "Authorization: Bearer ${cloudflare_api}" \
-                            -H "Content-Type: application/json" \
-                            -d '{
-                            "name": "'${cloudflare_db}'",
-                            "ttl": 3600,
-                            "type": "CNAME",
-                            "comment": "Domain verification record",
-                            "content": "'$ELB'",
-                            "proxied": false
-                            }'
-
-                        
-                        curl https://api.cloudflare.com/client/v4/zones/${zone_id}/dns_records/${cloudflare_frontend_id} \
-                            -X PATCH \
-                            -H "Authorization: Bearer ${cloudflare_api}" \
-                            -H "Content-Type: application/json" \
-                            -d '{
-                            "name": "'${cloudflare_frontend}'",
-                            "ttl": 3600,
-                            "type": "CNAME",
-                            "comment": "Domain verification record",
-                            "content": "'$ELB'",
-                            "proxied": false
-                            }'
+                            curl https://api.cloudflare.com/client/v4/zones/${zone_id}/dns_records/${cloudflare_backend_id} \
+                                -X PATCH \
+                                -H "Authorization: Bearer ${cloudflare_api}" \
+                                -H "Content-Type: application/json" \
+                                -d '{
+                                "name": "'${cloudflare_backend}'",
+                                "ttl": 3600,
+                                "type": "CNAME",
+                                "comment": "Domain verification record",
+                                "content": "'$ELB'",
+                                "proxied": false
+                                }'
 
 
-                        curl https://api.cloudflare.com/client/v4/zones/${zone_id}/dns_records/${cloudflare_prometheus_id} \
-                            -X PATCH \
-                            -H "Authorization: Bearer ${cloudflare_api}" \
-                            -H "Content-Type: application/json" \
-                            -d '{
-                            "name": "'${cloudflare_prometheus}'",
-                            "ttl": 3600,
-                            "type": "CNAME",
-                            "comment": "Domain verification record",
-                            "content": "'$ELB'",
-                            "proxied": false
-                            }'
+                            curl https://api.cloudflare.com/client/v4/zones/${zone_id}/dns_records/${cloudflare_db_id} \
+                                -X PATCH \
+                                -H "Authorization: Bearer ${cloudflare_api}" \
+                                -H "Content-Type: application/json" \
+                                -d '{
+                                "name": "'${cloudflare_db}'",
+                                "ttl": 3600,
+                                "type": "CNAME",
+                                "comment": "Domain verification record",
+                                "content": "'$ELB'",
+                                "proxied": false
+                                }'
 
-                        curl https://api.cloudflare.com/client/v4/zones/${zone_id}/dns_records/${cloudflare_queue_id} \
-                            -X PATCH \
-                            -H "Authorization: Bearer ${cloudflare_api}" \
-                            -H "Content-Type: application/json" \
-                            -d '{
-                            "name": "'${cloudflare_queue}'",
-                            "ttl": 3600,
-                            "type": "CNAME",
-                            "comment": "Domain verification record",
-                            "content": "'$ELB'",
-                            "proxied": false
-                            }'
-                    """
+                            
+                            curl https://api.cloudflare.com/client/v4/zones/${zone_id}/dns_records/${cloudflare_frontend_id} \
+                                -X PATCH \
+                                -H "Authorization: Bearer ${cloudflare_api}" \
+                                -H "Content-Type: application/json" \
+                                -d '{
+                                "name": "'${cloudflare_frontend}'",
+                                "ttl": 3600,
+                                "type": "CNAME",
+                                "comment": "Domain verification record",
+                                "content": "'$ELB'",
+                                "proxied": false
+                                }'
+
+
+                            curl https://api.cloudflare.com/client/v4/zones/${zone_id}/dns_records/${cloudflare_prometheus_id} \
+                                -X PATCH \
+                                -H "Authorization: Bearer ${cloudflare_api}" \
+                                -H "Content-Type: application/json" \
+                                -d '{
+                                "name": "'${cloudflare_prometheus}'",
+                                "ttl": 3600,
+                                "type": "CNAME",
+                                "comment": "Domain verification record",
+                                "content": "'$ELB'",
+                                "proxied": false
+                                }'
+
+                            curl https://api.cloudflare.com/client/v4/zones/${zone_id}/dns_records/${cloudflare_queue_id} \
+                                -X PATCH \
+                                -H "Authorization: Bearer ${cloudflare_api}" \
+                                -H "Content-Type: application/json" \
+                                -d '{
+                                "name": "'${cloudflare_queue}'",
+                                "ttl": 3600,
+                                "type": "CNAME",
+                                "comment": "Domain verification record",
+                                "content": "'$ELB'",
+                                "proxied": false
+                                }'
+                        """
+                    }
                 }
             }
         }
