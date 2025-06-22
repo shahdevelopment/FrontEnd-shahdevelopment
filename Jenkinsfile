@@ -594,7 +594,7 @@ pipeline {
                             kubectl label nodes \$control node-group=master
                             kubectl taint nodes \$control node-role.kubernetes.io/control-plane:NoSchedule- || true
 
-                            slave_nodes=$(kubectl get nodes | grep node | awk '{print \$1}')
+                            slave_nodes=\$(kubectl get nodes | grep node | awk '{print \$1}')
 
                             for node in \$slave_nodes; do
                             echo "Labeling node: \$node"
@@ -604,7 +604,7 @@ pipeline {
                             kubectl rollout restart DaemonSet/aws-cloud-controller-manager -n kube-system
 
                             kops rolling-update cluster --config=/home/ansible/.kube/config --name=kubecluster.shah-kubernetes.ca --state=s3://kubedevops001 --cloudonly
-                            mastersg=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=*master*" --query "Reservations[].Instances[].[InstanceId, SecurityGroups[0].GroupId]" --output text | grep sg | awk '{print \$2}') && echo \$mastersg
+                            mastersg=\$(aws ec2 describe-instances --filters "Name=tag:Name,Values=*master*" --query "Reservations[].Instances[].[InstanceId, SecurityGroups[0].GroupId]" --output text | grep sg | awk '{print \$2}') && echo \$mastersg
 
                             nodesg=\$(aws ec2 describe-instances --query "Reservations[].Instances[].[InstanceId, Tags[?Key=='Name'].Value | [0], SecurityGroups[0].GroupId]" --output text | grep node | grep -v None | grep -m 1 nodes | awk '{print \$3}') && echo \$nodesg
 
