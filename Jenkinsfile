@@ -623,11 +623,11 @@ pipeline {
                         sh 'echo ------------------------------------'
 
                         sh'''
-                            control=$(kubectl get nodes | grep control-plane | awk '{print \$1}')
+                            control=$(kubectl get nodes | grep control-plane | awk '{print $1}')
                             kubectl label nodes $control node-group=master
                             kubectl taint nodes $control node-role.kubernetes.io/control-plane:NoSchedule- || true
 
-                            slave_nodes=$(kubectl get nodes | grep node | awk '{print \$1}')
+                            slave_nodes=$(kubectl get nodes | grep node | awk '{print $1}')
 
                             for node in $slave_nodes; do
                             echo "Labeling node: $node"
@@ -651,7 +651,7 @@ pipeline {
                             echo "Fetching ingress rules for Security Group $SG_A on port $PORT..."
 
                             # Get the current security group rules for the specified port
-                            RULES=$(aws ec2 describe-security-groups --group-ids $SG_A --query "SecurityGroups[*].IpPermissions[?ToPort==\`$PORT\`][]" --output json)
+                            RULES=$(aws ec2 describe-security-groups --group-ids $SG_A --query "SecurityGroups[*].IpPermissions[?ToPort==\`'"$PORT"'\`][]" --output json)
 
                             # Check if there are any rules to delete
                             if [[ "$RULES" == "[]" ]]; then
@@ -667,7 +667,7 @@ pipeline {
                             echo "Fetching ingress rules for Security Group $SG_B on port $PORT..."
 
                             # Get the current security group rules for the specified port
-                            RULES=$(aws ec2 describe-security-groups --group-ids $SG_B --query "SecurityGroups[*].IpPermissions[?ToPort==\`$PORT\`][]" --output json)
+                            RULES=$(aws ec2 describe-security-groups --group-ids $SG_B --query "SecurityGroups[*].IpPermissions[?ToPort==\`'"$PORT"'\`][]" --output json)
 
                             # Check if there are any rules to delete
                             if [[ "$RULES" == "[]" ]]; then
