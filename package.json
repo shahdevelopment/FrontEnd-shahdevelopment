@@ -21,7 +21,6 @@
   "homepage": "https://github.com/Shah0373/profile_front#readme",
   "dependencies": {
     "cookie-parser": "^1.4.7",
-    "dotenv": "^16.4.7",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.2",
     "prom-client": "^15.1.3"
