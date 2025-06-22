@@ -124,6 +124,21 @@ pipeline {
         rab_user = ""
         rab_pass = ""
 
+        cloudflare_api = ""
+        zone_id = ""
+        cloudflare_grafana = ""
+        cloudflare_grafana_id = ""
+        cloudflare_backend = ""
+        cloudflare_backend_id = ""
+        cloudflare_db = ""
+        cloudflare_db_id = ""
+        cloudflare_front-end = ""
+        cloudflare_front-end_id = ""
+        cloudflare_prometheus = ""
+        cloudflare_prometheus_id = ""
+        cloudflare_queue = ""
+        cloudflare_queue_id = ""
+
     }
     options { skipDefaultCheckout() }
     stages {
@@ -264,6 +279,21 @@ pipeline {
 
                     rab_user = parameters['rab.user']
                     rab_pass = parameters['rab.pass']
+
+                    cloudflare_api = parameters['cloudflare.api']
+                    zone_id = parameters['zone.id']
+                    cloudflare_grafana = parameters['cloudflare.grafana']
+                    cloudflare_grafana_id = parameters['cloudflare.grafana.id']
+                    cloudflare_backend = parameters['cloudflare.backend']
+                    cloudflare_backend_id = parameters['cloudflare.backend.id']
+                    cloudflare_db = parameters['cloudflare.db']
+                    cloudflare_db_id = parameters['cloudflare.db.id']
+                    cloudflare_front-end = parameters['cloudflare.front-end']
+                    cloudflare_front-end_id = parameters['cloudflare.front-end.id']
+                    cloudflare_prometheus = parameters['cloudflare.prometheus']
+                    cloudflare_prometheus_id = parameters['cloudflare.prometheus.id']
+                    cloudflare_queue = parameters['cloudflare.queue']
+                    cloudflare_queue_id = parameters['cloudflare.queue.id']
 
                     echo "------------------------------------"
                     echo "------------------------------------"
@@ -625,6 +655,99 @@ pipeline {
                 }
             }
         }
+        stage('Update DNS') {
+            steps {
+                script {
+                    sh """
+                        ELB=$(aws elbv2 describe-load-balancers | grep DNSName) && echo $ELB
+
+                        curl https://api.cloudflare.com/client/v4/zones/${zone_id}/dns_records/${cloudflare_grafana_id} \
+                            -X PATCH \
+                            -H "Authorization: Bearer ${cloudflare_api}" \
+                            -H "Content-Type: application/json" \
+                            -d '{
+                            "name": "${cloudflare_grafana}",
+                            "ttl": 3600,
+                            "type": "A",
+                            "comment": "Domain verification record",
+                            "content": "$ELB",
+                            "proxied": false
+                            }'
+
+                        
+
+                        curl https://api.cloudflare.com/client/v4/zones/${zone_id}/dns_records/${cloudflare_backend_id} \
+                            -X PATCH \
+                            -H "Authorization: Bearer ${cloudflare_api}" \
+                            -H "Content-Type: application/json" \
+                            -d '{
+                            "name": "${cloudflare_backend}",
+                            "ttl": 3600,
+                            "type": "A",
+                            "comment": "Domain verification record",
+                            "content": "$ELB",
+                            "proxied": false
+                            }'
+
+
+                        curl https://api.cloudflare.com/client/v4/zones/${zone_id}/dns_records/${cloudflare_db_id} \
+                            -X PATCH \
+                            -H "Authorization: Bearer ${cloudflare_api}" \
+                            -H "Content-Type: application/json" \
+                            -d '{
+                            "name": "${cloudflare_db}",
+                            "ttl": 3600,
+                            "type": "A",
+                            "comment": "Domain verification record",
+                            "content": "$ELB",
+                            "proxied": false
+                            }'
+
+                        
+                        curl https://api.cloudflare.com/client/v4/zones/${zone_id}/dns_records/${cloudflare_front-end_id} \
+                            -X PATCH \
+                            -H "Authorization: Bearer ${cloudflare_api}" \
+                            -H "Content-Type: application/json" \
+                            -d '{
+                            "name": "${cloudflare_front-end}",
+                            "ttl": 3600,
+                            "type": "A",
+                            "comment": "Domain verification record",
+                            "content": "$ELB",
+                            "proxied": false
+                            }'
+
+
+                        curl https://api.cloudflare.com/client/v4/zones/${zone_id}/dns_records/${cloudflare_prometheus_id} \
+                            -X PATCH \
+                            -H "Authorization: Bearer ${cloudflare_api}" \
+                            -H "Content-Type: application/json" \
+                            -d '{
+                            "name": "${cloudflare_prometheus}",
+                            "ttl": 3600,
+                            "type": "A",
+                            "comment": "Domain verification record",
+                            "content": "$ELB",
+                            "proxied": false
+                            }'
+
+                        curl https://api.cloudflare.com/client/v4/zones/${zone_id}/dns_records/${cloudflare_queue_id} \
+                            -X PATCH \
+                            -H "Authorization: Bearer ${cloudflare_api}" \
+                            -H "Content-Type: application/json" \
+                            -d '{
+                            "name": "${cloudflare_queue}",
+                            "ttl": 3600,
+                            "type": "A",
+                            "comment": "Domain verification record",
+                            "content": "$ELB",
+                            "proxied": false
+                            }'
+                    """
+                }
+            }
+        }
+
         stage('PG Restore') {
             steps {
                 dir("${backend}") {

@@ -74,8 +74,8 @@ app.get('/signup', (req, res) => {
                                     <a href="/shahgpt">ChatGPT Clone</a>
                                     <a href="/login">My Profile</a>
                                     <a href="/allPosts">Posts</a>
-                                    <a href="https://grafana.shahsportfolio.online">Grafana</a>
-                                    <a href="https://prometheus.shahsportfolio.online">Prometheus</a>
+                                    <a href="https://grafana.shah-kubernetes.ca">Grafana</a>
+                                    <a href="https://prometheus.shah-kubernetes.ca">Prometheus</a>
                                 </div>
                             </div>
                             <button onclick="highlightButton(this)" class="menu"><a href="/contactpage">Contact</a></button>
@@ -203,8 +203,8 @@ app.get('/login', (req, res) => {
                                         <a href="/shahgpt">ChatGPT Clone</a>
                                         <a href="/login">My Profile</a>
                                         <a href="/allPosts">Posts</a>
-                                        <a href="https://grafana.shahsportfolio.online">Grafana</a>
-                                        <a href="https://prometheus.shahsportfolio.online">Prometheus</a>
+                                        <a href="https://grafana.shah-kubernetes.ca">Grafana</a>
+                                        <a href="https://prometheus.shah-kubernetes.ca">Prometheus</a>
                                     </div>
                                 </div>
                                 <button onclick="highlightButton(this)" class="menu"><a href="/contactpage">Contact</a></button>
@@ -318,8 +318,8 @@ app.get('/geolocate', (req, res) => {
                             <a href="/shahgpt">ChatGPT Clone</a>
                             <a href="/login">My Profile</a>
                             <a href="/allPosts">Posts</a>
-                            <a href="https://grafana.shahsportfolio.online">Grafana</a>
-                            <a href="https://prometheus.shahsportfolio.online">Prometheus</a>
+                            <a href="https://grafana.shah-kubernetes.ca">Grafana</a>
+                            <a href="https://prometheus.shah-kubernetes.ca">Prometheus</a>
                         </div>
                     </div>
                     <button onclick="highlightButton(this)" class="menu"><a href="/contactpage">Contact</a></button>
@@ -503,8 +503,8 @@ app.get('/contactpage', (req, res) => {
                             <a href="/shahgpt">ChatGPT Clone</a>
                             <a href="/login">My Profile</a>
                             <a href="/allPosts">Posts</a>
-                            <a href="https://grafana.shahsportfolio.online">Grafana</a>
-                            <a href="https://prometheus.shahsportfolio.online">Prometheus</a>
+                            <a href="https://grafana.shah-kubernetes.ca">Grafana</a>
+                            <a href="https://prometheus.shah-kubernetes.ca">Prometheus</a>
                         </div>
                     </div>
                     <button onclick="highlightButton(this)" class="menu"><a href="/contactpage">Contact</a></button>
@@ -587,8 +587,8 @@ app.get('/fastapi', (req, res) => {
                             <a href="/shahgpt">ChatGPT Clone</a>
                             <a href="/login">My Profile</a>
                             <a href="/allPosts">Posts</a>
-                            <a href="https://grafana.shahsportfolio.online">Grafana</a>
-                            <a href="https://prometheus.shahsportfolio.online">Prometheus</a>
+                            <a href="https://grafana.shah-kubernetes.ca">Grafana</a>
+                            <a href="https://prometheus.shah-kubernetes.ca">Prometheus</a>
                         </div>
                     </div>
                     <button onclick="highlightButton(this)" class="menu"><a href="/contactpage">Contact</a></button>
@@ -709,8 +709,8 @@ app.get('/', (req, res) => {
                             <a href="/shahgpt">ChatGPT Clone</a>
                             <a href="/login">My Profile</a>
                             <a href="/allPosts">Posts</a>
-                            <a href="https://grafana.shahsportfolio.online">Grafana</a>
-                            <a href="https://prometheus.shahsportfolio.online">Prometheus</a>
+                            <a href="https://grafana.shah-kubernetes.ca">Grafana</a>
+                            <a href="https://prometheus.shah-kubernetes.ca">Prometheus</a>
                         </div>
                     </div>
                     <button onclick="highlightButton(this)" class="menu"><a href="/contactpage">Contact</a></button>
@@ -929,8 +929,8 @@ app.get('/selfie', (req, res) => {
                                 <a href="/shahgpt">ChatGPT Clone</a>
                                 <a href="/login">My Profile</a>
                                 <a href="/allPosts">Posts</a>
-                                <a href="https://grafana.shahsportfolio.online">Grafana</a>
-                                <a href="https://prometheus.shahsportfolio.online">Prometheus</a>
+                                <a href="https://grafana.shah-kubernetes.ca">Grafana</a>
+                                <a href="https://prometheus.shah-kubernetes.ca">Prometheus</a>
                             </div>
                         </div>
                         <button onclick="highlightButton(this)" class="menu"><a href="/contactpage">Contact</a></button>
@@ -1089,8 +1089,8 @@ app.get('/data', (req, res) => {
                                 <a href="/shahgpt">ChatGPT Clone</a>
                                 <a href="/login">My Profile</a>
                                 <a href="/allPosts">Posts</a>
-                                <a href="https://grafana.shahsportfolio.online">Grafana</a>
-                                <a href="https://prometheus.shahsportfolio.online">Prometheus</a>
+                                <a href="https://grafana.shah-kubernetes.ca">Grafana</a>
+                                <a href="https://prometheus.shah-kubernetes.ca">Prometheus</a>
                             </div>
                         </div>
                         <button onclick="highlightButton(this)" class="menu"><a href="/contactpage">Contact</a></button>
@@ -1180,8 +1180,8 @@ app.get('/form', (req, res) =>{
                                 <a href="/shahgpt">ChatGPT Clone</a>
                                 <a href="/login">My Profile</a>
                                 <a href="/allPosts">Posts</a>
-                                <a href="https://grafana.shahsportfolio.online">Grafana</a>
-                                <a href="https://prometheus.shahsportfolio.online">Prometheus</a>
+                                <a href="https://grafana.shah-kubernetes.ca">Grafana</a>
+                                <a href="https://prometheus.shah-kubernetes.ca">Prometheus</a>
                             </div>
                         </div>
                         <button onclick="highlightButton(this)" class="menu"><a href="/contactpage">Contact</a></button>
@@ -1292,8 +1292,8 @@ app.get('/allPosts', async (req, res) => {
                                 <a href="/shahgpt">ChatGPT Clone</a>
                                 <a href="/login">My Profile</a>
                                 <a href="/allPosts">Posts</a>
-                                <a href="https://grafana.shahsportfolio.online">Grafana</a>
-                                <a href="https://prometheus.shahsportfolio.online">Prometheus</a>
+                                <a href="https://grafana.shah-kubernetes.ca">Grafana</a>
+                                <a href="https://prometheus.shah-kubernetes.ca">Prometheus</a>
                             </div>
                         </div>
                         <button onclick="highlightButton(this)" class="menu"><a href="/contactpage">Contact</a></button>
