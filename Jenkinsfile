@@ -694,7 +694,7 @@ pipeline {
                 dir("${k8}") {
                     script {
                         sh """
-                            ELB=\$(aws elbv2 describe-load-balancers | grep DNSName) && echo \$ELB
+                            ELB=\$(aws elbv2 describe-load-balancers --query "LoadBalancers[0].DNSName" --output text) && echo \$ELB
 
                             curl https://api.cloudflare.com/client/v4/zones/${zone_id}/dns_records/${cloudflare_grafana_id} \
                                 -X PATCH \
